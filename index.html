@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n="app.title">Leeway — זימון תור לביקורת ביטחון בנתב"ג</title>
+<meta name="description" content="זימון מראש של חלון זמן לביקורת ביטחון בנמל התעופה בן גוריון, ומעקב סטטוס ביום הטיסה.">
+<meta name="theme-color" content="#1e5aba">
+<link rel="icon" href="assets/images/logo-leeway-white.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Heebo covers Hebrew+Latin but has no Arabic and no Cyrillic. Cairo carries
+     Arabic, Rubik carries Cyrillic (and Hebrew). Google serves each unicode
+     range as its own file, so a language you never pick is never downloaded. -->
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Inter:wght@400;600;700&family=Rubik:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main class="app" id="app">
+
+  <!-- ═══ 1. Loading phase 1 — node 2072:1219 (logo at opacity 0) ═══ -->
+  <section class="screen screen--splash" id="screen-loading-1" data-screen="loading-1" data-state="hidden" data-i18n-aria="common.loading" aria-label="טוען">
+    <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="224" height="75">
+  </section>
+
+  <!-- ═══ 2. Loading phase 2 — node 2039:614 (logo revealed) ═══ -->
+  <section class="screen screen--splash" id="screen-loading-2" data-screen="loading-2" data-state="shown" hidden data-i18n-aria="common.loading" aria-label="טוען">
+    <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="224" height="75">
+  </section>
+
+  <!-- ═══ 3. Landing page — node 24:1271 ═══ -->
+  <section class="screen screen--landing" id="screen-landing" data-screen="landing" hidden aria-labelledby="landing-title">
+    <header class="header">
+      <img class="logo logo--hero" src="assets/images/logo-leeway-white.png" alt="Leeway" width="223" height="75">
+    </header>
+
+    <h1 class="display landing__headline" id="landing-title" data-i18n="landing.h1a">תזמינו עכשיו<br><em data-i18n="landing.h1b">כדי לא לחכות אחר כך</em></h1>
+
+    <img data-src-light="assets/images/illustration-terminal.png" data-src-dark="assets/images/illustration-terminal-dark.png" class="landing__art" src="assets/images/illustration-terminal.png" data-i18n-alt="alt.terminal" alt="איור של טרמינל נמל התעופה בן גוריון עם מגדל פיקוח ומטוס ממריא" width="419" height="279">
+
+    <div class="landing__actions">
+      <button type="button" class="btn btn--primary" data-go="registration" data-i18n="landing.newBooking">הזמינו חלון זמן חדש</button>
+      <button type="button" class="btn btn--secondary" data-go="status" data-i18n="landing.myBooking">הזמנה שלי</button>
+    </div>
+
+    <button type="button" class="status-card" data-go="status">
+      <span class="status-card__title" data-i18n="status.cardTitle">סטטוס שלי</span>
+      <span class="status-card__chip">
+        <span class="status-card__chip-text">
+          <span class="status-card__step" data-i18n="step.checkin">צ'ק-אין</span>
+          <span class="status-card__state" data-i18n="state.inprogress">בתהליך</span>
+        </span>
+        <img src="assets/icons/icon-briefcase.svg" alt="" width="24" height="24">
+      </span>
+      <span class="status-card__note" data-i18n="status.note">מידע כללי בלבד — ללא רמת עומס חזויה</span>
+    </button>
+
+    <button type="button" class="theme-toggle theme-toggle--landing" data-theme-toggle aria-pressed="false"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.5 1.5M17.1 17.1l1.5 1.5M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"/></svg><span data-theme-label data-i18n="theme.toDark">מצב כהה</span></button>
+  </section>
+
+  <!-- ═══ 4. Registration — node 2173:4992 ═══ -->
+  <section class="screen" id="screen-registration" data-screen="registration" data-draggable="landing" hidden aria-labelledby="registration-title">
+    <header class="header">
+      <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
+      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
+        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+      </button>
+    </header>
+
+    <div class="progress" data-progress="1">
+      <div class="progress__track">
+        <div class="progress__fill"></div>
+        <span class="progress__dot"></span>
+        <span class="progress__dot"></span>
+        <span class="progress__dot"></span>
+      </div>
+      <div class="progress__labels">
+        <span class="progress__label" data-i18n="step.passenger">פרטי נוסע</span>
+        <span class="progress__label" data-i18n="step.time">בחירת חלון זמן</span>
+        <span class="progress__label" data-i18n="step.confirm">אישור הזמנה</span>
+      </div>
+    </div>
+
+    <form class="form" id="registration-form" novalidate>
+      <h1 class="display" id="registration-title"><span data-i18n="reg.h1a">הכנס</span> <em data-i18n="reg.h1b">פרטיך</em></h1>
+
+      <div class="passenger" data-passenger="1">
+        <div class="name-row">
+          <label class="field">
+            <span class="visually-hidden" data-i18n="ph.first">שם פרטי</span>
+            <input class="input" type="text" name="first-1" data-i18n-ph="ph.first" placeholder="שם פרטי" autocomplete="given-name" data-rule="name">
+            <span class="field__error" data-i18n="err.first">יש להזין שם פרטי באותיות בלבד</span>
+          </label>
+          <label class="field">
+            <span class="visually-hidden" data-i18n="ph.last">שם משפחה</span>
+            <input class="input" type="text" name="last-1" data-i18n-ph="ph.last" placeholder="שם משפחה" autocomplete="family-name" data-rule="name">
+            <span class="field__error" data-i18n="err.last">יש להזין שם משפחה באותיות בלבד</span>
+          </label>
+        </div>
+        <label class="field">
+          <span class="visually-hidden" data-i18n="ph.passport">מספר דרכון</span>
+          <input class="input" type="text" inputmode="numeric" name="passport-1" data-i18n-ph="ph.passport" placeholder="מס׳ דרכון" data-rule="passport">
+          <span class="field__error" data-i18n="err.passport">מספר דרכון הוא 8 ספרות</span>
+        </label>
+        <label class="field">
+          <span class="visually-hidden" data-i18n="ph.flight">מספר טיסה</span>
+          <input class="input" type="text" name="flight-1" data-i18n-ph="ph.flight" placeholder="מס׳ טיסה" data-rule="flight">
+          <span class="field__error" data-i18n="err.flight">מספר טיסה לדוגמה: LY 315</span>
+        </label>
+      </div>
+
+      <h2 class="display"><span data-i18n="reg.h2a">טס</span> <em data-i18n="reg.h2b">לא לבד?</em></h2>
+
+      <div id="extra-passengers"></div>
+
+      <button type="button" class="add-passenger" id="add-passenger" data-i18n="reg.addPassenger">+ הוסף נוסע</button>
+
+      <div class="form__foot">
+        <button type="submit" class="btn btn--primary" data-i18n="common.confirm">אישור</button>
+        <button type="button" class="link-btn" data-i18n="reg.remember">זכרו אותי</button>
+      </div>
+    </form>
+
+    <img data-src-light="assets/images/illustration-clouds.png" data-src-dark="assets/images/illustration-clouds-dark.png" class="clouds clouds--sm" src="assets/images/illustration-clouds.png" alt="" width="137" height="103">
+  </section>
+
+  <!-- ═══ 5. Time choosing main — node 24:3461 ═══ -->
+  <section class="screen" id="screen-time-choosing" data-screen="time-choosing" hidden aria-labelledby="time-title">
+    <header class="header">
+      <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
+      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
+        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+      </button>
+    </header>
+
+    <div class="progress" data-progress="2">
+      <div class="progress__track">
+        <div class="progress__fill"></div>
+        <span class="progress__dot"></span>
+        <span class="progress__dot"></span>
+        <span class="progress__dot"></span>
+      </div>
+      <div class="progress__labels">
+        <span class="progress__label" data-i18n="step.passenger">פרטי נוסע</span>
+        <span class="progress__label" data-i18n="step.time">בחירת חלון זמן</span>
+        <span class="progress__label" data-i18n="step.confirm">אישור הזמנה</span>
+      </div>
+    </div>
+
+    <h1 class="visually-hidden" id="time-title" data-i18n="time.srTitle">בחירת חלון זמן לביקורת ביטחון</h1>
+
+    <button type="button" class="flight-card" data-go="time-extended">
+      <span>
+        <span class="flight-card__route" data-route>TLV-SEA</span>
+        <span class="flight-card__meta" data-i18n="flight.meta">יום ג׳ · 25.05.2026 · טרמינל 3 · כניסה 03</span>
+      </span>
+      <span class="flight-card__row">
+        <span class="flight-card__count"><span data-i18n="time.passengers">נוסעים</span> (<span data-pax-count>2</span>)</span>
+        <span class="flight-card__edit" data-i18n="common.edit">עריכה</span>
+      </span>
+    </button>
+
+    <fieldset class="slots" id="slots">
+      <legend class="visually-hidden" data-i18n="time.legend">חלונות זמן פנויים לביקורת ביטחון</legend>
+      <button type="button" class="slot" aria-pressed="false" data-slot="6:40-7:00">6:40-7:00</button>
+      <button type="button" class="slot" aria-pressed="false" data-slot="7:00-7:20">7:00-7:20</button>
+      <button type="button" class="slot" aria-pressed="false" data-slot="7:20-7:40">7:20-7:40</button>
+      <button type="button" class="slot" aria-pressed="false" data-slot="7:40-8:00">7:40-8:00</button>
+      <button type="button" class="slot" aria-pressed="false" data-slot="8:00-8:20" data-full="true">8:00-8:20<span class="slot__full" data-i18n="time.full">מלא</span></button>
+      <button type="button" class="slot" aria-pressed="false" data-slot="8:20-8:40">8:20-8:40</button>
+      <button type="button" class="slot" aria-pressed="false" data-slot="8:40-9:00">8:40-9:00</button>
+      <button type="button" class="slot" aria-pressed="false" data-slot="9:00-9:20" data-full="true">9:00-9:20<span class="slot__full" data-i18n="time.full">מלא</span></button>
+      <button type="button" class="slot" aria-pressed="false" data-slot="9:20-9:40">9:20-9:40</button>
+    </fieldset>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn--primary" data-confirm-slot data-i18n="common.continue">המשך</button>
+      <button type="button" class="btn btn--secondary" data-back data-i18n="common.back">חזרה</button>
+    </div>
+
+    <img data-src-light="assets/images/illustration-clouds.png" data-src-dark="assets/images/illustration-clouds-dark.png" class="clouds" src="assets/images/illustration-clouds.png" alt="" width="253" height="190">
+  </section>
+
+  <!-- ═══ 6. Time choosing extended info — node 2049:918 ═══ -->
+  <section class="screen" id="screen-time-extended" data-screen="time-extended" hidden aria-labelledby="time-ext-title">
+    <header class="header">
+      <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
+      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
+        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+      </button>
+    </header>
+
+    <div class="progress" data-progress="2">
+      <div class="progress__track">
+        <div class="progress__fill"></div>
+        <span class="progress__dot"></span>
+        <span class="progress__dot"></span>
+        <span class="progress__dot"></span>
+      </div>
+      <div class="progress__labels">
+        <span class="progress__label" data-i18n="step.passenger">פרטי נוסע</span>
+        <span class="progress__label" data-i18n="step.time">בחירת חלון זמן</span>
+        <span class="progress__label" data-i18n="step.confirm">אישור הזמנה</span>
+      </div>
+    </div>
+
+    <h1 class="visually-hidden" id="time-ext-title" data-i18n="timeExt.srTitle">פרטי ההזמנה המלאים</h1>
+
+    <div class="flight-card">
+      <img class="flight-card__photo" id="route-photo" src="assets/images/route-tlv-sea.png"
+           data-i18n-alt="alt.route" alt="קו הרקיע של סיאטל — יעד הטיסה" width="333" height="125">
+      <span>
+        <span class="flight-card__route" data-route>TLV-SEA</span>
+        <span class="flight-card__meta" data-i18n="flight.meta">יום ג׳ · 25.05.2026 · טרמינל 3 · כניסה 03</span>
+      </span>
+      <span class="flight-card__row">
+        <span class="flight-card__count"><span data-i18n="time.passengers">נוסעים</span> (<span data-pax-count>2</span>)</span>
+        <span class="flight-card__edit" data-i18n="common.edit">עריכה</span>
+      </span>
+      <div class="flight-card__pax" id="pax-list">
+        <div><span>Daniel Cohen</span><span><span data-i18n="common.passportShort">דרכון</span> 12345678</span></div>
+        <div><span>Maya Cohen</span><span><span data-i18n="common.passportShort">דרכון</span> 87654321</span></div>
+      </div>
+    </div>
+
+    <div class="slots slots--masked" data-go="time-choosing" role="button" tabindex="0"
+         data-i18n-aria="aria.backToSlots" aria-label="חזרה לבחירת חלון זמן">
+      <span class="slot">6:40-7:00</span>
+      <span class="slot">7:00-7:20</span>
+      <span class="slot">7:20-7:40</span>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn--primary" data-confirm-slot data-i18n="common.continue">המשך</button>
+      <button type="button" class="btn btn--secondary" data-back data-i18n="common.back">חזרה</button>
+    </div>
+
+    <img data-src-light="assets/images/illustration-clouds.png" data-src-dark="assets/images/illustration-clouds-dark.png" class="clouds" src="assets/images/illustration-clouds.png" alt="" width="253" height="190">
+  </section>
+
+  <!-- ═══ 7. Success — node 2038:534 ═══ -->
+  <section class="screen result" id="screen-success" data-screen="success" data-draggable="time-choosing" hidden aria-labelledby="success-title">
+    <header class="header">
+      <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
+      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
+        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+      </button>
+    </header>
+
+    <div class="progress" data-progress="3">
+      <div class="progress__track">
+        <div class="progress__fill"></div>
+        <span class="progress__dot"></span>
+        <span class="progress__dot"></span>
+        <span class="progress__dot"></span>
+      </div>
+      <div class="progress__labels">
+        <span class="progress__label" data-i18n="step.passenger">פרטי נוסע</span>
+        <span class="progress__label" data-i18n="step.time">בחירת חלון זמן</span>
+        <span class="progress__label" data-i18n="step.confirm">אישור הזמנה</span>
+      </div>
+    </div>
+
+    <h1 class="display result__title" id="success-title"><span data-i18n="success.h1a">הזמנה בוצע</span> <em class="is-success" data-i18n="success.h1b">בהצלחה</em></h1>
+
+    <img data-src-light="assets/images/illustration-airplane.png" data-src-dark="assets/images/illustration-airplane-dark.png" class="result__art" src="assets/images/illustration-airplane.png" data-i18n-alt="alt.airplane" alt="איור של מטוס ממריא" width="358" height="358">
+
+    <div class="actions">
+      <button type="button" class="btn btn--primary" data-go="status" data-i18n="success.track">מעקב אחרי סטטוס הטיסה</button>
+      <button type="button" class="btn btn--secondary" data-go="landing" data-i18n="common.home">לדף הבית</button>
+    </div>
+  </section>
+
+  <!-- ═══ 8. Fail — node 2058:1184 ═══ -->
+  <section class="screen result" id="screen-fail" data-screen="fail" hidden aria-labelledby="fail-title">
+    <header class="header">
+      <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
+      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
+        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+      </button>
+    </header>
+
+    <div class="progress" data-progress="3">
+      <div class="progress__track">
+        <div class="progress__fill"></div>
+        <span class="progress__dot"></span>
+        <span class="progress__dot"></span>
+        <span class="progress__dot"></span>
+      </div>
+      <div class="progress__labels">
+        <span class="progress__label" data-i18n="step.passenger">פרטי נוסע</span>
+        <span class="progress__label" data-i18n="step.time">בחירת חלון זמן</span>
+        <span class="progress__label" data-i18n="step.confirm">אישור הזמנה</span>
+      </div>
+    </div>
+
+    <h1 class="display result__title" id="fail-title"><span data-i18n="fail.h1a">אופס...משהו</span> <em class="is-danger" data-i18n="fail.h1b">השתבש</em></h1>
+
+    <img data-src-light="assets/images/illustration-error.png" data-src-dark="assets/images/illustration-error-dark.png" class="result__art" src="assets/images/illustration-error.png" data-i18n-alt="alt.error" alt="איור של משולש אזהרה אדום" width="377" height="283">
+
+    <p class="result__reason" id="fail-reason" role="status"></p>
+
+    <div class="actions">
+      <button type="button" class="btn btn--primary" data-back data-i18n="common.backBtn">אחורה</button>
+      <button type="button" class="btn btn--secondary" data-go="landing" data-i18n="common.home">לדף הבית</button>
+    </div>
+  </section>
+
+  <!-- ═══ 9. Passenger's status — node 2039:541 ═══ -->
+  <section class="screen" id="screen-status" data-screen="status" hidden aria-labelledby="status-title">
+    <header class="header">
+      <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
+      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
+        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+      </button>
+    </header>
+
+    <div class="page-title">
+      <h1 id="status-title"><span data-i18n="status.h1a">סטטוס</span> <span data-i18n="status.h1b">שלי</span></h1>
+    </div>
+
+    <div class="pass-shell">
+      <div class="qr-pass">
+        <div class="qr-pass__row">
+          <div class="qr-pass__meta">
+            <p class="qr-pass__label" data-i18n="pass.label">כרטיס הכניסה שלך</p>
+            <p class="qr-pass__time" dir="ltr" data-slot-display>06:40 – 07:00</p>
+            <p class="qr-pass__where" data-i18n="pass.where">טרמינל 3 · כניסה 03</p>
+          </div>
+          <img class="qr-pass__thumb" src="assets/images/qr-thumb.png"
+               data-i18n-alt="alt.qrThumb" alt="קוד QR מוקטן של כרטיס הכניסה" width="66" height="66">
+        </div>
+        <button type="button" class="btn btn--pass" data-go="status-qr" data-i18n="pass.openFull">פתיחה במסך מלא</button>
+      </div>
+
+      <ol class="timeline">
+        <li class="step step--done">
+          <div class="step__rail">
+            <span class="step__circle"><img src="assets/icons/icon-checkmark.svg" alt="" width="13" height="9"></span>
+            <span class="step__line"></span>
+          </div>
+          <div class="step__body">
+            <div class="step__content">
+              <img src="assets/icons/icon-identity.svg" alt="" width="20" height="20">
+              <div class="step__text">
+                <span class="step__name" data-i18n="tl.identify">זיהוי</span>
+                <span class="step__state" data-i18n="state.done">הושלם</span>
+              </div>
+            </div>
+            <div class="step__time"><span data-time="identify-in">05:30</span><span data-time="identify-out">07:05</span></div>
+          </div>
+        </li>
+
+        <li class="step step--current">
+          <div class="step__rail">
+            <span class="step__circle">2</span>
+            <span class="step__line"></span>
+          </div>
+          <div class="step__body">
+            <div class="step__card">
+              <div class="step__content">
+                <img src="assets/icons/icon-security.svg" alt="" width="20" height="20">
+                <div class="step__text">
+                  <span class="step__name" data-i18n="tl.security">ביקורת ביטחון</span>
+                  <span class="step__state" data-i18n="state.inprogress">בתהליך</span>
+                </div>
+              </div>
+              <span class="step__eta" data-time="security-eta" data-i18n-prefix="tl.eta">צפי משך - 07:45</span>
+            </div>
+          </div>
+        </li>
+
+        <li class="step step--upcoming">
+          <div class="step__rail">
+            <span class="step__circle">3</span>
+            <span class="step__line"></span>
+          </div>
+          <div class="step__body">
+            <div class="step__content">
+              <img src="assets/icons/icon-check-in.svg" alt="" width="20" height="20">
+              <div class="step__text">
+                <span class="step__name" data-i18n="step.checkin">צ'ק-אין</span>
+                <span class="step__state" data-i18n="state.waiting">ממתין</span>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="icon-row">
+      <button type="button" class="icon-btn" data-i18n-aria="aria.notifications" aria-label="הפעלת התראות">
+        <img src="assets/icons/btn-notification.png" alt="" width="60" height="60">
+      </button>
+      <button type="button" class="icon-btn" data-i18n-aria="aria.share" aria-label="שיתוף ההזמנה">
+        <img src="assets/icons/btn-share.png" alt="" width="60" height="60">
+      </button>
+    </div>
+  </section>
+
+  <!-- ═══ 10. Passenger's status — QR extension — node 2081:1532 ═══ -->
+  <section class="screen" id="screen-status-qr" data-screen="status-qr" hidden aria-labelledby="status-qr-title">
+    <header class="header">
+      <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
+      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
+        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+      </button>
+    </header>
+
+    <div class="page-title">
+      <h1 id="status-qr-title"><span data-i18n="status.h1a">סטטוס</span> <span data-i18n="status.h1b">שלי</span></h1>
+    </div>
+
+    <div class="pass-shell" data-go="status" role="button" tabindex="0" data-i18n-aria="aria.closeFull" aria-label="סגירת התצוגה המלאה">
+      <div class="qr-pass qr-pass--full">
+        <p class="qr-pass__names"><bdi><span data-i18n="qr.passenger">נוסע</span> +1</bdi> · <bdi dir="ltr">Daniel Cohen</bdi></p>
+        <p class="qr-pass__time" dir="ltr" data-slot-display>06:40 – 07:00</p>
+        <p class="qr-pass__where" data-i18n="qr.meta">יום ג׳ · 25.05 · טרמינל 3 · כניסה 03</p>
+        <img class="qr-pass__code" src="assets/images/qr-pass.png"
+             data-i18n-alt="alt.qrFull" alt="קוד QR של אישור הזימון להצגה בעמדת הביקורת" width="212" height="212">
+        <p class="qr-pass__scan" data-i18n="qr.scan">סרקו בעמדת הכניסה המהירה</p>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn--secondary" style="margin-block-start:var(--space-3)" data-i18n="qr.wallet">שמירה ל-Wallet</button>
+
+    <div class="icon-row">
+      <button type="button" class="icon-btn" data-i18n-aria="aria.notifications" aria-label="הפעלת התראות">
+        <img src="assets/icons/btn-notification.png" alt="" width="60" height="60">
+      </button>
+      <button type="button" class="icon-btn" data-i18n-aria="aria.share" aria-label="שיתוף ההזמנה">
+        <img src="assets/icons/btn-share.png" alt="" width="60" height="60">
+      </button>
+    </div>
+  </section>
+
+
+  <!-- ═══ 12. פרופיל שלי — node 4052:290 ═══ -->
+  <section class="screen screen--light" id="screen-profile" data-screen="profile" hidden aria-labelledby="profile-title">
+    <header class="header">
+      <img class="logo" data-src-light="assets/images/logo-leeway-blue.png" data-src-dark="assets/images/logo-leeway-white.png" src="assets/images/logo-leeway-blue.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
+      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
+        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+      </button>
+    </header>
+
+    <h1 class="settings__title" id="profile-title" data-i18n="profile.title">פרופיל שלי</h1>
+    <p class="settings__name" data-i18n="profile.name">דניאל כהן</p>
+
+    <img class="settings__avatar" id="profile-avatar" data-avatar-target src="assets/images/avatar-neutral.png"
+         alt="" width="156" height="153" data-i18n-alt="profile.av.neutral">
+
+    <button type="button" class="settings__link" data-avatar-toggle aria-expanded="false"
+            aria-controls="avatar-lane" data-i18n="profile.editPhoto">ערוך תמונת פרופיל</button>
+
+    <!-- The lane scrolls sideways; Figma node 4052:487 lays the nine avatars
+         out in exactly this order. -->
+    <div class="avatar-lane" id="avatar-lane" role="radiogroup" hidden
+         data-i18n-aria="profile.pickerLabel" aria-label="בחירת תמונת פרופיל">
+        <button type="button" class="avatar-lane__item" role="radio" aria-checked="true" data-avatar="avatar-neutral"><img src="assets/images/avatar-neutral.png" alt="" width="156" height="153" data-i18n-alt="profile.av.neutral"></button>
+        <button type="button" class="avatar-lane__item" role="radio" aria-checked="false" data-avatar="avatar-male-02"><img src="assets/images/avatar-male-02.png" alt="" width="156" height="153" data-i18n-alt="profile.av.male2"></button>
+        <button type="button" class="avatar-lane__item" role="radio" aria-checked="false" data-avatar="avatar-male-01"><img src="assets/images/avatar-male-01.png" alt="" width="156" height="153" data-i18n-alt="profile.av.male1"></button>
+        <button type="button" class="avatar-lane__item" role="radio" aria-checked="false" data-avatar="avatar-female-02"><img src="assets/images/avatar-female-02.png" alt="" width="156" height="153" data-i18n-alt="profile.av.female2"></button>
+        <button type="button" class="avatar-lane__item" role="radio" aria-checked="false" data-avatar="avatar-female-01"><img src="assets/images/avatar-female-01.png" alt="" width="156" height="153" data-i18n-alt="profile.av.female1"></button>
+        <button type="button" class="avatar-lane__item" role="radio" aria-checked="false" data-avatar="avatar-older"><img src="assets/images/avatar-older.png" alt="" width="156" height="153" data-i18n-alt="profile.av.older"></button>
+        <button type="button" class="avatar-lane__item" role="radio" aria-checked="false" data-avatar="avatar-elderly"><img src="assets/images/avatar-elderly.png" alt="" width="156" height="153" data-i18n-alt="profile.av.elderly"></button>
+        <button type="button" class="avatar-lane__item" role="radio" aria-checked="false" data-avatar="avatar-assistant-02"><img src="assets/images/avatar-assistant-02.png" alt="" width="156" height="153" data-i18n-alt="profile.av.assistant2"></button>
+        <button type="button" class="avatar-lane__item" role="radio" aria-checked="false" data-avatar="avatar-assistant-01"><img src="assets/images/avatar-assistant-01.png" alt="" width="156" height="153" data-i18n-alt="profile.av.assistant1"></button>
+    </div>
+
+    <form class="settings__form" id="profile-form" novalidate>
+      <div class="name-row">
+        <label class="field"><span class="visually-hidden" data-i18n="ph.first">שם פרטי</span>
+          <input class="input input--filled" type="text" name="profile-first" value="Daniel"
+                 data-i18n-ph="ph.first" placeholder="שם פרטי"></label>
+        <label class="field"><span class="visually-hidden" data-i18n="ph.last">שם משפחה</span>
+          <input class="input input--filled" type="text" name="profile-last" value="Cohen"
+                 data-i18n-ph="ph.last" placeholder="שם משפחה"></label>
+      </div>
+      <label class="field"><span class="visually-hidden" data-i18n="ph.passport">מס׳ דרכון</span>
+        <input class="input input--filled" type="text" inputmode="numeric" name="profile-passport"
+               value="12345678" data-i18n-ph="ph.passport" placeholder="מס׳ דרכון"></label>
+      <button type="submit" class="btn btn--primary" data-i18n="profile.save">שמור פרטים שלי</button>
+    </form>
+  </section>
+
+  <!-- ═══ 13. התראות ═══ -->
+  <section class="screen screen--light" id="screen-notifications" data-screen="notifications" hidden aria-labelledby="notif-title">
+    <header class="header">
+      <img class="logo" data-src-light="assets/images/logo-leeway-blue.png" data-src-dark="assets/images/logo-leeway-white.png" src="assets/images/logo-leeway-blue.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
+      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
+        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+      </button>
+    </header>
+
+    <h1 class="settings__title" id="notif-title" data-i18n="notif.title">התראות</h1>
+
+    <form class="settings__form settings__form--wide" id="notif-form" novalidate>
+      <label class="settings__row">
+        <span class="settings__row-label" data-i18n="notif.beforeFlight">תזכורת לפני הטיסה הבאה</span>
+        <select class="select" name="notif-flight" data-notif>
+          <option value="on" data-i18n="notif.on">מופעל</option>
+          <option value="off" data-i18n="notif.off">כבוי</option>
+        </select>
+      </label>
+      <label class="settings__row">
+        <span class="settings__row-label" data-i18n="notif.statusChange">עדכון בשינוי סטטוס</span>
+        <select class="select" name="notif-status" data-notif>
+          <option value="on" data-i18n="notif.on">מופעל</option>
+          <option value="off" data-i18n="notif.off">כבוי</option>
+        </select>
+      </label>
+      <button type="submit" class="btn btn--primary" data-i18n="common.save">שמירה</button>
+    </form>
+  </section>
+
+  <!-- ═══ 14. שפה ═══ -->
+  <section class="screen screen--light" id="screen-language" data-screen="language" hidden aria-labelledby="lang-title">
+    <header class="header">
+      <img class="logo" data-src-light="assets/images/logo-leeway-blue.png" data-src-dark="assets/images/logo-leeway-white.png" src="assets/images/logo-leeway-blue.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
+      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
+        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+      </button>
+    </header>
+
+    <h1 class="settings__title" id="lang-title" data-i18n="lang.title">שפה</h1>
+
+    <div class="lang-list" role="radiogroup" data-i18n-aria="lang.pickerLabel" aria-label="בחירת שפה">
+      <button type="button" class="lang" role="radio" aria-checked="true"  data-lang="he" lang="he"><span>עברית</span></button>
+      <button type="button" class="lang" role="radio" aria-checked="false" data-lang="ar" lang="ar"><span>العربية</span><span class="lang__note">demo</span></button>
+      <button type="button" class="lang" role="radio" aria-checked="false" data-lang="en" lang="en"><span>English</span></button>
+      <button type="button" class="lang" role="radio" aria-checked="false" data-lang="ru" lang="ru"><span>Русский</span></button>
+    </div>
+
+    <!-- דרך חזרה. השפה כבר התחלפה ברגע הבחירה — הכפתור רק מחזיר אותך למסך הקודם. -->
+    <form class="settings__form settings__form--wide" id="lang-form" novalidate>
+      <button type="submit" class="btn btn--primary" data-i18n="common.done">סיום</button>
+    </form>
+  </section>
+
+  <!-- ═══ 11. Overlay menu — node 2161:4918 ═══ -->
+  <dialog class="overlay" id="overlay" data-i18n-aria="menu.title" aria-label="תפריט">
+    <!-- The hamburger sits OUTSIDE the sliding panel on purpose: it must stay
+         exactly where the header one is and morph in place, while the panel
+         travels down behind it. -->
+    <button type="button" class="hamburger hamburger--menu" data-menu-close data-i18n-aria="menu.close" aria-label="סגירת תפריט">
+      <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
+    </button>
+
+    <div class="overlay__panel" tabindex="-1">
+      <div class="overlay__head">
+        <img class="overlay__avatar" data-avatar-target src="assets/images/avatar-placeholder.png" data-i18n-alt="alt.avatar" alt="תמונת פרופיל" width="39" height="38">
+      </div>
+      <nav class="overlay__nav">
+        <button type="button" class="overlay__link" data-go="profile" data-i18n="menu.profile">פרופיל שלי</button>
+        <button type="button" class="overlay__link" data-go="notifications" data-i18n="menu.notifications">התראות</button>
+        <button type="button" class="overlay__link" data-go="language" data-i18n="menu.language">שפה</button>
+        <button type="button" class="theme-toggle theme-toggle--menu" data-theme-toggle aria-pressed="false"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.5 1.5M17.1 17.1l1.5 1.5M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"/></svg><span data-theme-label data-i18n="theme.toDark">מצב כהה</span></button>
+      </nav>
+    </div>
+  </dialog>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

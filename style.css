@@ -1,0 +1,1625 @@
+/* =========================================================================
+   Leeway — זימון תור לביקורת ביטחון בנתב"ג
+   Design tokens mirrored 1:1 from the Figma file "Demo Final Project Ver 3"
+   (file key mJc7QbFA7CpcJTj1Tf4WRq), collections: Color / Spacing /
+   Typography / Radius. Variable names below match the Figma variable names,
+   with "/" replaced by "-".
+   ========================================================================= */
+
+:root {
+  /* ---- Color · primitives ------------------------------------------- */
+  --color-white-base: #ffffff;
+  --color-navy-900: #001b2a;
+  --color-navy-950: #0a1220;
+  --color-navy-800: #182a4a;
+  --color-blue-800: #0f3673;
+  --color-blue-700: #174691;
+  --color-blue-600: #1e5aba;
+  --color-blue-400: #63b3ed;
+  --color-blue-200: #d6e6ff;
+  --color-blue-100: #e9f2ff;
+  --color-gray-100: #f4f6f8;
+  --color-gray-300: #c9c8c8;
+  --color-slate-600: #525f77;
+  --color-slate-500: #606573;
+  --color-slate-400: #808d95;
+  --color-slate-300: #8b93a7;
+  --color-gold-500: #b6975b;
+  --color-gold-700: #8d7546;
+  --color-cream-50: #f2efe9;
+  --color-lavender-100: #e6e6ec;
+  --color-green-700: #1e6b41;
+  --color-green-600: #3e8e5c;
+  --color-green-50: #e6f4ec;
+  --color-blueinfo-700: #0238b5;
+  --color-blueinfo-400: #4c8ce0;
+  --color-amber-800: #8a5a0f;
+  --color-amber-600: #cb8724;
+  --color-amber-50: #fdf3e3;
+  --color-red-700: #bb0307;
+  --color-red-400: #e0534f;
+  --color-red-50: #fcebea;
+
+  /* ---- Color · semantic (Light mode) --------------------------------- */
+  --color-surface-base: var(--color-white-base);
+  --color-surface-raised: var(--color-blue-100);
+  --color-border-base: var(--color-gray-100);
+  --color-text-base: var(--color-navy-900);
+  --color-text-muted: var(--color-slate-400);
+  --color-text-on-primary: var(--color-white-base);
+  --color-text-on-primary-muted: var(--color-blue-200);
+  --color-primary-base: var(--color-blue-600);
+  --color-primary-strong: var(--color-blue-700);
+  --color-primary-deep: var(--color-blue-800);
+  --color-accent-base: var(--color-blue-400);
+  --color-success-base: var(--color-green-600);
+  --color-success-text: var(--color-green-700);
+  --color-success-surface: var(--color-green-50);
+  --color-info-base: var(--color-blueinfo-700);
+  --color-warning-base: var(--color-amber-600);
+  --color-warning-text: var(--color-amber-800);
+  --color-warning-surface: var(--color-amber-50);
+  --color-danger-base: var(--color-red-700);
+  --color-danger-text: var(--color-red-700);
+  --color-danger-surface: var(--color-red-50);
+  --color-neutral-base: var(--color-slate-500);
+  --color-muted-surface-base: var(--color-gray-300);
+  --color-focus-on-dark: var(--color-white-base);
+  --color-focus-on-light: var(--color-blue-600);
+  --color-overlay-scrim: var(--color-navy-900);
+
+  /* Not defined as a Figma variable — raw fill on the QR pass shell
+     (node 2300:1344). Tokenised here so no rule carries a bare hex. */
+  --color-pass-shell: #d9d9d9;
+
+  /* ---- Spacing ------------------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ---- Radius -------------------------------------------------------- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* ---- Inline icons (SVG data URI — no extra files) -------------------- */
+  --icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.4l3 3 6-6.6' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* ---- Typography ---------------------------------------------------- */
+  --typography-family-heading: "Heebo", "Rubik", system-ui, sans-serif;
+  --typography-family-body: "Inter", "Source Sans 3", system-ui, sans-serif;
+  --typography-size-xs: 12px;
+  --typography-size-sm: 14px;
+  --typography-size-md: 16px;
+  --typography-size-lg: 20px;
+  --typography-size-xl: 28px;
+  --typography-size-1xl: 36px;
+  --typography-size-2xl: 40px;
+  --typography-size-3xl: 48px;
+
+  --typography-line-xs: 18px;
+  --typography-line-sm: 20px;
+  --typography-line-md: 24px;
+  --typography-line-lg: 28px;
+  --typography-line-xl: 36px;
+  --typography-line-1xl: 44px;
+  --typography-line-2xl: 48px;
+  --typography-line-3xl: 56px;
+
+  --typography-weight-regular: 400;
+  --typography-weight-medium: 500;
+  --typography-weight-semibold: 600;
+  --typography-weight-bold: 700;
+
+  /* ---- Layout -------------------------------------------------------- */
+  --canvas-width: 412px;
+  --canvas-gutter: var(--space-5);
+  --header-top: var(--space-7);
+  --control-height: 48px;
+  --field-height: 52px;
+
+  /* ---- Motion · read from the Figma prototype (27 connections) -------- */
+  --motion-dissolve: 300ms;
+  --motion-move-fast: 300ms;
+  --motion-move: 400ms;
+  --motion-move-slow: 500ms;
+  --motion-smart: 300ms;
+  --motion-smart-slow: 500ms;
+  --motion-splash-1: 200ms;
+  --motion-splash-2: 400ms;
+  --ease-out: cubic-bezier(0, 0, 0.58, 1);
+  --ease-in: cubic-bezier(0.42, 0, 1, 1);
+  --ease-linear: linear;
+
+  /* ---- Micro-motion · archetype "רגוע ואמין", mobile-adjusted ---------
+     Derived: radius 3 + typeface 1 + palette 3 + category 2 = 9 / 4 = 2.25.
+     Calm base 260ms, cut 15% because a phone in the hand is unforgiving;
+     lift halved from 6px because travel reads bigger on a small screen.
+     Easing is this product's own --ease-out, not the archetype default.   */
+  --motion-press-in: 90ms;      /* a press must register almost instantly  */
+  --motion-press-out: 160ms;    /* the release is allowed to relax slower  */
+  --motion-fast: 140ms;
+  --motion-base: 220ms;         /* calm 260ms − 15% for mobile             */
+  --motion-lift: 3px;           /* calm 6px, halved for the phone          */
+  --motion-press-scale: 0.97;
+  --motion-stagger: 40ms;
+  --motion-celebrate: 300ms;    /* the one delight beat, on Success        */
+  --motion-spin: 700ms;         /* loading spinner revolution              */
+  --motion-pulse: 1200ms;       /* the spinner's reduced-motion substitute */
+
+  /* ---- Elevation ----------------------------------------------------- */
+  --shadow-pass: 0 7.367px 18.419px -4px rgb(0 27 42 / 0.16);
+
+  /* ---- Gradients · named styles gradient/reveal-mask/* ---------------- */
+  --gradient-reveal-to-blue: linear-gradient(160deg, rgb(217 217 217 / 0) 0%, var(--color-primary-base) 92%);
+  --gradient-reveal-from-blue: linear-gradient(160deg, var(--color-primary-base) 0%, rgb(115 115 115 / 0) 100%);
+  --gradient-scrim-up: linear-gradient(to top, var(--color-primary-base) 55%, rgb(30 90 186 / 0) 100%);
+
+  color-scheme: light;
+}
+
+/* ---- Color · semantic (Dark mode) ------------------------------------
+   Values read from the "Dark" mode of the Figma Color collection.
+   The page opens in whichever mode the phone is set to, and the switch on the
+   Landing page (or in the menu) overrides that for the rest of the visit.
+   script.js stamps data-theme on <html>; this block only reacts to it.
+   It re-declares colour variables only — it never touches layout, so
+   deleting it leaves the light design byte-for-byte identical.           */
+:root[data-theme="dark"] {
+  --color-surface-base: var(--color-navy-950);
+  --color-surface-raised: var(--color-navy-800);
+  --color-border-base: var(--color-slate-600);
+  --color-text-base: var(--color-cream-50);
+  --color-text-muted: var(--color-lavender-100);
+  --color-primary-base: var(--color-gold-500);
+  --color-primary-strong: var(--color-gold-700);
+  --color-info-base: var(--color-blueinfo-400);
+  --color-danger-base: var(--color-red-400);
+  --color-neutral-base: var(--color-slate-300);
+  /* accent, success and warning are intentionally identical in both
+     modes — contrast-checked in docs/DESIGN_SYSTEM_AUDIT.md. */
+  color-scheme: dark;
+}
+
+/* =========================================================================
+   Base
+   ========================================================================= */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-navy-900);
+  font-family: var(--typography-family-body);
+  font-size: var(--typography-size-md);
+  line-height: var(--typography-line-md);
+  color: var(--color-text-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--typography-family-heading);
+  margin: 0;
+}
+
+p { margin: 0; }
+
+img { max-width: 100%; display: block; }
+picture { display: contents; }
+
+button { font: inherit; color: inherit; }
+
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-focus-on-dark);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.screen--light :where(a, button, input):focus-visible {
+  outline-color: var(--color-focus-on-light);
+}
+
+/* headings receive focus programmatically after a screen change (for screen
+   readers) — that must never paint a visible ring */
+[tabindex="-1"]:focus,
+[tabindex="-1"]:focus-visible { outline: none; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* =========================================================================
+   App shell + screens
+   ========================================================================= */
+
+.app {
+  position: relative;
+  width: 100%;
+  max-width: var(--canvas-width);
+  min-height: 100dvh;
+  margin-inline: auto;
+  overflow: hidden;
+  background: var(--color-primary-base);
+  isolation: isolate;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding-inline: var(--canvas-gutter);
+  padding-block-end: max(var(--space-5), env(safe-area-inset-bottom));
+  background: var(--color-primary-base);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+.screen[hidden] { display: none !important; }
+
+/* The screen leaving the stage sits underneath the incoming one. */
+.screen.is-leaving { z-index: 1; }
+.screen.is-entering { z-index: 2; }
+
+/* =========================================================================
+   Transitions — types, directions and durations read from the Figma
+   prototype. Figma "Move in · Left" = the incoming frame travels leftwards,
+   so it enters from the right edge; "Move in · Right" is the mirror.
+   ========================================================================= */
+
+@media (prefers-reduced-motion: no-preference) {
+  .anim-dissolve-in {
+    animation: fade-in var(--motion-dissolve) var(--ease-out) both;
+  }
+  .anim-dissolve-out {
+    animation: fade-out var(--motion-dissolve) var(--ease-out) both;
+  }
+  .anim-move-in-left {
+    animation: slide-from-end var(--duration, var(--motion-move-slow)) var(--ease, var(--ease-out)) both;
+  }
+  .anim-move-in-right {
+    animation: slide-from-start var(--duration, var(--motion-move-slow)) var(--ease, var(--ease-out)) both;
+  }
+  .anim-smart-in {
+    animation: smart-in var(--duration, var(--motion-smart)) var(--ease, var(--ease-out)) both;
+  }
+  .anim-smart-out {
+    animation: smart-out var(--duration, var(--motion-smart)) var(--ease, var(--ease-out)) both;
+  }
+}
+
+@keyframes fade-in  { from { opacity: 0 } to { opacity: 1 } }
+@keyframes fade-out { from { opacity: 1 } to { opacity: 0 } }
+@keyframes slide-from-end   { from { transform: translateX(100%) }  to { transform: translateX(0) } }
+@keyframes slide-from-start { from { transform: translateX(-100%) } to { transform: translateX(0) } }
+@keyframes smart-in  { from { opacity: 0; transform: scale(1.03) } to { opacity: 1; transform: scale(1) } }
+@keyframes smart-out { from { opacity: 1; transform: scale(1) }    to { opacity: 0; transform: scale(0.985) } }
+
+/* =========================================================================
+   Header — hamburger (start) + logo (end)
+   ========================================================================= */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block-start: var(--header-top);
+  min-block-size: 51px;
+  flex: 0 0 auto;
+}
+
+.logo { width: 111px; height: auto; }
+.logo--hero { width: 223px; }
+
+.hamburger {
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  margin-inline-start: calc(var(--space-1) * -1);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.hamburger img { width: 35px; }
+.hamburger img.is-active { width: 44px; }   /* 43px of ink, matching Figma */
+
+.home-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+}
+
+/* =========================================================================
+   Progress bar (Progress Bar V2 — node 2048:535)
+   ========================================================================= */
+
+.progress {
+  --progress-fill: 0%;
+  position: relative;
+  margin-block-start: var(--space-6);
+  padding-block-end: var(--space-1);
+  flex: 0 0 auto;
+}
+
+.progress__track {
+  position: relative;
+  block-size: 4px;
+  margin-inline: 8.5px;       /* half a dot, so the dots cap the rail exactly */
+  border-radius: var(--radius-pill);
+  background: var(--color-white-base);
+}
+
+.progress__fill {
+  position: absolute;
+  left: 0;                    /* physical on purpose — see the note below */
+  top: 50%;
+  transform: translateY(-50%);
+  block-size: 9px;            /* Figma: 4px track, 9px filled segment */
+  inline-size: var(--progress-fill);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-base);
+  /* The one place a size is animated instead of a transform: this bar is
+     absolutely positioned, so the reflow is confined to itself, and
+     scaleX() would distort the pill-shaped cap on a 9px-tall element. */
+  transition: inline-size var(--motion-base) var(--ease-out);
+}
+
+/* The rail runs physically left → right, matching the Figma layout, so the
+   dots are placed with `left` rather than a logical property on purpose. */
+.progress__dot {
+  position: absolute;
+  top: 50%;
+  inline-size: 17px;
+  block-size: 17px;
+  border-radius: var(--radius-pill);
+  background: var(--color-white-base);
+  transform: translate(-50%, -50%);
+}
+.progress__dot:nth-of-type(1) { left: 0; }
+.progress__dot:nth-of-type(2) { left: 50%; }
+.progress__dot:nth-of-type(3) { left: 100%; }
+.progress__dot.is-done { background: var(--color-accent-base); }
+
+.progress__labels {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  margin-block-start: var(--space-2);
+}
+
+.progress__label {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-md);
+  color: var(--color-text-muted);
+}
+.progress__label.is-current {
+  color: var(--color-white-base);
+  font-weight: var(--typography-weight-bold);
+}
+
+/* =========================================================================
+   Buttons (Button — node 2012:447 / Button V2 — node 2095:723)
+   ========================================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  inline-size: 100%;
+  min-block-size: var(--control-height);
+  padding-inline: var(--space-5);
+  padding-block: var(--space-3);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--typography-family-body);
+  font-size: var(--typography-size-md);
+  font-weight: var(--typography-weight-bold);
+  line-height: var(--typography-line-md);
+  cursor: pointer;
+}
+/* no :hover — this is a touch product; hover sticks after a tap */
+
+.btn--primary {
+  background: var(--color-accent-base);
+  border-color: var(--color-accent-base);
+  color: var(--color-text-on-primary);
+}
+.btn--secondary {
+  background: var(--color-surface-raised);
+  border-color: var(--color-accent-base);
+  color: var(--color-accent-base);
+}
+.btn--pass {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-sm);
+  font-weight: var(--typography-weight-semibold);
+  background: var(--color-accent-base);
+  border-color: var(--color-accent-base);
+  color: var(--color-white-base);
+  min-block-size: 44px;
+}
+
+.btn-row {
+  display: flex;
+  gap: var(--space-2);
+  margin-block-start: var(--space-5);
+}
+.btn-row .btn { flex: 1 1 0; }
+
+.actions { display: grid; gap: var(--space-2); }
+
+/* =========================================================================
+   Inputs (Input — node 2007:432)
+   ========================================================================= */
+
+.field { display: block; }
+
+.input {
+  inline-size: 100%;
+  block-size: var(--field-height);
+  padding-inline: var(--space-4);
+  padding-block: var(--space-3);
+  border: 1px solid var(--color-border-base);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-base);
+  font-family: var(--typography-family-body);
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-sm);
+  color: var(--color-text-base);
+  text-align: start;
+}
+.input::placeholder { color: var(--color-text-muted); opacity: 1; }
+/* border-color alone is not a sufficient focus affordance — keep the ring */
+.input:focus { border-color: var(--color-focus-on-light); }
+.input:focus:not(:focus-visible) { outline: none; }
+
+.input[aria-invalid="true"] {
+  border-color: var(--color-red-700);
+  background: var(--color-danger-surface);
+  color: var(--color-navy-900);
+}
+.input[aria-invalid="true"]::placeholder { color: var(--color-slate-500); }
+
+.field__error {
+  display: none;
+  margin-block-start: var(--space-1);
+  font-size: var(--typography-size-xs);
+  line-height: var(--typography-line-xs);
+  color: var(--color-red-700);
+  background: var(--color-danger-surface);
+  border-radius: var(--radius-sm);
+  padding-inline: var(--space-2);
+  padding-block: 2px;
+  inline-size: fit-content;
+}
+.field.has-error .field__error { display: block; }
+
+.name-row { display: flex; gap: var(--space-2); }
+.name-row .field { flex: 1 1 0; min-inline-size: 0; }
+
+/* =========================================================================
+   Typography helpers
+   ========================================================================= */
+
+.display {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-2xl);
+  line-height: var(--typography-line-2xl);
+  font-weight: var(--typography-weight-bold);
+  color: var(--color-white-base);
+}
+.display em { font-style: normal; color: var(--color-accent-base); }
+.display em.is-success { color: var(--color-success-base); }
+.display em.is-danger { color: var(--color-danger-base); }
+
+.h3 {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-xl);
+  line-height: var(--typography-line-xl);
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-white-base);
+}
+.h3 em { font-style: normal; color: var(--color-accent-base); }
+
+/* =========================================================================
+   Landing page (node 24:1271)
+   ========================================================================= */
+
+.screen--landing { align-items: center; }
+.screen--landing .header { justify-content: center; padding-block-start: var(--space-6); }
+
+.landing__headline {
+  align-self: stretch;
+  text-align: start;
+  margin-block-start: var(--space-7);
+}
+
+.landing__art {
+  align-self: center;
+  inline-size: calc(100% + var(--canvas-gutter) * 2);
+  max-inline-size: none;
+  margin-inline: calc(var(--canvas-gutter) * -1);
+  margin-block-start: calc(var(--space-5) * -1);
+}
+
+.landing__actions {
+  align-self: stretch;
+  display: grid;
+  gap: var(--space-2);
+  margin-block-start: var(--space-5);
+}
+
+/* My Status Card (node 2063:712) */
+.status-card {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-block-start: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border-base);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-base);
+  text-align: start;
+  cursor: pointer;
+  inline-size: 100%;
+}
+.status-card__title {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-lg);
+  line-height: var(--typography-line-lg);
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-text-base);
+}
+.status-card__chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  inline-size: 100%;
+  padding-inline: var(--space-3);
+  padding-block: 10px;
+  border-radius: 10px;
+  background: var(--color-surface-raised);
+}
+.status-card__chip img { inline-size: 24px; block-size: 24px; }
+.status-card__chip-text { display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; }
+.status-card__step {
+  font-family: var(--typography-family-heading);
+  font-size: 15px;
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-primary-base);
+}
+.status-card__state {
+  font-family: var(--typography-family-heading);
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+.status-card__note {
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-sm);
+  color: var(--color-text-muted);
+}
+
+/* =========================================================================
+   Loading / splash (nodes 2072:1219, 2039:614)
+   ========================================================================= */
+
+.screen--splash {
+  align-items: center;
+  justify-content: center;
+  padding-block: 0;
+}
+.screen--splash .logo { inline-size: 224px; }
+.screen--splash[data-state="hidden"] .logo { opacity: 0; }
+.screen--splash[data-state="shown"] .logo {
+  opacity: 1;
+  transition: opacity var(--motion-dissolve) var(--ease-out);
+}
+
+/* =========================================================================
+   Registration (node 2173:4992)
+   ========================================================================= */
+
+.form { display: grid; gap: 10px; margin-block-start: var(--space-6); }
+
+.passenger { display: grid; gap: 10px; }
+.passenger__title { margin-block-start: var(--space-3); }
+
+.form__foot { margin-block-start: var(--space-5); display: grid; gap: var(--space-3); }
+
+.link-btn {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;          /* minimum touch target */
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  background: none;
+  color: var(--color-white-base);
+  font-size: var(--typography-size-sm);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.add-passenger {
+  inline-size: 100%;
+  min-block-size: 44px;
+  border: 1.5px dashed var(--color-accent-base);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-accent-base);
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-md);
+  font-weight: var(--typography-weight-semibold);
+  cursor: pointer;
+}
+.add-passenger:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.clouds {
+  align-self: center;
+  inline-size: 253px;
+  margin-block-start: var(--space-6);
+  margin-block-end: var(--space-3);
+  pointer-events: none;
+}
+.clouds--sm { inline-size: 137px; }
+
+/* =========================================================================
+   Flight card + time chips (nodes 4014:2291 / 2072:1179)
+   ========================================================================= */
+
+.flight-card {
+  margin-block-start: var(--space-6);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-base);
+  text-align: start;
+  inline-size: 100%;
+  border: 0;
+  cursor: pointer;
+  display: grid;
+  gap: var(--space-3);
+}
+.flight-card__photo {
+  inline-size: 100%;
+  block-size: 125px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+.flight-card__route {
+  display: block;
+  text-align: end;
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-1xl);
+  line-height: var(--typography-line-xl);
+  font-weight: var(--typography-weight-bold);
+  color: var(--color-text-base);
+}
+.flight-card__meta {
+  display: block;
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-sm);
+  color: var(--color-neutral-base);
+  margin-block-start: var(--space-1);
+}
+.flight-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+.flight-card__count {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-md);
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-text-base);
+}
+.flight-card__edit {
+  font-size: var(--typography-size-sm);
+  color: var(--color-primary-base);
+  text-decoration: underline;
+}
+.flight-card__pax {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--typography-size-sm);
+  color: var(--color-text-base);
+}
+.flight-card__pax div { display: flex; justify-content: space-between; }
+.flight-card__pax span:last-child { color: var(--color-neutral-base); }
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  margin-block-start: var(--space-5);
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+.slots legend { padding: 0; }
+
+.slot {
+  min-block-size: 46px;
+  padding-inline: var(--space-2);
+  border: 1px solid var(--color-surface-base);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-base);
+  font-family: var(--typography-family-body);
+  font-size: var(--typography-size-sm);
+  font-weight: var(--typography-weight-bold);
+  color: var(--color-primary-base);
+  cursor: pointer;
+  transition: background var(--motion-base) var(--ease-out), color var(--motion-base) var(--ease-out);
+}
+.slot[aria-pressed="true"] {
+  background: var(--color-primary-strong);
+  border-color: var(--color-white-base);
+  color: var(--color-white-base);
+}
+.slot[data-full="true"] {
+  background: var(--color-muted-surface-base);
+  border-color: var(--color-muted-surface-base);
+  color: var(--color-slate-600);
+}
+.slot[data-full="true"][aria-pressed="true"] {
+  background: var(--color-slate-600);
+  color: var(--color-white-base);
+}
+.slot__full {
+  display: block;
+  font-size: 10px;
+  font-weight: var(--typography-weight-regular);
+}
+
+/* the collapsed / masked chip strip on "Time choosing extended info" */
+.slots--masked {
+  position: relative;
+  block-size: 42px;
+  overflow: hidden;
+}
+.slots--masked::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-reveal-from-blue, linear-gradient(160deg, var(--color-primary-base) 0%, rgb(115 115 115 / 0) 100%));
+  cursor: pointer;
+}
+
+/* =========================================================================
+   Success / Fail (nodes 2038:534, 2058:1184)
+   ========================================================================= */
+
+.result { align-items: center; }
+.result > .header,
+.result > .progress { align-self: stretch; inline-size: 100%; }
+.result__title { align-self: stretch; text-align: start; margin-block-start: var(--space-5); }
+.result__art {
+  inline-size: calc(100% + var(--canvas-gutter));
+  max-inline-size: 377px;
+  margin-inline: calc(var(--canvas-gutter) / -2);
+  margin-block: var(--space-4);
+}
+.result .actions { align-self: stretch; inline-size: 100%; margin-block-end: auto; }
+.result__reason {
+  align-self: stretch;
+  margin-block-end: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-surface);
+  color: var(--color-danger-text);
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-sm);
+}
+.result__reason:empty { display: none; }
+
+/* =========================================================================
+   Status screens (nodes 2039:541, 2081:1532)
+   ========================================================================= */
+
+.page-title { margin-block-start: var(--space-6); text-align: start; }
+.page-title span { color: var(--color-accent-base); }
+.page-title h1 {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-2xl);
+  line-height: var(--typography-line-2xl);
+  font-weight: var(--typography-weight-bold);
+  color: var(--color-white-base);
+}
+
+.pass-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-block-start: var(--space-5);
+  padding: 13px 14px 41px;
+  border-radius: 14px;
+  background: var(--color-pass-shell);
+}
+
+.qr-pass {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 15px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-base);
+  box-shadow: var(--shadow-pass);
+}
+.qr-pass__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.qr-pass__thumb { inline-size: 66px; block-size: 66px; }
+.qr-pass__meta { display: flex; flex-direction: column; gap: 2px; text-align: start; }
+.qr-pass__label {
+  font-family: var(--typography-family-heading);
+  font-size: 12px;
+  font-weight: var(--typography-weight-medium);
+  line-height: 18px;
+  color: var(--color-slate-600);
+}
+.qr-pass__time {
+  unicode-bidi: isolate;
+  font-size: 18px;
+  font-weight: var(--typography-weight-semibold);
+  line-height: 26px;
+  color: var(--color-text-base);
+}
+.qr-pass__where {
+  font-family: var(--typography-family-heading);
+  font-size: 11px;
+  line-height: 17px;
+  color: var(--color-slate-600);
+}
+
+/* full-screen pass */
+.qr-pass--full { align-items: center; text-align: center; gap: var(--space-4); padding: var(--space-5); }
+.qr-pass--full .qr-pass__names {
+  font-size: var(--typography-size-md);
+  font-weight: var(--typography-weight-bold);
+  color: var(--color-text-base);
+}
+.qr-pass--full .qr-pass__time { font-size: var(--typography-size-1xl); line-height: var(--typography-line-xl); }
+.qr-pass--full .qr-pass__code { inline-size: 212px; max-inline-size: 100%; }
+.qr-pass--full .qr-pass__scan { font-family: var(--typography-family-heading); font-size: 12px; color: var(--color-slate-600); }
+
+/* Journey timeline (node 2067:830) */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 26px 17px;
+  border-radius: 10px;
+  background: var(--color-surface-base);
+}
+
+.step { display: flex; flex-direction: row-reverse; gap: 10px; align-items: stretch; }
+
+.step__rail {
+  position: relative;
+  flex: 0 0 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.step__circle {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  inline-size: 27px;
+  block-size: 27px;
+  border-radius: var(--radius-pill);
+  background: var(--color-neutral-base);
+  color: var(--color-white-base);
+  font-family: var(--typography-family-heading);
+  font-size: 12px;
+  font-weight: var(--typography-weight-bold);
+  flex: 0 0 auto;
+}
+.step--done .step__circle { background: var(--color-success-base); }
+.step--current .step__circle { background: var(--color-primary-base); }
+.step__circle img { inline-size: 13px; }
+
+.step__line {
+  flex: 1 1 auto;
+  inline-size: 0;
+  border-inline-start: 2px dashed var(--color-neutral-base);
+  margin-block: 2px;
+}
+.step--done .step__line { border-color: var(--color-success-base); }
+.step:last-child .step__line { display: none; }
+
+.step__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-block-end: var(--space-2);
+}
+.step__content { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; }
+.step__content img { inline-size: 20px; block-size: 20px; flex: 0 0 auto; }
+.step__text { display: flex; flex-direction: column; gap: 2px; }
+.step__name {
+  font-family: var(--typography-family-heading);
+  font-size: 13px;
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-text-base);
+}
+.step__state {
+  font-family: var(--typography-family-heading);
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+.step--upcoming .step__name { color: var(--color-text-muted); }
+.step__time {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: end;
+  font-family: var(--typography-family-heading);
+  font-size: 11px;
+  font-weight: var(--typography-weight-medium);
+  color: var(--color-text-base);
+}
+
+.step__card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-base);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-base);
+}
+.step__eta {
+  font-family: var(--typography-family-heading);
+  font-size: 11px;
+  font-weight: var(--typography-weight-medium);
+  color: var(--color-text-muted);
+}
+
+.icon-row {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-5);
+  margin-block-start: var(--space-5);
+}
+.icon-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+}
+.icon-btn img { inline-size: 60px; block-size: 60px; }
+
+/* =========================================================================
+   Theme switch — new control, no Figma source. Styled from existing tokens.
+   ========================================================================= */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: 44px;
+  padding-inline: var(--space-4);
+  padding-block: var(--space-2);
+  border: 1.5px solid var(--color-accent-base);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-accent-base);
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-sm);
+  font-weight: var(--typography-weight-semibold);
+  cursor: pointer;
+  transition: background var(--motion-base) var(--ease-out), color var(--motion-base) var(--ease-out);
+}
+
+.theme-toggle svg { inline-size: 18px; block-size: 18px; flex: 0 0 auto; }
+.theme-toggle .icon-moon { display: none; }
+.theme-toggle[aria-pressed="true"] .icon-sun { display: none; }
+.theme-toggle[aria-pressed="true"] .icon-moon { display: block; }
+
+.theme-toggle--landing {
+  align-self: flex-start;            /* physical right in this RTL layout */
+  margin-block-start: auto;          /* sits at the bottom of the free space */
+  margin-block-end: 0;
+}
+.screen--landing { padding-block-end: var(--space-5); }
+.screen--landing .status-card { margin-block-end: var(--space-3); }
+
+.theme-toggle--menu {
+  align-self: flex-start;
+  margin-block-start: var(--space-3);
+  border-color: var(--color-accent-base);
+}
+
+/* =========================================================================
+   Overlay menu (node 2161:4918)
+   ========================================================================= */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgb(0 27 42 / 0.35);
+  border: 0;
+  padding: 0;
+}
+.overlay[hidden] { display: none !important; }
+
+.overlay__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: 0 var(--canvas-gutter) var(--space-6);
+  min-block-size: 304px;
+  background: var(--color-surface-base);
+  animation: fade-in var(--motion-dissolve) var(--ease-out) both;
+}
+.overlay__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 100%;
+  padding-block-start: var(--header-top);
+  /* the row used to be 44px tall because it held the 44px hamburger; that
+     moved out, so pin the height explicitly or the avatar drifts 3px up */
+  min-block-size: calc(var(--header-top) + 44px);
+}
+.overlay__avatar { inline-size: 39px; block-size: 38px; border-radius: var(--radius-pill); }
+.overlay__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  inline-size: 100%;
+  margin-block-start: var(--space-5);
+}
+.overlay__link {
+  padding: var(--space-1) 0;
+  border: 0;
+  background: none;
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-xl);
+  font-weight: var(--typography-weight-semibold);
+  line-height: 44px;
+  color: var(--color-accent-base);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* =========================================================================
+   Narrow phones — the design is 412px, this keeps it honest at 360px
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   The boarding pass is a "paper document" surface: it stays light in both
+   colour modes. A QR code has to be dark-on-light to scan at all, and the
+   timeline glyphs are exported from Figma with baked-in navy strokes, so
+   flipping this card to navy in dark mode would make both unreadable.
+   Figma has no dark variant of these screens — this is a deliberate call,
+   not a token value, and it is the one place dark mode departs from light.
+   ------------------------------------------------------------------------- */
+[data-theme="dark"] .qr-pass,
+[data-theme="dark"] .timeline,
+[data-theme="dark"] .step__card {
+  background: var(--color-white-base);
+  border-color: var(--color-gray-100);
+}
+[data-theme="dark"] .qr-pass__time,
+[data-theme="dark"] .qr-pass__names,
+[data-theme="dark"] .step__name,
+[data-theme="dark"] .step__time { color: var(--color-navy-900); }
+[data-theme="dark"] .qr-pass__label,
+[data-theme="dark"] .qr-pass__where,
+[data-theme="dark"] .qr-pass__scan { color: var(--color-slate-600); }
+[data-theme="dark"] .step__state,
+[data-theme="dark"] .step__eta,
+[data-theme="dark"] .step--upcoming .step__name { color: var(--color-slate-400); }
+
+@media (width <= 380px) {
+  :root {
+    --canvas-gutter: var(--space-4);
+    --typography-size-2xl: 34px;
+    --typography-line-2xl: 42px;
+    --typography-size-1xl: 30px;
+  }
+  .slots { gap: var(--space-1); }
+  .slot { font-size: var(--typography-size-xs); }
+  .progress__label { font-size: var(--typography-size-xs); }
+}
+
+/* =========================================================================
+   MICRO-MOTION · פורמט: מובייל בלבד (מגע, בלי hover)
+   ארכיטיפ: "רגוע ואמין" — 2.25 מתוך 4. הטוקנים בראש הקובץ.
+   כל ההנפשות כאן נוגעות ב-transform וב-opacity בלבד.
+   ========================================================================= */
+
+/* ---- 1. בסיס למגע ------------------------------------------------------
+   מבטלים את ההדגשה הכחולה של הדפדפן ומחליפים אותה במצב לחיצה משלנו;
+   manipulation מוותר על השהיית ה-300ms של זיהוי לחיצה כפולה.            */
+:where(button, a, [role="button"], .input, summary) {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ---- 2. מצב לחוץ — הכוכב של מוצר מגע ----------------------------------
+   נכנס ב-90ms כדי שהאצבע תרגיש מיד, משתחרר ב-160ms.
+   data-pressed נקבע ב-JS על pointerdown ומתנקה גם ב-pointercancel,
+   כך שגלילה שביטלה את הלחיצה לא משאירה כפתור תקוע.                      */
+.btn,
+.slot,
+.status-card,
+.flight-card,
+.icon-btn,
+.theme-toggle,
+.overlay__link,
+.add-passenger,
+.link-btn,
+.hamburger,
+.pass-shell[role="button"],
+.slots--masked {
+  transition: transform var(--motion-press-out) var(--ease-out),
+              background-color var(--motion-press-out) var(--ease-out);
+}
+
+.btn[data-pressed]:not([aria-busy="true"]),
+.slot[data-pressed],
+.status-card[data-pressed],
+.flight-card[data-pressed],
+.icon-btn[data-pressed],
+.theme-toggle[data-pressed],
+.overlay__link[data-pressed],
+.add-passenger[data-pressed]:not(:disabled),
+.link-btn[data-pressed],
+.hamburger[data-pressed],
+.pass-shell[data-pressed],
+.slots--masked[data-pressed] {
+  transform: scale(var(--motion-press-scale));
+  transition-duration: var(--motion-press-in);
+}
+
+/* על אלמנטים גדולים ההקטנה כמעט לא נראית, אז הרקע נושא את המשקל */
+.status-card[data-pressed],
+.flight-card[data-pressed] { background-color: var(--color-blue-100); }
+.slot[data-pressed]:not([aria-pressed="true"]) { background-color: var(--color-blue-100); }
+.btn--primary[data-pressed] { background-color: var(--color-primary-strong); }
+.btn--secondary[data-pressed] { background-color: var(--color-blue-200); }
+.theme-toggle[data-pressed] { background-color: var(--color-blue-100); }
+
+/* הלוגו הוא קישור לבית — הוא מקבל לחיצה, אבל עדינה יותר */
+.logo[role="button"] {
+  /* the image stays 37px tall; padding lifts the hit area to 45px */
+  box-sizing: content-box;
+  padding-block: 3.5px;          /* 37 + 7 = 44 exactly, so the header row
+                                    height matches the hamburger's 44px and
+                                    nothing lands on a half pixel */
+  transition: transform var(--motion-press-out) var(--ease-out);
+}
+.logo[role="button"][data-pressed] {
+  transform: scale(0.94);
+  transition-duration: var(--motion-press-in);
+}
+
+/* ---- 3. מצב מושבת ------------------------------------------------------ */
+.btn:disabled,
+.add-passenger:disabled {
+  opacity: 0.45;
+  pointer-events: none;      /* בלי משוב לחיצה על משהו שאי אפשר ללחוץ */
+}
+
+/* ---- 4. מצב טעינה ------------------------------------------------------
+   ה-PRD מגדיר ספינר קצר בזמן אימות מול נתוני הטיסה. הטקסט נשאר במקום
+   ורק נעשה שקוף, כך שרוחב הכפתור לא קופץ.                               */
+.btn[aria-busy="true"] {
+  color: transparent;
+  pointer-events: none;
+  position: relative;
+}
+.btn[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  inline-size: 20px;
+  block-size: 20px;
+  border: 2px solid currentColor;
+  border-block-start-color: var(--color-white-base);
+  border-radius: var(--radius-pill);
+  color: rgb(255 255 255 / 0.45);
+  animation: spin var(--motion-spin) var(--ease-linear) infinite;
+}
+@keyframes spin { to { transform: rotate(360deg) } }
+
+/* ---- 5. מצב פוקוס ------------------------------------------------------
+   נשאר חובה גם במובייל: מקלדת חיצונית, Switch Control וקורא מסך.       */
+.slot:focus-visible,
+.status-card:focus-visible,
+.flight-card:focus-visible { outline-color: var(--color-focus-on-light); }
+
+/* ---- 6. שגיאה בשדה — לא מקפיצה, אבל גם לא מתמהמהת --------------------
+   המשתמש כבר תקוע, אז ההודעה נכנסת מהר: 140ms בלבד.                    */
+.field__error {
+  opacity: 0;
+  transform: translateY(calc(var(--motion-lift) * -1));
+  transition: opacity var(--motion-fast) var(--ease-out),
+              transform var(--motion-fast) var(--ease-out);
+}
+.field.has-error .field__error { opacity: 1; transform: translateY(0); }
+.input { transition: border-color var(--motion-fast) var(--ease-out),
+                     background-color var(--motion-fast) var(--ease-out); }
+
+/* ---- 7. נוסע חדש נכנס לטופס -------------------------------------------
+   בלי אנימציית גובה: רק transform ו-opacity, כדי לא לחשב פריסה מחדש.   */
+.passenger--entering {
+  animation: block-in var(--motion-base) var(--ease-out) both;
+}
+@keyframes block-in {
+  from { opacity: 0; transform: translateY(calc(var(--motion-lift) * -2)) }
+  to   { opacity: 1; transform: translateY(0) }
+}
+
+/* ---- 8. תפריט — <dialog> אמיתי -----------------------------------------
+   מחליף את ה-div שהיה כאן. נותן מלכודת פוקוס, Escape ושכבה עליונה בחינם.
+   @starting-style מגדיר את נקודת ההתחלה של הכניסה בלי JS; בדפדפן ישן
+   הפאנל פשוט יופיע מיד, בלי תנועה — התנהגות תקינה, לא שבורה.            */
+.overlay {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  inset: 0;
+  inline-size: 100%;
+  max-inline-size: var(--canvas-width);   /* stay inside the phone frame */
+  block-size: 100%;
+  max-block-size: none;
+  margin-inline: auto;
+  background: transparent;
+  overflow: hidden;
+}
+.overlay::backdrop {
+  background: rgb(0 27 42 / 0.35);
+  opacity: 0;
+  transition: opacity var(--motion-base) var(--ease-out), overlay var(--motion-base) allow-discrete,
+              display var(--motion-base) allow-discrete;
+}
+.overlay[open]::backdrop { opacity: 1; }
+@starting-style { .overlay[open]::backdrop { opacity: 0 } }
+
+.overlay__panel {
+  transform: translateY(-100%);
+  transition: transform var(--motion-base) var(--ease-out);
+}
+.overlay[open] .overlay__panel { transform: translateY(0); transition-delay: 60ms; }
+@starting-style { .overlay[open] .overlay__panel { transform: translateY(-100%) } }
+
+/* ההמבורגר של התפריט לא נוסע עם הפאנל. הוא יושב בדיוק במקום שבו יושב
+   ההמבורגר של הכותרת, מתגלגל במקום, והפאנל מחליק מאחוריו.
+   מיקום פיזי (left) בכוונה — הכותרת מציבה אותו בצד שמאל הפיזי גם ב-RTL. */
+.hamburger--menu {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: var(--header-top);
+  inset-inline-end: var(--canvas-gutter);   /* trailing edge, both directions */
+  margin-inline: 0;
+}
+
+/* ---- 9. גלגול ההמבורגר -------------------------------------------------
+   שלושה <rect> באותה מערכת צירים. הפס העליון לא זז בכלל, האמצעי מחליק
+   ימינה 8.31, והתחתון מתקצר מהקצה השמאלי — בדיוק מה שמצויר ב-Figma.     */
+.burger { inline-size: 43.25px; block-size: auto; overflow: visible; display: block; }
+.burger__bar {
+  transform-box: fill-box;
+  transition: fill var(--motion-base) var(--ease-out),
+              transform var(--motion-base) var(--ease-out);
+}
+.burger__bar--top,
+.burger__bar--bot { fill: var(--color-white-base); }
+.burger__bar--mid { fill: var(--color-accent-base); }
+
+.is-open .burger__bar--top,
+.is-open .burger__bar--bot { fill: var(--color-gray-300); }
+.is-open .burger__bar--mid { fill: var(--color-primary-base); transform: translateX(8.31px); }
+.is-open .burger__bar--bot { transform-origin: right center; transform: scaleX(0.659); }
+
+/* ---- 10. פס ההתקדמות זז בין השלבים ------------------------------------
+   הבר של המסך הנכנס מתחיל מהערך של השלב הקודם ורק אז מתמלא, אחרי
+   שהמעבר בין המסכים כבר נחת. שלושת הברים נשארו נפרדים.                  */
+.progress__dot { transition: background-color var(--motion-base) var(--ease-out); }
+.progress__label { transition: color var(--motion-base) var(--ease-out); }
+
+/* ---- 11. המטוס במסך ההצלחה --------------------------------------------
+   הרגע היחיד בכל המוצר שמותר לו לחגוג. נכנס רק אחרי שהמעבר הסתיים.     */
+.result__art--celebrate {
+  animation: art-in var(--motion-celebrate) var(--ease-out) both;
+}
+@keyframes art-in {
+  from { opacity: 0; transform: translateY(12px) }
+  to   { opacity: 1; transform: translateY(0) }
+}
+
+/* התמונות לא נגררות בעצמן — גרירה מובנית של הדפדפן חוטפת את המצביע
+   ומבטלת את המחווה שלנו באמצע.                                          */
+.screen img { -webkit-user-drag: none; user-drag: none; }
+
+/* ---- 12. גרירה חזרה — שני החיבורים מסוג ON_DRAG שב-Figma --------------
+   האלמנט עוקב אחרי האצבע 1:1 בזמן הגרירה, בלי שום easing; ההאטה שייכת
+   רק לשחרור. גם touch-action מוגדר במפורש כדי לא להילחם בגלילה.         */
+.screen[data-draggable] { touch-action: pan-y; }
+.screen.is-dragging { transition: none; }
+.screen.is-snapping { transition: transform var(--motion-base) var(--ease-out); }
+
+/* ---- 13. תנועה מופחתת --------------------------------------------------
+   פחות תנועה, לא אפס משוב: מבטלים הזזה וקנה מידה, משאירים דעיכות קצרות.
+   הספינר הופך לפעימת שקיפות, כי הוא מידע ולא קישוט.                     */
+@media (prefers-reduced-motion: reduce) {
+  /* פחות תנועה, לא אפס משוב. מנטרלים את הטוקנים עצמם במקום להילחם
+     בסלקטורים: כל כלל שמשתמש בהם מפסיק לזוז, והדעיכות נשארות.        */
+  :root {
+    --motion-press-scale: 1;
+    --motion-lift: 0px;
+  }
+  .overlay__panel,
+  .overlay[open] .overlay__panel { transform: none; }
+  .passenger--entering { animation: fade-in var(--motion-fast) var(--ease-out) both; }
+  .result__art--celebrate { animation: fade-in var(--motion-fast) var(--ease-out) both; }
+  .is-open .burger__bar--mid,
+  .is-open .burger__bar--bot { transform: none; }
+  .btn[aria-busy="true"]::after { animation: pulse var(--motion-pulse) var(--ease-out) infinite; }
+}
+@keyframes pulse { 50% { opacity: 0.35 } }
+
+/* =========================================================================
+   מסכי הגדרות — פרופיל / התראות / שפה
+   ב-Figma (node 4052:290) המסכים האלה הפוכים לשאר המוצר: קנבס לבן,
+   שדות כחולים מלאים עם טקסט לבן. זו בחירה מכוונת בעיצוב, לא טעות.
+   ========================================================================= */
+
+.screen--light {
+  background: var(--color-surface-base);
+  align-items: center;
+}
+
+/* הכותרת נשארת ברוחב מלא כמו בכל שאר המסכים — ההמבורגר בקצה ההתחלה,
+   הלוגו בקצה הסיום. כך היא מתהפכת נכון גם כשעוברים לאנגלית או לרוסית. */
+.screen--light .header { align-self: stretch; }
+
+/* על רקע לבן הלוגו הלבן והפסים הלבנים נעלמים */
+.screen--light .burger__bar--top,
+.screen--light .burger__bar--bot { fill: var(--color-text-base); }
+.screen--light .burger__bar--mid { fill: var(--color-primary-base); }
+
+.settings__title {
+  align-self: center;
+  margin-block-start: var(--space-5);
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-xl);
+  line-height: var(--typography-line-xl);
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-accent-base);
+  text-decoration: underline;
+  text-align: center;
+}
+
+.settings__name {
+  margin-block-start: var(--space-6);
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-2xl);
+  line-height: var(--typography-line-2xl);
+  font-weight: var(--typography-weight-bold);
+  color: var(--color-text-base);
+  text-align: center;
+}
+
+.settings__avatar {
+  inline-size: 156px;
+  block-size: auto;
+  margin-block-start: var(--space-2);
+  border-radius: var(--radius-pill);
+}
+
+.settings__link {
+  margin-block-start: var(--space-2);
+  padding: var(--space-3) var(--space-4);   /* 44px touch target */
+  min-block-size: 44px;
+  border: 0;
+  background: none;
+  font-size: var(--typography-size-xs);
+  line-height: var(--typography-line-xs);
+  color: var(--color-info-base);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.settings__form {
+  align-self: stretch;
+  display: grid;
+  gap: 10px;
+  margin-block-start: var(--space-5);
+}
+.settings__form--wide { margin-block-start: var(--space-6); gap: var(--space-4); }
+.settings__form .btn { margin-block-start: var(--space-6); }
+
+/* שדה מלא — הווריאנט של מסך הפרופיל */
+.input--filled {
+  background: var(--color-primary-base);
+  border-color: var(--color-primary-base);
+  color: var(--color-text-on-primary);
+}
+.input--filled::placeholder { color: var(--color-text-on-primary-muted); }
+
+/* ---- מגירת האווטארים — גלילה אופקית עם עצירה על כל תמונה ------------- */
+.avatar-lane {
+  align-self: stretch;
+  display: flex;
+  gap: var(--space-4);
+  inline-size: calc(100% + var(--canvas-gutter) * 2);
+  margin-inline: calc(var(--canvas-gutter) * -1);
+  padding-inline: var(--canvas-gutter);
+  padding-block: var(--space-3);
+  margin-block-start: var(--space-2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;          /* אצבע אופקית לנו, אנכית לדפדפן */
+}
+.avatar-lane::-webkit-scrollbar { display: none; }
+.avatar-lane[hidden] { display: none !important; }
+
+.avatar-lane__item {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 3px solid transparent;
+  border-radius: var(--radius-pill);
+  background: none;
+  scroll-snap-align: center;
+  cursor: pointer;
+  line-height: 0;
+  transition: transform var(--motion-press-out) var(--ease-out),
+              border-color var(--motion-base) var(--ease-out);
+}
+.avatar-lane__item img { inline-size: 96px; block-size: auto; border-radius: var(--radius-pill); }
+.avatar-lane__item[aria-checked="true"] { border-color: var(--color-primary-base); }
+.avatar-lane__item[data-pressed] {
+  transform: scale(var(--motion-press-scale));
+  transition-duration: var(--motion-press-in);
+}
+
+/* ---- שורת הגדרה עם בורר ---------------------------------------------- */
+.settings__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-block-size: 56px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--color-border-base);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+.settings__row-label {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-md);
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-text-base);
+}
+
+.select {
+  min-block-size: 44px;
+  min-inline-size: 104px;
+  padding-inline: var(--space-3);
+  border: 1.5px solid var(--color-primary-base);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-base);
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-sm);
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-primary-base);
+  cursor: pointer;
+}
+
+/* ---- רשימת שפות -------------------------------------------------------- */
+.lang-list {
+  align-self: stretch;
+  display: grid;
+  gap: var(--space-3);
+  margin-block-start: var(--space-6);
+}
+
+.lang {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-block-size: 56px;
+  padding-inline: var(--space-4);
+  border: 1.5px solid var(--color-border-base);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-lg);
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-text-base);
+  cursor: pointer;
+  transition: transform var(--motion-press-out) var(--ease-out),
+              border-color var(--motion-base) var(--ease-out),
+              background-color var(--motion-base) var(--ease-out);
+}
+.lang[aria-checked="true"] {
+  border-color: var(--color-primary-base);
+  background: var(--color-surface-base);
+  color: var(--color-primary-base);
+}
+.lang[aria-checked="true"]::after {
+  content: "";
+  inline-size: 20px; block-size: 20px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-primary-base);
+  /* סימן וי לבן כ-SVG מוטבע — בלי קובץ נוסף ובלי פשרה על הצורה */
+  background-image: var(--icon-check);
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.lang[data-pressed] {
+  transform: scale(var(--motion-press-scale));
+  transition-duration: var(--motion-press-in);
+}
+.lang__note {
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-warning-surface);
+  color: var(--color-warning-text);
+  font-family: var(--typography-family-body);
+  font-size: 11px;
+  font-weight: var(--typography-weight-bold);
+  text-transform: uppercase;
+}
+
+
+/* =========================================================================
+   כיוון: אנגלית ורוסית הן LTR
+   ארבעה כללים בקובץ משתמשים ב-row-reverse כדי לכפות סדר פיזי מסוים
+   (המסילה של פס ההתקדמות ושל ציר המסע רצות תמיד משמאל לימין, כמו ב-Figma).
+   ב-LTR הכיוון של row-reverse מתהפך, ולכן הם חוזרים ל-row.
+   ========================================================================= */
+
+/* פס ההתקדמות: שלב 1 נשאר בקצה השמאלי הפיזי, שם מתחילה גם ההתמלאות */
+[dir="ltr"] .progress__labels { flex-direction: row; }
+
+/* ציר המסע: המסילה נשארת משמאל, הטקסט לצידה, השעות בקצה הנגדי */
+[dir="ltr"] .step,
+[dir="ltr"] .step__body,
+[dir="ltr"] .step__content { flex-direction: row; }
+[dir="ltr"] .step__time { text-align: start; }
