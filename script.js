@@ -92,6 +92,10 @@
       "time.legend": "חלונות זמן פנויים לביקורת ביטחון",
       "time.full": "מלא",
       "time.passengers": "נוסעים",
+      "time.loading": "טוען חלונות זמן פנויים",
+      "time.emptyTitle": "אין חלונות פנויים בתאריך הזה",
+      "time.emptyBody": "כל חלונות הביטחון ל-25.05 נתפסו. חלונות מתפנים בביטולים, אז כדאי לבדוק שוב מאוחר יותר — ובכל מקרה אפשר להגיע לביקורת כרגיל, בלי זימון.",
+      "time.emptyRetry": "בדיקה חוזרת",
       "timeExt.srTitle": "פרטי ההזמנה המלאים",
       "flight.meta": "יום ג׳ · 25.05.2026 · טרמינל 3 · כניסה 03",
       "pass.label": "כרטיס הכניסה שלך",
@@ -205,6 +209,10 @@
       "time.legend": "Available security-check slots",
       "time.full": "Full",
       "time.passengers": "Passengers",
+      "time.loading": "Loading available time slots",
+      "time.emptyTitle": "No free slots on this date",
+      "time.emptyBody": "Every security window for 25.05 is taken. Slots free up when people cancel, so it is worth checking again later — and you can always arrive for screening without a booking.",
+      "time.emptyRetry": "Check again",
       "timeExt.srTitle": "Full booking details",
       "flight.meta": "Tue · 25.05.2026 · Terminal 3 · Gate 03",
       "pass.label": "Your entry pass",
@@ -318,6 +326,10 @@
       "time.legend": "Свободные окна досмотра",
       "time.full": "Занято",
       "time.passengers": "Пассажиры",
+      "time.loading": "Загрузка свободных окон",
+      "time.emptyTitle": "На эту дату нет свободных окон",
+      "time.emptyBody": "Все окна досмотра на 25.05 заняты. Окна освобождаются при отменах, поэтому стоит проверить позже — и в любом случае можно пройти досмотр без брони.",
+      "time.emptyRetry": "Проверить снова",
       "timeExt.srTitle": "Полные данные брони",
       "flight.meta": "Вт · 25.05.2026 · Терминал 3 · Выход 03",
       "pass.label": "Ваш пропуск",
@@ -431,6 +443,10 @@
       "time.legend": "المواعيد المتاحة للفحص الأمني",
       "time.full": "ممتلئ",
       "time.passengers": "المسافرون",
+      "time.loading": "جارٍ تحميل المواعيد المتاحة",
+      "time.emptyTitle": "لا توجد مواعيد متاحة في هذا التاريخ",
+      "time.emptyBody": "جميع مواعيد الفحص ليوم 25.05 محجوزة. تتوفر مواعيد عند الإلغاء، لذا يُستحسن التحقّق لاحقًا — ويمكنك على أي حال الوصول إلى الفحص دون حجز.",
+      "time.emptyRetry": "تحقّق مرة أخرى",
       "timeExt.srTitle": "تفاصيل الحجز الكاملة",
       "flight.meta": "الثلاثاء · 25.05.2026 · المبنى 3 · البوابة 03",
       "pass.label": "بطاقة دخولك",
@@ -625,6 +641,9 @@
 
     toEl.hidden = false;
     toEl.scrollTop = 0;
+    /* מסך בחירת חלון הזמן נטען מחדש בכל כניסה, כדי שמצב הטעינה יהיה
+       אמיתי ולא הדגמה חד-פעמית. */
+    if (to === "time-choosing" && typeof loadSlots === "function") loadSlots();
     var inCls = animateIn(toEl, t);
     var outCls = animateOut(fromEl, t);
 
@@ -672,7 +691,13 @@
      To pin the product to light regardless of the phone, change the line
      marked SYSTEM SEED below to   var theme = "light";
      --------------------------------------------------------------------- */
-  var THEME_COLORS = { light: "#1e5aba", dark: "#b6975b" };
+  /* צבע ה-theme-color של הדפדפן נקרא מהטוקן החי ולא נכתב כ-hex.
+     הקריאה נעשית אחרי שהמצב כבר הוחל על <html>, ולכן היא מחזירה
+     את --color-primary-base של המצב הנוכחי (כחול בבהיר, זהב בכהה). */
+  function themeColor() {
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue("--color-primary-base").trim();
+  }
   var systemDark = window.matchMedia("(prefers-color-scheme: dark)");
   var themeChosenByUser = false;
   var theme = systemDark.matches ? "dark" : "light";   /* SYSTEM SEED */
@@ -696,7 +721,7 @@
     });
 
     var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", THEME_COLORS[next]);
+    if (meta) meta.setAttribute("content", themeColor());
   }
   applyTheme(theme);
 
@@ -950,6 +975,53 @@
       chosenSlot = btn;
     });
   }
+
+  /* ---------------------------------------------------------------------
+     שלושת המצבים של מסך בחירת חלון הזמן: טעינה, ריק, מלא.
+     המסך מציג נתונים (חלונות פנויים), ולכן לפי ה-PRD סעיף 8א הוא חייב את
+     שלושתם. הטעינה קורית באמת בכל כניסה למסך; המצב הריק מודגם דרך
+     הפרמטר ?slots=empty בכתובת, וכפתור "בדיקה חוזרת" מחזיר אותו למלא.
+     --------------------------------------------------------------------- */
+  var slotsSkeleton = document.getElementById("slots-skeleton");
+  var slotsEmptyBox = document.getElementById("slots-empty");
+  var slotsForced = null;
+  try {
+    slotsForced = new URLSearchParams(window.location.search).get("slots");
+  } catch (err) { slotsForced = null; }
+  var slotsTimer = null;
+
+  function setSlotsState(state) {
+    if (!slotsWrap || !slotsSkeleton || !slotsEmptyBox) return;
+    slotsWrap.hidden = state !== "full";
+    slotsSkeleton.hidden = state !== "loading";
+    slotsEmptyBox.hidden = state !== "empty";
+    var confirmBtn = document.querySelector("#screen-time-choosing [data-confirm-slot]");
+    if (confirmBtn) {
+      confirmBtn.disabled = state !== "full";
+      if (state === "loading") confirmBtn.setAttribute("aria-busy", "true");
+      else confirmBtn.removeAttribute("aria-busy");
+    }
+  }
+
+  function loadSlots() {
+    if (!slotsWrap) return;
+    window.clearTimeout(slotsTimer);
+    if (slotsForced === "empty") { setSlotsState("empty"); return; }
+    if (slotsForced === "loading") { setSlotsState("loading"); return; }
+    setSlotsState("loading");
+    slotsTimer = window.setTimeout(function () { setSlotsState("full"); }, reduced ? 200 : 750);
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-slots-retry]"), function (btn) {
+    btn.addEventListener("click", function () {
+      slotsForced = null;
+      chosenSlot = null;
+      Array.prototype.forEach.call(document.querySelectorAll("#slots .slot"), function (s) {
+        s.setAttribute("aria-pressed", "false");
+      });
+      loadSlots();
+    });
+  });
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-confirm-slot]"), function (btn) {
     btn.addEventListener("click", function () {

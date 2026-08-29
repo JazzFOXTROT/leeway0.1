@@ -1,0 +1,212 @@
+/* =========================================================================
+   Leeway — זימון תור לביקורת ביטחון בנתב"ג
+   Design tokens mirrored 1:1 from the Figma file "Demo Final Project Ver 3"
+   (file key mJc7QbFA7CpcJTj1Tf4WRq), collections: Color / Spacing /
+   Typography / Radius. Variable names below match the Figma variable names,
+   with "/" replaced by "-".
+   ========================================================================= */
+
+:root {
+  /* ---- Color · primitives ------------------------------------------- */
+  --color-white-base: #ffffff;
+  --color-navy-900: #001b2a;
+  --color-navy-950: #0a1220;
+  --color-navy-800: #182a4a;
+  --color-blue-800: #0f3673;
+  --color-blue-700: #174691;
+  --color-blue-600: #1e5aba;
+  --color-blue-400: #63b3ed;
+  --color-blue-200: #d6e6ff;
+  --color-blue-100: #e9f2ff;
+  --color-gray-100: #f4f6f8;
+  --color-gray-300: #c9c8c8;
+  --color-slate-600: #525f77;
+  --color-slate-500: #606573;
+  --color-slate-400: #808d95;
+  --color-slate-300: #8b93a7;
+  --color-gold-500: #b6975b;
+  --color-gold-700: #8d7546;
+  --color-cream-50: #f2efe9;
+  --color-lavender-100: #e6e6ec;
+  --color-green-700: #1e6b41;
+  --color-green-600: #3e8e5c;
+  --color-green-50: #e6f4ec;
+  --color-blueinfo-700: #0238b5;
+  --color-blueinfo-400: #4c8ce0;
+  --color-amber-800: #8a5a0f;
+  --color-amber-600: #cb8724;
+  --color-amber-50: #fdf3e3;
+  --color-red-700: #bb0307;
+  --color-red-400: #e0534f;
+  --color-red-50: #fcebea;
+
+  /* ---- Color · semantic (Light mode) --------------------------------- */
+  --color-surface-base: var(--color-white-base);
+  --color-surface-raised: var(--color-blue-100);
+  --color-border-base: var(--color-gray-100);
+  --color-text-base: var(--color-navy-900);
+  --color-text-muted: var(--color-slate-400);
+  --color-text-on-primary: var(--color-white-base);
+  --color-text-on-primary-muted: var(--color-blue-200);
+  --color-primary-base: var(--color-blue-600);
+  --color-primary-strong: var(--color-blue-700);
+  --color-primary-deep: var(--color-blue-800);
+  --color-accent-base: var(--color-blue-400);
+  --color-success-base: var(--color-green-600);
+  --color-success-text: var(--color-green-700);
+  --color-success-surface: var(--color-green-50);
+  --color-info-base: var(--color-blueinfo-700);
+  --color-warning-base: var(--color-amber-600);
+  --color-warning-text: var(--color-amber-800);
+  --color-warning-surface: var(--color-amber-50);
+  --color-danger-base: var(--color-red-700);
+  --color-danger-text: var(--color-red-700);
+  --color-danger-surface: var(--color-red-50);
+  --color-neutral-base: var(--color-slate-500);
+  --color-muted-surface-base: var(--color-gray-300);
+  --color-focus-on-dark: var(--color-white-base);
+  --color-focus-on-light: var(--color-blue-600);
+  --color-overlay-scrim: var(--color-navy-900);
+
+  /* Not defined as a Figma variable — raw fill on the QR pass shell
+     (node 2300:1344). Tokenised here so no rule carries a bare hex. */
+  --color-pass-shell: #d9d9d9;
+
+  /* ---- Spacing ------------------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ---- Radius -------------------------------------------------------- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* ---- Inline icons (SVG data URI — no extra files) -------------------- */
+  --icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.4l3 3 6-6.6' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* ---- Typography ---------------------------------------------------- */
+  --typography-family-heading: "Heebo", "Rubik", system-ui, sans-serif;
+  --typography-family-body: "Inter", "Source Sans 3", system-ui, sans-serif;
+  --typography-size-2xs: 10px;
+  --typography-size-xs: 12px;
+  --typography-size-sm: 14px;
+  --typography-size-md: 16px;
+  --typography-size-lg: 20px;
+  --typography-size-xl: 28px;
+  --typography-size-1xl: 36px;
+  --typography-size-2xl: 40px;
+  --typography-size-3xl: 48px;
+
+  --typography-line-2xs: 14px;
+  --typography-line-xs: 18px;
+  --typography-line-sm: 20px;
+  --typography-line-md: 24px;
+  --typography-line-lg: 28px;
+  --typography-line-xl: 36px;
+  --typography-line-1xl: 44px;
+  --typography-line-2xl: 48px;
+  --typography-line-3xl: 56px;
+
+  --typography-weight-regular: 400;
+  --typography-weight-medium: 500;
+  --typography-weight-semibold: 600;
+  --typography-weight-bold: 700;
+
+  /* ---- Layout -------------------------------------------------------- */
+  --canvas-width: 412px;
+  --canvas-gutter: var(--space-5);
+  --header-top: var(--space-7);
+  --control-height: 48px;
+  --field-height: 52px;
+
+  /* ---- Motion · read from the Figma prototype (27 connections) -------- */
+  --motion-dissolve: 300ms;
+  --motion-move-fast: 300ms;
+  --motion-move: 400ms;
+  --motion-move-slow: 500ms;
+  --motion-smart: 300ms;
+  --motion-smart-slow: 500ms;
+  --motion-splash-1: 200ms;
+  --motion-splash-2: 400ms;
+  --ease-out: cubic-bezier(0, 0, 0.58, 1);
+  --ease-in: cubic-bezier(0.42, 0, 1, 1);
+  --ease-linear: linear;
+
+  /* ---- Micro-motion · archetype "רגוע ואמין", mobile-adjusted ---------
+     Derived: radius 3 + typeface 1 + palette 3 + category 2 = 9 / 4 = 2.25.
+     Calm base 260ms, cut 15% because a phone in the hand is unforgiving;
+     lift halved from 6px because travel reads bigger on a small screen.
+     Easing is this product's own --ease-out, not the archetype default.   */
+  --motion-press-in: 90ms;      /* a press must register almost instantly  */
+  --motion-press-out: 160ms;    /* the release is allowed to relax slower  */
+  --motion-fast: 140ms;
+  --motion-base: 220ms;         /* calm 260ms − 15% for mobile             */
+  --motion-lift: 3px;           /* calm 6px, halved for the phone          */
+  --motion-press-scale: 0.97;
+  --motion-stagger: 40ms;
+  --motion-celebrate: 300ms;    /* the one delight beat, on Success        */
+  --motion-spin: 700ms;         /* loading spinner revolution              */
+  --motion-pulse: 1200ms;       /* the spinner's reduced-motion substitute */
+
+  /* ---- Elevation ----------------------------------------------------- */
+  --shadow-pass: 0 7.367px 18.419px -4px rgb(0 27 42 / 0.16);
+
+  /* ---- Gradients · named styles gradient/reveal-mask/* ---------------- */
+  --gradient-reveal-to-blue: linear-gradient(160deg, rgb(217 217 217 / 0) 0%, var(--color-primary-base) 92%);
+  --gradient-reveal-from-blue: linear-gradient(160deg, var(--color-primary-base) 0%, rgb(115 115 115 / 0) 100%);
+  --gradient-scrim-up: linear-gradient(to top, var(--color-primary-base) 55%, rgb(30 90 186 / 0) 100%);
+
+  color-scheme: light;
+}
+
+/* ---- Color · semantic (Dark mode) ------------------------------------
+   Values read from the "Dark" mode of the Figma Color collection.
+   The page opens in whichever mode the phone is set to, and the switch on the
+   Landing page (or in the menu) overrides that for the rest of the visit.
+   script.js stamps data-theme on <html>; this block only reacts to it.
+   It re-declares colour variables only — it never touches layout, so
+   deleting it leaves the light design byte-for-byte identical.           */
+:root[data-theme="dark"] {
+  --color-surface-base: var(--color-navy-950);
+  --color-surface-raised: var(--color-navy-800);
+  --color-border-base: var(--color-slate-600);
+  --color-text-base: var(--color-cream-50);
+  --color-text-muted: var(--color-lavender-100);
+  --color-primary-base: var(--color-gold-500);
+  --color-primary-strong: var(--color-gold-700);
+  --color-info-base: var(--color-blueinfo-400);
+  --color-danger-base: var(--color-red-400);
+  --color-neutral-base: var(--color-slate-300);
+  /* accent, success and warning are intentionally identical in both
+     modes — contrast-checked in docs/DESIGN_SYSTEM_AUDIT.md. */
+  color-scheme: dark;
+}
+
+/* ---- Token overrides · מסך צר (עד 380px) -------------------------------
+   הטוקנים היחידים שמשתנים ברוחב קטן: מרווח הקנבס וגדלי הכותרות הגדולות.
+   שאר הכללים הרספונסיביים יושבים ב-style.css.                          */
+@media (width <= 380px) {
+  :root {
+    --canvas-gutter: var(--space-4);
+    --typography-size-2xl: 34px;
+    --typography-line-2xl: 42px;
+    --typography-size-1xl: 30px;
+  }
+}
+
+/* ---- Token overrides · תנועה מופחתת ------------------------------------
+   פחות תנועה, לא אפס משוב: מנטרלים את טוקני התנועה עצמם במקום להילחם
+   בסלקטורים — כל כלל שמשתמש בהם מפסיק לזוז, והדעיכות נשארות.          */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-press-scale: 1;
+    --motion-lift: 0px;
+  }
+}
