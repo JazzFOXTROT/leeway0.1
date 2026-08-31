@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title data-i18n="app.title">Leeway — זימון תור לביקורת ביטחון בנתב"ג</title>
 <meta name="description" content="זימון מראש של חלון זמן לביקורת ביטחון בנמל התעופה בן גוריון, ומעקב סטטוס ביום הטיסה.">
-<!-- ערך התחלה בלבד, זהה לטוקן --color-blue-600. תגית meta לא יכולה לקרוא
-     משתנה CSS, ולכן זה ערך הצבע היחיד בכל הפרויקט שנכתב כ-hex; script.js
-     דורס אותו בטעינה ובכל החלפת מצב מתוך --color-primary-base עצמו. -->
 <meta name="theme-color" content="#1e5aba">
 <link rel="icon" href="assets/images/logo-leeway-white.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +13,6 @@
      Arabic, Rubik carries Cyrillic (and Hebrew). Google serves each unicode
      range as its own file, so a language you never pick is never downloaded. -->
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Inter:wght@400;600;700&family=Rubik:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles/tokens.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -39,7 +35,7 @@
       <img class="logo logo--hero" src="assets/images/logo-leeway-white.png" alt="Leeway" width="223" height="75">
     </header>
 
-    <h1 class="display landing__headline" id="landing-title" data-i18n="landing.h1a">תזמינו עכשיו<br><em data-i18n="landing.h1b">כדי לא לחכות אחר כך</em></h1>
+    <h1 class="display landing__headline" id="landing-title"><span data-i18n="landing.h1a">תזמינו עכשיו</span><br><em data-i18n="landing.h1b">כדי לא לחכות אחר כך</em></h1>
 
     <img data-src-light="assets/images/illustration-terminal.png" data-src-dark="assets/images/illustration-terminal-dark.png" class="landing__art" src="assets/images/illustration-terminal.png" data-i18n-alt="alt.terminal" alt="איור של טרמינל נמל התעופה בן גוריון עם מגדל פיקוח ומטוס ממריא" width="419" height="279">
 
@@ -60,7 +56,17 @@
       <span class="status-card__note" data-i18n="status.note">מידע כללי בלבד — ללא רמת עומס חזויה</span>
     </button>
 
-    <button type="button" class="theme-toggle theme-toggle--landing" data-theme-toggle aria-pressed="false"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.5 1.5M17.1 17.1l1.5 1.5M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"/></svg><span data-theme-label data-i18n="theme.toDark">מצב כהה</span></button>
+    <!-- שורת ההגדרות המהירות: שפה בפינה אחת, מצב תצוגה בשנייה. שתיהן
+         זמינות גם בתפריט ההמבורגר — זו רק דרך קצרה יותר. -->
+    <div class="landing__foot">
+      <button type="button" class="theme-toggle theme-toggle--landing" data-theme-toggle aria-pressed="false"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.5 1.5M17.1 17.1l1.5 1.5M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"/></svg><span data-theme-label data-i18n="theme.toDark">מצב כהה</span></button>
+      <div class="lang-switch" role="radiogroup" data-i18n-aria="lang.pickerLabel" aria-label="בחירת שפה">
+        <button type="button" class="lang-switch__btn" role="radio" aria-checked="true"  data-lang="he" data-i18n-aria="lang.he" aria-label="עברית"><span aria-hidden="true">HE</span></button>
+        <button type="button" class="lang-switch__btn" role="radio" aria-checked="false" data-lang="en" data-i18n-aria="lang.en" aria-label="אנגלית"><span aria-hidden="true">EN</span></button>
+        <button type="button" class="lang-switch__btn" role="radio" aria-checked="false" data-lang="ar" data-i18n-aria="lang.ar" aria-label="ערבית"><span aria-hidden="true">AR</span></button>
+        <button type="button" class="lang-switch__btn" role="radio" aria-checked="false" data-lang="ru" data-i18n-aria="lang.ru" aria-label="רוסית"><span aria-hidden="true">RU</span></button>
+      </div>
+    </div>
   </section>
 
   <!-- ═══ 4. Registration — node 2173:4992 ═══ -->
@@ -177,35 +183,6 @@
       <button type="button" class="slot" aria-pressed="false" data-slot="9:00-9:20" data-full="true">9:00-9:20<span class="slot__full" data-i18n="time.full">מלא</span></button>
       <button type="button" class="slot" aria-pressed="false" data-slot="9:20-9:40">9:20-9:40</button>
     </fieldset>
-
-    <!-- מצב טעינה: שלד שמחזיק בדיוק את אותה רשת 3 עמודות, כדי שהמסך לא יקפוץ
-         כשהחלונות האמיתיים מגיעים. aria-hidden כי אין כאן תוכן לקריין —
-         ההודעה לקורא המסך יושבת על אזור ה-status שמתחת.                     -->
-    <div class="slots-skeleton" id="slots-skeleton" hidden aria-hidden="true">
-      <span class="slots-skeleton__chip"></span>
-      <span class="slots-skeleton__chip"></span>
-      <span class="slots-skeleton__chip"></span>
-      <span class="slots-skeleton__chip"></span>
-      <span class="slots-skeleton__chip"></span>
-      <span class="slots-skeleton__chip"></span>
-      <span class="slots-skeleton__chip"></span>
-      <span class="slots-skeleton__chip"></span>
-      <span class="slots-skeleton__chip"></span>
-    </div>
-
-    <!-- מצב ריק: כל החלונות בתאריך תפוסים. לפי כרטיס התחושה, מסך ריק כאן לא
-         מתנצל ולא חוסם — הוא אומר מה קרה, ומזכיר שאפשר להגיע גם בלי זימון.  -->
-    <div class="slots-empty" id="slots-empty" role="status" hidden>
-      <svg class="slots-empty__art" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-        <rect x="6" y="10" width="36" height="32" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
-        <path d="M6 19h36" stroke="currentColor" stroke-width="2"/>
-        <path d="M15 6v8M33 6v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M18 27l12 10M30 27L18 37" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      <p class="slots-empty__title" data-i18n="time.emptyTitle">אין חלונות פנויים בתאריך הזה</p>
-      <p class="slots-empty__body" data-i18n="time.emptyBody">כל חלונות הביטחון ל-25.05 נתפסו. חלונות מתפנים בביטולים, אז כדאי לבדוק שוב מאוחר יותר — ובכל מקרה אפשר להגיע לביקורת כרגיל, בלי זימון.</p>
-      <button type="button" class="btn btn--secondary slots-empty__retry" data-slots-retry data-i18n="time.emptyRetry">בדיקה חוזרת</button>
-    </div>
 
     <div class="btn-row">
       <button type="button" class="btn btn--primary" data-confirm-slot data-i18n="common.continue">המשך</button>

@@ -1,9 +1,206 @@
 /* =========================================================================
-   Leeway — גיליון הסגנון של האפליקציה
-   כל הטוקנים (צבע, מרווח, טיפוגרפיה, רדיוס) יושבים ב-styles/tokens.css,
-   ונטענים לפני הקובץ הזה. אין כאן ולו ערך צבע, מרווח או גופן אחד שאינו
-   קריאה למשתנה מהטוקנים.
+   Leeway — זימון תור לביקורת ביטחון בנתב"ג
+   Design tokens mirrored 1:1 from the Figma file "Demo Final Project Ver 3"
+   (file key mJc7QbFA7CpcJTj1Tf4WRq), collections: Color / Spacing /
+   Typography / Radius. Variable names below match the Figma variable names,
+   with "/" replaced by "-".
    ========================================================================= */
+
+:root {
+  /* ---- Color · primitives ------------------------------------------- */
+  --color-white-base: #ffffff;
+  --color-navy-900: #001b2a;
+  --color-navy-950: #0a1220;
+  --color-navy-800: #182a4a;
+  --color-blue-800: #0f3673;
+  --color-blue-700: #174691;
+  --color-blue-600: #1e5aba;
+  --color-blue-400: #63b3ed;
+  --color-blue-200: #d6e6ff;
+  --color-blue-100: #e9f2ff;
+  --color-gray-100: #f4f6f8;
+  --color-gray-300: #c9c8c8;
+  --color-slate-600: #525f77;
+  --color-slate-500: #606573;
+  --color-slate-400: #808d95;
+  --color-slate-300: #8b93a7;
+  --color-gold-500: #b6975b;
+  --color-gold-700: #8d7546;
+  --color-cream-50: #f2efe9;
+  --color-lavender-100: #e6e6ec;
+  --color-green-700: #1e6b41;
+  --color-green-600: #3e8e5c;
+  --color-green-50: #e6f4ec;
+  --color-blueinfo-700: #0238b5;
+  --color-blueinfo-400: #4c8ce0;
+  --color-amber-800: #8a5a0f;
+  --color-amber-600: #cb8724;
+  --color-amber-50: #fdf3e3;
+  --color-red-700: #bb0307;
+  --color-red-400: #e0534f;
+  --color-red-50: #fcebea;
+
+  /* ---- Color · semantic (Light mode) --------------------------------- */
+  --color-surface-base: var(--color-white-base);
+  --color-surface-raised: var(--color-blue-100);
+  --color-border-base: var(--color-gray-100);
+  --color-text-base: var(--color-navy-900);
+  --color-text-muted: var(--color-slate-400);
+  --color-text-on-primary: var(--color-white-base);
+  --color-text-on-primary-muted: var(--color-blue-200);
+  --color-primary-base: var(--color-blue-600);
+  --color-primary-strong: var(--color-blue-700);
+  --color-primary-deep: var(--color-blue-800);
+  --color-accent-base: var(--color-blue-400);
+  --color-success-base: var(--color-green-600);
+  --color-success-text: var(--color-green-700);
+  --color-success-surface: var(--color-green-50);
+  --color-info-base: var(--color-blueinfo-700);
+  --color-warning-base: var(--color-amber-600);
+  --color-warning-text: var(--color-amber-800);
+  --color-warning-surface: var(--color-amber-50);
+  --color-danger-base: var(--color-red-700);
+  --color-danger-text: var(--color-red-700);
+  --color-danger-surface: var(--color-red-50);
+  --color-neutral-base: var(--color-slate-500);
+  --color-muted-surface-base: var(--color-gray-300);
+  --color-focus-on-dark: var(--color-white-base);
+  --color-focus-on-light: var(--color-blue-600);
+  --color-overlay-scrim: var(--color-navy-900);
+
+  /* Not defined as a Figma variable — raw fill on the QR pass shell
+     (node 2300:1344). Tokenised here so no rule carries a bare hex. */
+  --color-pass-shell: #d9d9d9;
+
+  /* ---- Spacing ------------------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ---- Radius -------------------------------------------------------- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* ---- Inline icons (SVG data URI — no extra files) -------------------- */
+  --icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.4l3 3 6-6.6' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* ---- Typography ---------------------------------------------------- */
+  --typography-family-heading: "Heebo", "Rubik", system-ui, sans-serif;
+  --typography-family-body: "Inter", "Source Sans 3", system-ui, sans-serif;
+  --typography-size-xs: 12px;
+  --typography-size-sm: 14px;
+  --typography-size-md: 16px;
+  --typography-size-lg: 20px;
+  --typography-size-xl: 28px;
+  --typography-size-1xl: 36px;
+  --typography-size-2xl: 40px;
+  --typography-size-3xl: 48px;
+
+  --typography-line-xs: 18px;
+  --typography-line-sm: 20px;
+  --typography-line-md: 24px;
+  --typography-line-lg: 28px;
+  --typography-line-xl: 36px;
+  --typography-line-1xl: 44px;
+  --typography-line-2xl: 48px;
+  --typography-line-3xl: 56px;
+
+  --typography-weight-regular: 400;
+  --typography-weight-medium: 500;
+  --typography-weight-semibold: 600;
+  --typography-weight-bold: 700;
+
+  /* ---- Spacing · vertical (fluid) --------------------------------------
+     ה-Figma צויר על קנבס של 412×917. אף טלפון אמיתי לא נותן 917 פיקסלים
+     גובה גלויים — אייפון 17 נותן בערך 724 מתחת לסרגל של ספארי. לכן
+     המרווחים האנכיים בלבד נמדדים ביחס לגובה החלון: הם מגיעים למספר
+     המדויק של ה-Figma בגובה המקורי, ומתכווצים בהדרגה במסך נמוך יותר.
+     הרוחב, הטיפוגרפיה ושטחי המגע לא נוגעים בזה ונשארים קבועים.
+     ---------------------------------------------------------------------- */
+  --v-2: clamp(6px,  0.90dvh,  8px);   /* = --space-2 at 917 */
+  --v-3: clamp(8px,  1.31dvh, 12px);   /* = --space-3 */
+  --v-4: clamp(10px, 1.75dvh, 16px);   /* = --space-4 */
+  --v-5: clamp(13px, 2.62dvh, 24px);   /* = --space-5 */
+  --v-6: clamp(16px, 3.49dvh, 32px);   /* = --space-6 */
+  --v-7: clamp(20px, 5.24dvh, 48px);   /* = --space-7 */
+  --v-8: clamp(26px, 6.98dvh, 64px);   /* = --space-8 */
+
+  /* ---- Layout -------------------------------------------------------- */
+  --canvas-width: 412px;
+  --canvas-gutter: var(--space-5);
+  --header-top: var(--v-7);
+  --control-height: 48px;
+  --field-height: 52px;
+
+  /* ---- Motion · read from the Figma prototype (27 connections) -------- */
+  --motion-dissolve: 300ms;
+  --motion-move-fast: 300ms;
+  --motion-move: 400ms;
+  --motion-move-slow: 500ms;
+  --motion-smart: 300ms;
+  --motion-smart-slow: 500ms;
+  --motion-splash-1: 200ms;
+  --motion-splash-2: 400ms;
+  --ease-out: cubic-bezier(0, 0, 0.58, 1);
+  --ease-in: cubic-bezier(0.42, 0, 1, 1);
+  --ease-linear: linear;
+
+  /* ---- Micro-motion · archetype "רגוע ואמין", mobile-adjusted ---------
+     Derived: radius 3 + typeface 1 + palette 3 + category 2 = 9 / 4 = 2.25.
+     Calm base 260ms, cut 15% because a phone in the hand is unforgiving;
+     lift halved from 6px because travel reads bigger on a small screen.
+     Easing is this product's own --ease-out, not the archetype default.   */
+  --motion-press-in: 90ms;      /* a press must register almost instantly  */
+  --motion-press-out: 160ms;    /* the release is allowed to relax slower  */
+  --motion-fast: 140ms;
+  --motion-base: 220ms;         /* calm 260ms − 15% for mobile             */
+  --motion-lift: 3px;           /* calm 6px, halved for the phone          */
+  --motion-press-scale: 0.97;
+  --motion-stagger: 40ms;
+  --motion-celebrate: 300ms;    /* the one delight beat, on Success        */
+  --motion-spin: 700ms;         /* loading spinner revolution              */
+  --motion-pulse: 1200ms;       /* the spinner's reduced-motion substitute */
+
+  /* ---- Elevation ----------------------------------------------------- */
+  --shadow-pass: 0 7.367px 18.419px -4px rgb(0 27 42 / 0.16);
+
+  /* ---- Gradients · named styles gradient/reveal-mask/* ---------------- */
+  --gradient-reveal-to-blue: linear-gradient(160deg, rgb(217 217 217 / 0) 0%, var(--color-primary-base) 92%);
+  --gradient-reveal-from-blue: linear-gradient(160deg, var(--color-primary-base) 0%, rgb(115 115 115 / 0) 100%);
+  --gradient-scrim-up: linear-gradient(to top, var(--color-primary-base) 55%, rgb(30 90 186 / 0) 100%);
+
+  color-scheme: light;
+}
+
+/* ---- Color · semantic (Dark mode) ------------------------------------
+   Values read from the "Dark" mode of the Figma Color collection.
+   The page opens in whichever mode the phone is set to, and the switch on the
+   Landing page (or in the menu) overrides that for the rest of the visit.
+   script.js stamps data-theme on <html>; this block only reacts to it.
+   It re-declares colour variables only — it never touches layout, so
+   deleting it leaves the light design byte-for-byte identical.           */
+:root[data-theme="dark"] {
+  --color-surface-base: var(--color-navy-950);
+  --color-surface-raised: var(--color-navy-800);
+  --color-border-base: var(--color-slate-600);
+  --color-text-base: var(--color-cream-50);
+  --color-text-muted: var(--color-lavender-100);
+  --color-primary-base: var(--color-gold-500);
+  --color-primary-strong: var(--color-gold-700);
+  --color-info-base: var(--color-blueinfo-400);
+  --color-danger-base: var(--color-red-400);
+  --color-neutral-base: var(--color-slate-300);
+  /* accent, success and warning are intentionally identical in both
+     modes — contrast-checked in docs/DESIGN_SYSTEM_AUDIT.md. */
+  color-scheme: dark;
+}
 
 /* =========================================================================
    Base
@@ -12,10 +209,6 @@
 *,
 *::before,
 *::after { box-sizing: border-box; }
-
-/* כמה מהאלמנטים כאן מקבלים display מפורש (grid/flex), שגובר על ברירת המחדל
-   של התכונה hidden. הכלל הזה מחזיר ל-hidden את המשמעות שלו בכל המסמך.   */
-[hidden] { display: none !important; }
 
 html { -webkit-text-size-adjust: 100%; }
 
@@ -86,7 +279,7 @@ button { font: inherit; color: inherit; }
   display: flex;
   flex-direction: column;
   padding-inline: var(--canvas-gutter);
-  padding-block-end: max(var(--space-5), env(safe-area-inset-bottom));
+  padding-block-end: max(var(--v-5), env(safe-area-inset-bottom));
   background: var(--color-primary-base);
   overflow-y: auto;
   overflow-x: hidden;
@@ -106,10 +299,6 @@ button { font: inherit; color: inherit; }
    ========================================================================= */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* השלד פועם בשקיפות בלבד — מידע על המתנה, לא קישוט. */
-  .slots-skeleton__chip { animation: slot-shimmer 1200ms var(--ease-out) infinite; }
-  .slots-skeleton__chip:nth-child(3n + 2) { animation-delay: 140ms; }
-  .slots-skeleton__chip:nth-child(3n + 3) { animation-delay: 280ms; }
   .anim-dissolve-in {
     animation: fade-in var(--motion-dissolve) var(--ease-out) both;
   }
@@ -130,7 +319,6 @@ button { font: inherit; color: inherit; }
   }
 }
 
-@keyframes slot-shimmer { 0%, 100% { opacity: 0.22 } 50% { opacity: 0.55 } }
 @keyframes fade-in  { from { opacity: 0 } to { opacity: 1 } }
 @keyframes fade-out { from { opacity: 1 } to { opacity: 0 } }
 @keyframes slide-from-end   { from { transform: translateX(100%) }  to { transform: translateX(0) } }
@@ -152,7 +340,8 @@ button { font: inherit; color: inherit; }
 }
 
 .logo { width: 111px; height: auto; }
-.logo--hero { width: 223px; }
+/* הלוגו הגדול של עמוד הנחיתה — 223px ב-Figma, מתכווץ במסך נמוך */
+.logo--hero { width: clamp(150px, 24.3dvh, 223px); }
 
 .hamburger {
   display: grid;
@@ -183,8 +372,8 @@ button { font: inherit; color: inherit; }
 .progress {
   --progress-fill: 0%;
   position: relative;
-  margin-block-start: var(--space-6);
-  padding-block-end: var(--space-1);
+  margin-block-start: var(--v-6);
+  padding-block-end: var(--v-1);
   flex: 0 0 auto;
 }
 
@@ -231,7 +420,7 @@ button { font: inherit; color: inherit; }
   display: flex;
   justify-content: space-between;
   flex-direction: row-reverse;
-  margin-block-start: var(--space-2);
+  margin-block-start: var(--v-2);
 }
 
 .progress__label {
@@ -291,7 +480,7 @@ button { font: inherit; color: inherit; }
 .btn-row {
   display: flex;
   gap: var(--space-2);
-  margin-block-start: var(--space-5);
+  margin-block-start: var(--v-5);
 }
 .btn-row .btn { flex: 1 1 0; }
 
@@ -331,7 +520,7 @@ button { font: inherit; color: inherit; }
 
 .field__error {
   display: none;
-  margin-block-start: var(--space-1);
+  margin-block-start: var(--v-1);
   font-size: var(--typography-size-xs);
   line-height: var(--typography-line-xs);
   color: var(--color-red-700);
@@ -375,27 +564,46 @@ button { font: inherit; color: inherit; }
    ========================================================================= */
 
 .screen--landing { align-items: center; }
-.screen--landing .header { justify-content: center; padding-block-start: var(--space-6); }
+.screen--landing .header { justify-content: center; padding-block-start: var(--v-6); }
 
 .landing__headline {
   align-self: stretch;
   text-align: start;
-  margin-block-start: var(--space-7);
+  margin-block-start: var(--v-7);
 }
 
+/* האיור הוא צרכן הגובה הגדול ביותר במסך. במסך גבוה הוא נשאר full-bleed
+   בדיוק כמו ב-Figma; במסך נמוך הוא מתכווץ לפי היחס הטבעי שלו (419:279)
+   ומתמרכז, במקום לדחוף את כפתורי הפעולה מתחת לקו הקיפול. */
 .landing__art {
   align-self: center;
   inline-size: calc(100% + var(--canvas-gutter) * 2);
   max-inline-size: none;
   margin-inline: calc(var(--canvas-gutter) * -1);
-  margin-block-start: calc(var(--space-5) * -1);
+  margin-block-start: calc(var(--v-5) * -1);
+  /* התיבה נשארת full-bleed בדיוק כמו ב-Figma. רק כשאין מספיק גובה
+     התקרה נכנסת לפעולה, והאיור מצטמצם ומתמרכז בתוכה — במקום לדחוף
+     את כפתורי הפעולה מתחת לקו הקיפול. */
+  max-block-size: clamp(128px, 30dvh, 279px);
+  block-size: auto;
+  object-fit: contain;
+  /* min-block-size:0 הוא מה שמתיר לתמונה בכלל להתכווץ בתוך flex column.
+     בלעדיו התמונה נשארת בגובה הטבעי שלה ודוחפת את השאר החוצה. */
+  flex: 0 1 auto;
+  /* הרצפה: מתחת ל-96px האיור כבר נראה כמו מדבקה ולא כמו איור. משם
+     והלאה המסך גולל — עדיף גלילה קטנה על איור מעוך. */
+  min-block-size: 96px;
 }
+
+/* רק האיור מוותר על גובה. כל שאר האלמנטים בעמוד — כותרת, כפתורים,
+   כרטיס הסטטוס, שורת ההגדרות — שומרים על הגובה המלא שלהם. */
+.screen--landing > :not(.landing__art) { flex-shrink: 0; }
 
 .landing__actions {
   align-self: stretch;
   display: grid;
-  gap: var(--space-2);
-  margin-block-start: var(--space-5);
+  gap: var(--v-2);
+  margin-block-start: var(--v-5);
 }
 
 /* My Status Card (node 2063:712) */
@@ -403,9 +611,9 @@ button { font: inherit; color: inherit; }
   align-self: stretch;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  margin-block-start: var(--space-4);
-  padding: var(--space-5);
+  gap: var(--v-2);
+  margin-block-start: var(--v-4);
+  padding: var(--v-5) var(--space-5);
   border: 1px solid var(--color-border-base);
   border-radius: var(--radius-lg);
   background: var(--color-surface-base);
@@ -469,12 +677,12 @@ button { font: inherit; color: inherit; }
    Registration (node 2173:4992)
    ========================================================================= */
 
-.form { display: grid; gap: 10px; margin-block-start: var(--space-6); }
+.form { display: grid; gap: 10px; margin-block-start: var(--v-6); }
 
 .passenger { display: grid; gap: 10px; }
-.passenger__title { margin-block-start: var(--space-3); }
+.passenger__title { margin-block-start: var(--v-3); }
 
-.form__foot { margin-block-start: var(--space-5); display: grid; gap: var(--space-3); }
+.form__foot { margin-block-start: var(--v-5); display: grid; gap: var(--space-3); }
 
 .link-btn {
   justify-self: center;
@@ -505,21 +713,29 @@ button { font: inherit; color: inherit; }
 }
 .add-passenger:disabled { opacity: 0.45; cursor: not-allowed; }
 
+/* העננים הם קישוט. במסך גבוה הם בגודל המקורי מ-Figma, ובמסך נמוך הם
+   הראשונים לוותר על גובה — לפני כל אלמנט שהמשתמש צריך לגעת בו. */
 .clouds {
   align-self: center;
   inline-size: 253px;
-  margin-block-start: var(--space-6);
-  margin-block-end: var(--space-3);
+  max-block-size: clamp(46px, 20.7dvh, 190px);
+  block-size: auto;
+  object-fit: contain;
+  margin-block-start: var(--v-6);
+  margin-block-end: var(--v-3);
   pointer-events: none;
 }
-.clouds--sm { inline-size: 137px; }
+.clouds--sm { inline-size: 137px; max-block-size: clamp(34px, 11.2dvh, 103px); }
+/* גם העננים מוותרים על גובה לפני כל אלמנט אחר */
+.clouds { flex: 0 1 auto; min-block-size: 34px; }
+.screen > :not(.clouds):not(.landing__art):not(.result__art) { flex-shrink: 0; }
 
 /* =========================================================================
    Flight card + time chips (nodes 4014:2291 / 2072:1179)
    ========================================================================= */
 
 .flight-card {
-  margin-block-start: var(--space-6);
+  margin-block-start: var(--v-6);
   padding: var(--space-4);
   border-radius: var(--radius-lg);
   background: var(--color-surface-base);
@@ -550,7 +766,7 @@ button { font: inherit; color: inherit; }
   font-size: var(--typography-size-sm);
   line-height: var(--typography-line-sm);
   color: var(--color-neutral-base);
-  margin-block-start: var(--space-1);
+  margin-block-start: var(--v-1);
 }
 .flight-card__row {
   display: flex;
@@ -582,7 +798,7 @@ button { font: inherit; color: inherit; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2);
-  margin-block-start: var(--space-5);
+  margin-block-start: var(--v-5);
   padding: 0;
   border: 0;
   min-inline-size: 0;
@@ -618,59 +834,8 @@ button { font: inherit; color: inherit; }
 }
 .slot__full {
   display: block;
-  font-size: var(--typography-size-2xs);
-  line-height: var(--typography-line-2xs);
+  font-size: 10px;
   font-weight: var(--typography-weight-regular);
-}
-
-/* ---- מסך בחירת חלון זמן · מצב טעינה ומצב ריק ---------------------------
-   שלושת המצבים של המסך הראשי. השלד מחזיק בדיוק את אותה רשת של הצ'יפים
-   האמיתיים, ולכן המעבר מטעינה למלא לא מזיז אף אלמנט אחר על המסך.        */
-.slots-skeleton {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-2);
-  margin-block-start: var(--space-5);
-}
-.slots-skeleton__chip {
-  min-block-size: 46px;
-  border-radius: var(--radius-md);
-  background: var(--color-surface-base);
-  opacity: 0.3;
-}
-
-.slots-empty {
-  margin-block-start: var(--space-5);
-  padding: var(--space-5) var(--space-4);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-base);
-  color: var(--color-text-base);
-  text-align: center;
-}
-.slots-empty__art {
-  inline-size: 48px;
-  block-size: 48px;
-  margin-inline: auto;
-  color: var(--color-primary-base);
-}
-.slots-empty__title {
-  margin-block-start: var(--space-3);
-  font-family: var(--typography-family-heading);
-  font-size: var(--typography-size-md);
-  line-height: var(--typography-line-md);
-  font-weight: var(--typography-weight-bold);
-  color: var(--color-text-base);
-}
-.slots-empty__body {
-  margin-block-start: var(--space-2);
-  font-family: var(--typography-family-body);
-  font-size: var(--typography-size-sm);
-  line-height: var(--typography-line-sm);
-  color: var(--color-neutral-base);
-}
-.slots-empty__retry {
-  margin-block-start: var(--space-4);
-  inline-size: 100%;
 }
 
 /* the collapsed / masked chip strip on "Time choosing extended info" */
@@ -694,17 +859,24 @@ button { font: inherit; color: inherit; }
 .result { align-items: center; }
 .result > .header,
 .result > .progress { align-self: stretch; inline-size: 100%; }
-.result__title { align-self: stretch; text-align: start; margin-block-start: var(--space-5); }
+.result__title { align-self: stretch; text-align: start; margin-block-start: var(--v-5); }
+/* איורי התוצאה מתכווצים באותו היגיון כמו איור עמוד הנחיתה */
 .result__art {
   inline-size: calc(100% + var(--canvas-gutter));
   max-inline-size: 377px;
   margin-inline: calc(var(--canvas-gutter) / -2);
-  margin-block: var(--space-4);
+  margin-block: var(--v-4);
+  max-block-size: clamp(150px, 26dvh, 320px);   /* אותו היגיון כמו האיור בעמוד הנחיתה */
+  block-size: auto;
+  object-fit: contain;
+  flex: 0 1 auto;
+  min-block-size: 110px;
 }
+.result > :not(.result__art) { flex-shrink: 0; }
 .result .actions { align-self: stretch; inline-size: 100%; margin-block-end: auto; }
 .result__reason {
   align-self: stretch;
-  margin-block-end: var(--space-4);
+  margin-block-end: var(--v-4);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   background: var(--color-danger-surface);
@@ -718,7 +890,7 @@ button { font: inherit; color: inherit; }
    Status screens (nodes 2039:541, 2081:1532)
    ========================================================================= */
 
-.page-title { margin-block-start: var(--space-6); text-align: start; }
+.page-title { margin-block-start: var(--v-6); text-align: start; }
 .page-title span { color: var(--color-accent-base); }
 .page-title h1 {
   font-family: var(--typography-family-heading);
@@ -731,9 +903,9 @@ button { font: inherit; color: inherit; }
 .pass-shell {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  margin-block-start: var(--space-5);
-  padding: 13px 14px 41px;
+  gap: var(--v-2);
+  margin-block-start: var(--v-5);
+  padding: 13px 14px clamp(18px, 4.5dvh, 41px);
   border-radius: 14px;
   background: var(--color-pass-shell);
 }
@@ -792,7 +964,7 @@ button { font: inherit; color: inherit; }
   display: flex;
   flex-direction: column;
   gap: 7px;
-  padding: 26px 17px;
+  padding: clamp(12px, 2.8dvh, 26px) 17px;
   border-radius: 10px;
   background: var(--color-surface-base);
 }
@@ -841,7 +1013,7 @@ button { font: inherit; color: inherit; }
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-2);
-  padding-block-end: var(--space-2);
+  padding-block-end: var(--v-2);
 }
 .step__content { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; }
 .step__content img { inline-size: 20px; block-size: 20px; flex: 0 0 auto; }
@@ -889,7 +1061,7 @@ button { font: inherit; color: inherit; }
   display: flex;
   justify-content: center;
   gap: var(--space-5);
-  margin-block-start: var(--space-5);
+  margin-block-start: var(--v-5);
 }
 .icon-btn {
   padding: 0;
@@ -907,37 +1079,88 @@ button { font: inherit; color: inherit; }
 .theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  justify-content: center;
+  gap: var(--space-1);
   min-block-size: 44px;
-  padding-inline: var(--space-4);
-  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  padding-block: var(--space-1);
   border: 1.5px solid var(--color-accent-base);
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-accent-base);
   font-family: var(--typography-family-heading);
-  font-size: var(--typography-size-sm);
+  font-size: var(--typography-size-xs);
   font-weight: var(--typography-weight-semibold);
+  white-space: nowrap;
   cursor: pointer;
   transition: background var(--motion-base) var(--ease-out), color var(--motion-base) var(--ease-out);
 }
 
-.theme-toggle svg { inline-size: 18px; block-size: 18px; flex: 0 0 auto; }
+.theme-toggle svg { inline-size: 16px; block-size: 16px; flex: 0 0 auto; }
 .theme-toggle .icon-moon { display: none; }
 .theme-toggle[aria-pressed="true"] .icon-sun { display: none; }
 .theme-toggle[aria-pressed="true"] .icon-moon { display: block; }
 
-.theme-toggle--landing {
-  align-self: flex-start;            /* physical right in this RTL layout */
-  margin-block-start: auto;          /* sits at the bottom of the free space */
-  margin-block-end: 0;
+/* =========================================================================
+   שורת ההגדרות המהירות בתחתית עמוד הנחיתה
+   שפה בקצה אחד, מצב תצוגה בשני. space-between מצמיד כל אחת לקצה שלה,
+   ולכן השורה מתהפכת נכון לבד כשעוברים לאנגלית או לרוסית.
+   ========================================================================= */
+.landing__foot {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-block-start: auto;          /* נדחפת לתחתית השטח הפנוי */
+  padding-block-start: var(--v-3);
 }
-.screen--landing { padding-block-end: var(--space-5); }
-.screen--landing .status-card { margin-block-end: var(--space-3); }
+
+/* מתג השפה — מלבן קומפקטי מחולק לארבע. הקודים נשארים באותיות לטיניות
+   בכל שפה, כי דובר רוסית מזהה "RU" גם כשהממשק בעברית. */
+.lang-switch {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  border: 1.5px solid var(--color-accent-base);
+  border-radius: var(--radius-sm);
+}
+
+.lang-switch__btn {
+  min-inline-size: 40px;
+  min-block-size: 44px;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--color-accent-base);
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-xs);
+  font-weight: var(--typography-weight-semibold);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background var(--motion-base) var(--ease-out),
+              color var(--motion-base) var(--ease-out),
+              transform var(--motion-press-out) var(--ease-out);
+}
+.lang-switch__btn + .lang-switch__btn {
+  border-inline-start: 1px solid var(--color-accent-base);
+}
+.lang-switch__btn[aria-checked="true"] {
+  background: var(--color-accent-base);
+  color: var(--color-primary-deep);
+}
+.lang-switch__btn[data-pressed] {
+  transform: scale(var(--motion-press-scale));
+  transition-duration: var(--motion-press-in);
+}
+
+.theme-toggle--landing { flex: 0 0 auto; }
+.screen--landing { padding-block-end: var(--v-5); }
+.screen--landing .status-card { margin-block-end: var(--v-3); }
 
 .theme-toggle--menu {
   align-self: flex-start;
-  margin-block-start: var(--space-3);
+  margin-block-start: var(--v-3);
   border-color: var(--color-accent-base);
 }
 
@@ -983,7 +1206,7 @@ button { font: inherit; color: inherit; }
   align-items: flex-start;
   gap: var(--space-2);
   inline-size: 100%;
-  margin-block-start: var(--space-5);
+  margin-block-start: var(--v-5);
 }
 .overlay__link {
   padding: var(--space-1) 0;
@@ -1027,7 +1250,25 @@ button { font: inherit; color: inherit; }
 [data-theme="dark"] .step__eta,
 [data-theme="dark"] .step--upcoming .step__name { color: var(--color-slate-400); }
 
+/* מסך נמוך: הכותרת הראשית יורדת מדרגה אחת. שתי שורות של 48px הן
+   96px מתוך תקציב גובה שאין ממנו הרבה — 42px לשורה עדיין קריאות
+   לגמרי ומחזירות את כפתורי הפעולה אל מעל קו הקיפול. */
+@media (height <= 780px) {
+  :root {
+    --typography-size-2xl: 34px;
+    --typography-line-2xl: 42px;
+    --typography-size-3xl: 40px;
+    --typography-line-3xl: 48px;
+  }
+}
+
 @media (width <= 380px) {
+  :root {
+    --canvas-gutter: var(--space-4);
+    --typography-size-2xl: 34px;
+    --typography-line-2xl: 42px;
+    --typography-size-1xl: 30px;
+  }
   .slots { gap: var(--space-1); }
   .slot { font-size: var(--typography-size-xs); }
   .progress__label { font-size: var(--typography-size-xs); }
@@ -1254,6 +1495,12 @@ button { font: inherit; color: inherit; }
    פחות תנועה, לא אפס משוב: מבטלים הזזה וקנה מידה, משאירים דעיכות קצרות.
    הספינר הופך לפעימת שקיפות, כי הוא מידע ולא קישוט.                     */
 @media (prefers-reduced-motion: reduce) {
+  /* פחות תנועה, לא אפס משוב. מנטרלים את הטוקנים עצמם במקום להילחם
+     בסלקטורים: כל כלל שמשתמש בהם מפסיק לזוז, והדעיכות נשארות.        */
+  :root {
+    --motion-press-scale: 1;
+    --motion-lift: 0px;
+  }
   .overlay__panel,
   .overlay[open] .overlay__panel { transform: none; }
   .passenger--entering { animation: fade-in var(--motion-fast) var(--ease-out) both; }
@@ -1286,7 +1533,7 @@ button { font: inherit; color: inherit; }
 
 .settings__title {
   align-self: center;
-  margin-block-start: var(--space-5);
+  margin-block-start: var(--v-5);
   font-family: var(--typography-family-heading);
   font-size: var(--typography-size-xl);
   line-height: var(--typography-line-xl);
@@ -1297,7 +1544,7 @@ button { font: inherit; color: inherit; }
 }
 
 .settings__name {
-  margin-block-start: var(--space-6);
+  margin-block-start: var(--v-6);
   font-family: var(--typography-family-heading);
   font-size: var(--typography-size-2xl);
   line-height: var(--typography-line-2xl);
@@ -1309,12 +1556,12 @@ button { font: inherit; color: inherit; }
 .settings__avatar {
   inline-size: 156px;
   block-size: auto;
-  margin-block-start: var(--space-2);
+  margin-block-start: var(--v-2);
   border-radius: var(--radius-pill);
 }
 
 .settings__link {
-  margin-block-start: var(--space-2);
+  margin-block-start: var(--v-2);
   padding: var(--space-3) var(--space-4);   /* 44px touch target */
   min-block-size: 44px;
   border: 0;
@@ -1330,10 +1577,10 @@ button { font: inherit; color: inherit; }
   align-self: stretch;
   display: grid;
   gap: 10px;
-  margin-block-start: var(--space-5);
+  margin-block-start: var(--v-5);
 }
-.settings__form--wide { margin-block-start: var(--space-6); gap: var(--space-4); }
-.settings__form .btn { margin-block-start: var(--space-6); }
+.settings__form--wide { margin-block-start: var(--v-6); gap: var(--space-4); }
+.settings__form .btn { margin-block-start: var(--v-6); }
 
 /* שדה מלא — הווריאנט של מסך הפרופיל */
 .input--filled {
@@ -1352,7 +1599,7 @@ button { font: inherit; color: inherit; }
   margin-inline: calc(var(--canvas-gutter) * -1);
   padding-inline: var(--canvas-gutter);
   padding-block: var(--space-3);
-  margin-block-start: var(--space-2);
+  margin-block-start: var(--v-2);
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -1420,7 +1667,7 @@ button { font: inherit; color: inherit; }
   align-self: stretch;
   display: grid;
   gap: var(--space-3);
-  margin-block-start: var(--space-6);
+  margin-block-start: var(--v-6);
 }
 
 .lang {
