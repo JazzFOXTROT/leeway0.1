@@ -14,22 +14,6 @@
      range as its own file, so a language you never pick is never downloaded. -->
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Inter:wght@400;600;700&family=Rubik:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-     <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "yb2fob1kwd");
-</script>
-     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5BSJ5TKMCK"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-5BSJ5TKMCK');
-</script>
 </head>
 <body>
 
@@ -144,7 +128,7 @@
 
       <div class="form__foot">
         <button type="submit" class="btn btn--primary" data-i18n="common.confirm">אישור</button>
-        <button type="button" class="link-btn" data-i18n="reg.remember">זכרו אותי</button>
+        <button type="button" class="link-btn" data-remember aria-pressed="false" data-i18n="reg.remember">זכרו אותי</button>
       </div>
     </form>
 
@@ -509,6 +493,17 @@
                value="12345678" data-i18n-ph="ph.passport" placeholder="מס׳ דרכון"></label>
       <button type="submit" class="btn btn--primary" data-i18n="profile.save">שמור פרטים שלי</button>
     </form>
+
+    <!-- ═══ מחיקת כל מה שנשמר במכשיר ═══════════════════════════════════════
+         הכפתור הזה מוחק בפועל את שלושת המפתחות ואת המטמון שמפורטים
+         בשם ב-docs/PRIVACY.md. אחריו נכתבת כאן תוצאת בדיקה חוזרת — כמה
+         מפתחות וכמה מטמונים נשארו — כדי שהמחיקה תהיה ניתנת לאימות ולא
+         רק מובטחת.                                                        -->
+    <div class="danger-zone">
+      <button type="button" class="btn btn--danger" data-clear-storage data-i18n="profile.clear">מחק את כל מה שנשמר</button>
+      <p class="danger-zone__note" data-i18n="profile.clearNote">מוחק את הפרטים ששמרת במכשיר הזה ואת העותק הלא-מקוון של האפליקציה. אין לזה השפעה על הזמנות שכבר אושרו.</p>
+      <p class="danger-zone__result" data-clear-result role="status" aria-live="polite"></p>
+    </div>
   </section>
 
   <!-- ═══ 13. התראות ═══ -->

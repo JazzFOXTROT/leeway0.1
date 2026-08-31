@@ -123,6 +123,12 @@
       "profile.name": "דניאל כהן",
       "profile.editPhoto": "ערוך תמונת פרופיל",
       "profile.save": "שמור פרטים שלי",
+      "reg.rememberOn": "זוכרים אותך",
+      "profile.clear": "מחק את כל מה שנשמר",
+      "profile.clearNote": "מוחק את הפרטים ששמרת במכשיר הזה. אין לזה השפעה על הזמנות שכבר אושרו.",
+      "clear.done": "נמחקו {k} מפתחות ו-{c} מטמונים. בבדיקה חוזרת לא נשאר כלום.",
+      "clear.left": "נמחק חלקית — נשארו {k} מפתחות ו-{c} מטמונים.",
+      "clear.empty": "לא היה מה למחוק — המכשיר כבר נקי.",
       "profile.pickerLabel": "בחירת תמונת פרופיל",
       "profile.av.neutral": "אווטאר ניטרלי",
       "profile.av.male1": "נוסע",
@@ -240,6 +246,12 @@
       "profile.name": "Daniel Cohen",
       "profile.editPhoto": "Edit profile picture",
       "profile.save": "Save my details",
+      "reg.rememberOn": "We'll remember you",
+      "profile.clear": "Delete everything saved",
+      "profile.clearNote": "Deletes the details you saved on this device. Bookings already confirmed are not affected.",
+      "clear.done": "Deleted {k} keys and {c} caches. Re-checked: nothing left.",
+      "clear.left": "Partly deleted — {k} keys and {c} caches remain.",
+      "clear.empty": "Nothing to delete — this device is already clean.",
       "profile.pickerLabel": "Choose a profile picture",
       "profile.av.neutral": "Neutral avatar",
       "profile.av.male1": "Male traveller",
@@ -357,6 +369,12 @@
       "profile.name": "Даниэль Коэн",
       "profile.editPhoto": "Изменить фото профиля",
       "profile.save": "Сохранить мои данные",
+      "reg.rememberOn": "Мы вас запомним",
+      "profile.clear": "Удалить всё сохранённое",
+      "profile.clearNote": "Удаляет данные, сохранённые на этом устройстве. Уже подтверждённые брони не затрагиваются.",
+      "clear.done": "Удалено {k} ключей и {c} кэшей. Повторная проверка: ничего не осталось.",
+      "clear.left": "Удалено частично — осталось {k} ключей и {c} кэшей.",
+      "clear.empty": "Нечего удалять — устройство уже чистое.",
       "profile.pickerLabel": "Выбор фото профиля",
       "profile.av.neutral": "Нейтральный аватар",
       "profile.av.male1": "Пассажир",
@@ -474,6 +492,12 @@
       "profile.name": "دانيال كوهين",
       "profile.editPhoto": "تعديل صورة الملف الشخصي",
       "profile.save": "حفظ بياناتي",
+      "reg.rememberOn": "سنتذكّرك",
+      "profile.clear": "احذف كل ما تم حفظه",
+      "profile.clearNote": "يحذف البيانات التي حفظتها على هذا الجهاز. لا يؤثر على الحجوزات المؤكدة.",
+      "clear.done": "تم حذف {k} مفاتيح و{c} ذاكرات تخزين. عند إعادة الفحص: لم يتبقَّ شيء.",
+      "clear.left": "تم الحذف جزئيًا — تبقّى {k} مفاتيح و{c} ذاكرات تخزين.",
+      "clear.empty": "لا يوجد ما يُحذف — الجهاز نظيف بالفعل.",
       "profile.pickerLabel": "اختيار صورة الملف الشخصي",
       "profile.av.neutral": "صورة رمزية محايدة",
       "profile.av.male1": "مسافر",
@@ -532,6 +556,10 @@
     applyTheme(theme);
     var photo = document.getElementById("route-photo");
     if (photo) photo.alt = t("alt.route");
+    /* applyLanguage() has just overwritten every [data-i18n] node with the
+       dictionary default, including the two that carry state: the
+       "remember me" label and the saved profile name. Put them back. */
+    if (typeof syncStatefulLabels === "function") syncStatefulLabels();
   }
 
   /* ---------------------------------------------------------------------
@@ -843,9 +871,26 @@
      Splash sequence — Loading 1 (logo at opacity 0) fades to Loading 2,
      which auto-advances to the Landing page.
      --------------------------------------------------------------------- */
+  /* A link can open the app straight at ?screen=registration or
+     ?screen=status. Only those two names are honoured — anything else is
+     ignored and the app opens normally. The jump happens AFTER the Landing
+     page has settled, so Landing is on the back stack and Back from a
+     shortcut lands there instead of dead-ending on the splash. */
+  var SHORTCUT_SCREENS = { registration: 1, status: 1 };
+  var shortcutScreen = null;
+  try {
+    var qs = new URLSearchParams(window.location.search).get("screen");
+    if (qs && SHORTCUT_SCREENS[qs]) shortcutScreen = qs;
+  } catch (err) { shortcutScreen = null; }
+
   window.setTimeout(function () {
     go("loading-2");
-    window.setTimeout(function () { go("landing"); }, 400);
+    window.setTimeout(function () {
+      go("landing");
+      /* 560ms > the 500ms loading-2>landing transition, so go() is no longer
+         busy and the jump is not swallowed. */
+      if (shortcutScreen) window.setTimeout(function () { go(shortcutScreen); }, 560);
+    }, 400);
   }, 200);
 
   /* ---------------------------------------------------------------------
@@ -1183,6 +1228,207 @@
   });
 
   applyLanguage("he");
+
+  /* =====================================================================
+     STORAGE
+     Everything this app writes to the device lives under the "leeway."
+     prefix, and STORAGE_KEYS below is the complete list — the same three
+     names that docs/PRIVACY.md lists, and the same three the "מחק את כל מה
+     שנשמר" button removes. If a key is ever added here it has to be added
+     there too; there is no fourth place data can hide.
+
+       leeway.remember   "1" while "זכרו אותי" is on. Absent otherwise.
+       leeway.passenger  the first passenger's details, so the form comes
+                         back filled. Written only while leeway.remember
+                         is "1", removed the moment it is switched off.
+       leeway.profile    what the profile screen's save button saves,
+                         including the chosen avatar.
+
+     Every access is wrapped. Safari in private mode does not return null
+     from localStorage — it throws, and an unguarded read would take the
+     whole app down on the splash screen.
+     ===================================================================== */
+
+  var STORAGE_KEYS = ["leeway.remember", "leeway.passenger", "leeway.profile"];
+
+  function readKey(key) {
+    try { return window.localStorage.getItem(key); } catch (err) { return null; }
+  }
+  function writeKey(key, value) {
+    try { window.localStorage.setItem(key, value); return true; } catch (err) { return false; }
+  }
+  function dropKey(key) {
+    try { window.localStorage.removeItem(key); } catch (err) { /* nothing to do */ }
+  }
+  function readJSON(key) {
+    var raw = readKey(key);
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch (err) { dropKey(key); return null; }
+  }
+  function writeJSON(key, value) { return writeKey(key, JSON.stringify(value)); }
+
+  function fmt(str, vars) {
+    return String(str).replace(/\{(\w+)\}/g, function (m, k) {
+      return Object.prototype.hasOwnProperty.call(vars, k) ? vars[k] : m;
+    });
+  }
+
+  function field(form, name) { return form ? form.querySelector('[name="' + name + '"]') : null; }
+
+  /* ---------------------------------------------------------------------
+     "זכרו אותי" — the button used to be decorative. Now it is the only
+     thing that turns storage on: nothing is written until it is pressed,
+     and pressing it again deletes what was written.
+     --------------------------------------------------------------------- */
+  var rememberBtn = document.querySelector("[data-remember]");
+  var PAX1 = ["first-1", "last-1", "passport-1", "flight-1"];
+
+  function rememberOn() { return readKey("leeway.remember") === "1"; }
+
+  function snapshotPassenger() {
+    if (!form) return;
+    var data = {};
+    PAX1.forEach(function (n) {
+      var el = field(form, n);
+      if (el) data[n] = el.value;
+    });
+    writeJSON("leeway.passenger", data);
+  }
+
+  function restorePassenger() {
+    var data = readJSON("leeway.passenger");
+    if (!data || !form) return;
+    PAX1.forEach(function (n) {
+      var el = field(form, n);
+      if (el && typeof data[n] === "string" && !el.value) el.value = data[n];
+    });
+  }
+
+  function syncStatefulLabels() {
+    if (rememberBtn) {
+      var on = rememberOn();
+      rememberBtn.setAttribute("aria-pressed", String(on));
+      rememberBtn.textContent = t(on ? "reg.rememberOn" : "reg.remember");
+    }
+    var saved = readJSON("leeway.profile");
+    var nameEl = document.querySelector(".settings__name");
+    if (nameEl) {
+      nameEl.textContent = (saved && (saved.first || saved.last))
+        ? [saved.first, saved.last].filter(Boolean).join(" ")
+        : t("profile.name");           /* back to the dictionary default */
+    }
+  }
+
+  if (rememberBtn) {
+    rememberBtn.addEventListener("click", function () {
+      if (rememberOn()) {
+        /* Off means gone, not merely inactive. */
+        dropKey("leeway.remember");
+        dropKey("leeway.passenger");
+      } else {
+        writeKey("leeway.remember", "1");
+        snapshotPassenger();
+      }
+      syncStatefulLabels();
+    });
+
+    /* While it is on, keep the snapshot current as the traveller types —
+       so it survives a crash, not only a successful submit. */
+    if (form) form.addEventListener("input", function (e) {
+      if (!rememberOn()) return;
+      if (PAX1.indexOf(e.target.name) === -1) return;
+      window.clearTimeout(snapshotPassenger.timer);
+      snapshotPassenger.timer = window.setTimeout(snapshotPassenger, 400);
+    });
+  }
+
+  /* ---------------------------------------------------------------------
+     Profile — "שמור פרטים שלי" now saves. It used to spin and go back.
+     --------------------------------------------------------------------- */
+  function snapshotProfile() {
+    if (!profileForm) return;
+    var picked = document.querySelector('.avatar-lane__item[aria-checked="true"]');
+    writeJSON("leeway.profile", {
+      first: (field(profileForm, "profile-first") || {}).value || "",
+      last: (field(profileForm, "profile-last") || {}).value || "",
+      passport: (field(profileForm, "profile-passport") || {}).value || "",
+      avatar: picked ? picked.dataset.avatar : ""
+    });
+  }
+
+  function restoreProfile() {
+    var saved = readJSON("leeway.profile");
+    if (!saved || !profileForm) return;
+    if (typeof saved.first === "string" && saved.first) field(profileForm, "profile-first").value = saved.first;
+    if (typeof saved.last === "string" && saved.last) field(profileForm, "profile-last").value = saved.last;
+    if (typeof saved.passport === "string" && saved.passport) field(profileForm, "profile-passport").value = saved.passport;
+    if (saved.avatar) {
+      var item = document.querySelector('.avatar-lane__item[data-avatar="' + saved.avatar + '"]');
+      if (item) item.click();          /* reuses the picker's own paint path */
+    }
+  }
+
+  if (profileForm) profileForm.addEventListener("submit", function () {
+    snapshotProfile();
+    syncStatefulLabels();              /* the name under the title follows */
+  });
+
+  /* ---------------------------------------------------------------------
+     "מחק את כל מה שנשמר" — deletes the three keys and every Cache Storage
+     entry this origin holds, then counts again and reports what is left.
+     The recount is the point: the button proves itself instead of claiming.
+     --------------------------------------------------------------------- */
+  var clearBtn = document.querySelector("[data-clear-storage]");
+  var clearOut = document.querySelector("[data-clear-result]");
+
+  function countKeys() {
+    return STORAGE_KEYS.filter(function (k) { return readKey(k) !== null; }).length;
+  }
+  function listCaches() {
+    if (!window.caches || !caches.keys) return Promise.resolve([]);
+    return caches.keys().catch(function () { return []; });
+  }
+
+  if (clearBtn) clearBtn.addEventListener("click", function () {
+    listCaches().then(function (before) {
+      var keysBefore = countKeys();
+
+      STORAGE_KEYS.forEach(dropKey);
+
+      return Promise.all(before.map(function (name) {
+        return caches.delete(name).catch(function () { return false; });
+      })).then(function () {
+        return listCaches().then(function (after) {
+          var keysAfter = countKeys();
+          var cleared = keysBefore + before.length;
+
+          if (clearOut) {
+            if (keysAfter === 0 && after.length === 0) {
+              clearOut.removeAttribute("data-failed");
+              clearOut.textContent = cleared === 0
+                ? t("clear.empty")
+                : fmt(t("clear.done"), { k: keysBefore, c: before.length });
+            } else {
+              clearOut.setAttribute("data-failed", "");
+              clearOut.textContent = fmt(t("clear.left"), { k: keysAfter, c: after.length });
+            }
+          }
+          /* The screen has to stop showing what was just deleted, otherwise
+             the button reads as a lie. Registration empties; the profile
+             goes back to the values the markup ships with. */
+          if (form) PAX1.forEach(function (n) { var el = field(form, n); if (el) el.value = ""; });
+          if (profileForm) qsa("#profile-form .input").forEach(function (el) { el.value = el.defaultValue; });
+          var firstAvatar = document.querySelector(".avatar-lane__item");
+          if (firstAvatar) firstAvatar.click();
+          syncStatefulLabels();
+        });
+      });
+    });
+  });
+
+  restoreProfile();
+  restorePassenger();
+  syncStatefulLabels();
 
   var routeEl = document.querySelector("[data-route]");
   applyRoutePhoto(routeEl ? routeEl.textContent.trim() : "TLV-SEA");
