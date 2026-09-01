@@ -66,6 +66,8 @@
       "reg.h2a": "טס",
       "reg.h2b": "לא לבד?",
       "reg.addPassenger": "+ הוסף נוסע",
+      "reg.removePassenger": "הסר",
+      "aria.removePassenger": "הסרת נוסע",
       "reg.remember": "זכרו אותי",
       "reg.passengerN": "נוסע",
       "reg.max": "הגעת למקסימום {n} נוסעים",
@@ -189,6 +191,8 @@
       "reg.h2a": "Flying",
       "reg.h2b": "with others?",
       "reg.addPassenger": "+ Add passenger",
+      "reg.removePassenger": "Remove",
+      "aria.removePassenger": "Remove passenger",
       "reg.remember": "Remember me",
       "reg.passengerN": "Passenger",
       "reg.max": "Maximum of {n} passengers reached",
@@ -278,7 +282,7 @@
       "app.title": "Leeway — запись на досмотр в аэропорту Бен-Гурион",
       "common.loading": "Загрузка",
       "common.confirm": "Подтвердить",
-      "common.continue": "Next",
+      "common.continue": "Далее",
       "common.back": "Назад",
       "common.backBtn": "Назад",
       "common.home": "На главную",
@@ -312,6 +316,8 @@
       "reg.h2a": "Летите",
       "reg.h2b": "не один?",
       "reg.addPassenger": "+ Добавить пассажира",
+      "reg.removePassenger": "Удалить",
+      "aria.removePassenger": "Удалить пассажира",
       "reg.remember": "Запомнить меня",
       "reg.passengerN": "Пассажир",
       "reg.max": "Достигнут максимум: {n} пассажиров",
@@ -435,6 +441,8 @@
       "reg.h2a": "هل تسافر",
       "reg.h2b": "مع آخرين؟",
       "reg.addPassenger": "+ إضافة مسافر",
+      "reg.removePassenger": "إزالة",
+      "aria.removePassenger": "إزالة مسافر",
       "reg.remember": "تذكّرني",
       "reg.passengerN": "مسافر",
       "reg.max": "تم بلوغ الحد الأقصى {n} مسافرين",
@@ -575,6 +583,23 @@
     Array.prototype.forEach.call(el.querySelectorAll(".result__title"), fitTitle);
   }
 
+  /* The status title is two words and only the possessive one is blue.
+     Word order differs by language, so the possessive is not always the
+     same slot: it is the FIRST word in English and Russian ("My status",
+     "Мой статус") and the SECOND in Hebrew and Arabic ("סטטוס שלי").
+     Marking a fixed span would colour the wrong word in half the languages. */
+  var STATUS_ACCENT = { he: "b", en: "a", ru: "a", ar: "b" };
+
+  function paintStatusTitle(code) {
+    var slot = STATUS_ACCENT[code] || "b";
+    qsa(".page-title h1").forEach(function (h1) {
+      var spans = h1.querySelectorAll("span");
+      if (spans.length < 2) return;
+      spans[0].classList.toggle("is-accent", slot === "a");
+      spans[1].classList.toggle("is-accent", slot === "b");
+    });
+  }
+
   function applyLanguage(code) {
     if (!LANGS[code]) return;
     lang = code;
@@ -592,6 +617,7 @@
 
     if (lastSlot) applySlot(lastSlot);
     applyTheme(theme);
+    paintStatusTitle(code);       /* the accented word moves between languages */
     fitTitlesIn(document);        /* the sentence just changed length */
     var photo = document.getElementById("route-photo");
     if (photo) photo.alt = t("alt.route");
@@ -757,9 +783,10 @@
      marked SYSTEM SEED below to   var theme = "light";
      --------------------------------------------------------------------- */
   var THEME_COLORS = { light: "#1e5aba", dark: "#b6975b" };
-  var systemDark = window.matchMedia("(prefers-color-scheme: dark)");
   var themeChosenByUser = false;
-  var theme = systemDark.matches ? "dark" : "light";   /* SYSTEM SEED */
+  /* SYSTEM SEED — החלטת מוצר: המוצר נפתח תמיד בבהיר, בלי קשר להגדרת
+     הטלפון. מי שרוצה כהה מקבל אותו בהקשה אחת על המתג. */
+  var theme = "light";
 
   function applyTheme(next) {
     theme = next;
@@ -784,12 +811,10 @@
   }
   applyTheme(theme);
 
-  /* keep following the phone until the traveller picks a side themselves */
-  var onSystemChange = function (e) {
-    if (!themeChosenByUser) applyTheme(e.matches ? "dark" : "light");
-  };
-  if (systemDark.addEventListener) systemDark.addEventListener("change", onSystemChange);
-  else if (systemDark.addListener) systemDark.addListener(onSystemChange);
+  /* The phone's setting is deliberately NOT followed any more. Light is the
+     product's default, and the toggle is the only thing that changes it —
+     otherwise changing the phone's theme mid-visit would silently override
+     a choice the traveller already made. */
 
   /* ---------------------------------------------------------------------
      Overlay menu — the hamburger is unconnected in the Figma prototype,
@@ -928,6 +953,7 @@
   var PRESSABLE = ".btn, .slot, .status-card, .flight-card, .icon-btn, .theme-toggle," +
                   ".lang, .lang-switch__btn, .avatar-lane__item, .settings__link," +
                   ".overlay__link, .add-passenger, .link-btn, .hamburger," +
+                  ".passenger__remove," +
                   '.logo[role="button"], .pass-shell[role="button"], .slots--masked';
 
   document.addEventListener("pointerdown", function (e) {
@@ -1029,7 +1055,12 @@
     var e = function (key) { return '<span class="field__error" data-i18n="' + key + '">' + t(key) + '</span>'; };
     var sr = function (key) { return '<span class="visually-hidden" data-i18n="' + key + '">' + t(key) + '</span>'; };
     return '' +
-      '<h3 class="h3 passenger__title"><span data-i18n="reg.passengerN">' + t("reg.passengerN") + '</span> <em>' + n + '</em></h3>' +
+      '<h3 class="h3 passenger__title">' +
+        '<span><span data-i18n="reg.passengerN">' + t("reg.passengerN") + '</span> <em>' + n + '</em></span>' +
+        '<button type="button" class="passenger__remove" data-remove-passenger ' +
+          'data-i18n="reg.removePassenger" data-i18n-aria="aria.removePassenger" ' +
+          'aria-label="' + t("aria.removePassenger") + '">' + t("reg.removePassenger") + '</button>' +
+      '</h3>' +
       '<div class="name-row">' +
         '<label class="field">' + sr("ph.first") +
         '<input class="input" type="text" data-rule="name" name="first-' + n + f("ph.first") + '>' + e("err.first") + '</label>' +
@@ -1063,6 +1094,50 @@
         addBtn.textContent = t("reg.max").replace("{n}", MAX_PASSENGERS);
         addBtn.removeAttribute("data-i18n");
       }
+    });
+  }
+
+  /* Passenger fields are addressed by index (first-2, first-3 ...), so a
+     removal from the middle must renumber everything after it. Skip this and
+     the form silently ends up with a gap — first-2 and first-4, no first-3 —
+     which validate() still walks but snapshotPassenger() and the flight card
+     would read wrongly. */
+  function renumberPassengers() {
+    var blocks = extraWrap ? Array.prototype.slice.call(extraWrap.children) : [];
+    blocks.forEach(function (block, i) {
+      var n = i + 2;                     /* passenger 1 is in the static markup */
+      block.dataset.passenger = String(n);
+      var num = block.querySelector(".passenger__title em");
+      if (num) num.textContent = String(n);
+      ["first", "last", "passport", "flight"].forEach(function (base) {
+        var el = block.querySelector('[name^="' + base + '-"]');
+        if (el) el.name = base + "-" + n;
+      });
+    });
+    paxCount = blocks.length + 1;
+    updatePaxCount();
+    if (addBtn) {
+      addBtn.disabled = paxCount >= MAX_PASSENGERS;
+      if (paxCount < MAX_PASSENGERS) {
+        addBtn.setAttribute("data-i18n", "reg.addPassenger");
+        addBtn.textContent = t("reg.addPassenger");
+      }
+    }
+  }
+
+  if (extraWrap) {
+    extraWrap.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-remove-passenger]");
+      if (!btn) return;
+      var block = btn.closest(".passenger");
+      if (!block) return;
+      /* Move focus out before the node goes away, or the browser drops it to
+         <body> and a keyboard user loses their place in the form. */
+      var next = block.nextElementSibling;
+      block.remove();
+      renumberPassengers();
+      var land = (next && next.querySelector("input")) || addBtn;
+      if (land && typeof land.focus === "function") land.focus();
     });
   }
 
@@ -1471,6 +1546,29 @@
     });
   }
 
+  /* The profile is the traveller's own details, so editing it should show up
+     in "פרטי נוסע" for passenger 1 too — otherwise they type the same name
+     twice and wonder which one counts.
+
+     overwrite=true after an explicit save (they just declared these details);
+     overwrite=false on load, so a remembered passenger is not clobbered.
+
+     Note it never starts persisting on its own: leeway.passenger is only
+     touched when "זכרו אותי" is already on, exactly as the privacy policy says. */
+  var PROFILE_TO_PAX = { first: "first-1", last: "last-1", passport: "passport-1" };
+
+  function applyProfileToRegistration(overwrite) {
+    var saved = readJSON("leeway.profile");
+    if (!saved || !form) return;
+    Object.keys(PROFILE_TO_PAX).forEach(function (key) {
+      var el = field(form, PROFILE_TO_PAX[key]);
+      var val = saved[key];
+      if (!el || typeof val !== "string" || !val) return;
+      if (overwrite || !el.value) el.value = val;
+    });
+    if (rememberOn()) snapshotPassenger();
+  }
+
   function restoreProfile() {
     var saved = readJSON("leeway.profile");
     if (!saved || !profileForm) return;
@@ -1485,6 +1583,7 @@
 
   if (profileForm) profileForm.addEventListener("submit", function () {
     snapshotProfile();
+    applyProfileToRegistration(true);  /* passenger 1 follows the profile */
     syncStatefulLabels();              /* the name under the title follows */
   });
 
@@ -1543,6 +1642,7 @@
 
   restoreProfile();
   restorePassenger();
+  applyProfileToRegistration(false);   /* fills only what restore left empty */
   syncStatefulLabels();
 
   var routeEl = document.querySelector("[data-route]");

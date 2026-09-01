@@ -27,7 +27,7 @@
    >>> VERSION below is bumped. Bump it in the same commit as the edit.
    ========================================================================= */
 
-const VERSION = "v1";
+const VERSION = "v2";
 
 const PREFIX = "leeway-" + VERSION;      /* every cache we own starts with this */
 const SHELL_CACHE = PREFIX + "-shell";   /* documents + the offline screen      */

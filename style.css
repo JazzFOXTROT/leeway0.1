@@ -485,6 +485,10 @@ button { font: inherit; color: inherit; }
   margin-block-start: var(--v-5);
 }
 .btn-row .btn { flex: 1 1 0; }
+/* ב-RTL הפעולה הראשית יושבת מימין, וזה נכון. ב-LTR אותו סדר DOM היה שם
+   אותה משמאל ואת "חזרה" מימין — הפוך מהמוסכמה. היפוך השורה מחזיר את
+   הראשית לימין בלי לגעת ב-HTML. */
+:root[dir="ltr"] .btn-row { flex-direction: row-reverse; }
 
 .actions { display: grid; gap: var(--space-2); }
 
@@ -703,7 +707,36 @@ button { font: inherit; color: inherit; }
 .form { display: grid; gap: 10px; margin-block-start: var(--v-6); }
 
 .passenger { display: grid; gap: 10px; }
-.passenger__title { margin-block-start: var(--v-3); }
+.passenger__title {
+  margin-block-start: var(--v-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* הסרת נוסע. בלי זה, נוסע שנוסף בטעות חוסם את הטופס לתמיד — הוא ריק,
+   ולכן validate() נכשל עליו ואי אפשר להמשיך. */
+.passenger__remove {
+  flex: 0 0 auto;
+  min-block-size: 44px;          /* שטח מגע, גם אם הטקסט קטן */
+  padding-inline: var(--space-3);
+  border: 0;
+  background: none;
+  color: var(--color-danger-base);
+  font-family: var(--typography-family-body);
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-sm);
+  font-weight: var(--typography-weight-semibold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.passenger__remove[data-pressed] {
+  transform: scale(var(--motion-press-scale));
+  transition-duration: var(--motion-press-in);
+}
 
 /* ‎.form הוא grid עם gap של 10px, שכבר תורם את המרווח מעל הפוטר. מחסירים
    אותו כדי ש"+ הוסף נוסע" ו"אישור" ישבו בדיוק 8px זה מזה, כמו שאר הזוגות. */
@@ -925,7 +958,10 @@ button { font: inherit; color: inherit; }
    ========================================================================= */
 
 .page-title { margin-block-start: var(--v-6); text-align: start; }
-.page-title span { color: var(--color-accent-base); }
+/* הכותרת דו-גונית כמו כל שאר הכותרות: הבסיס לבן, ורק מילת השייכות
+   ("שלי" / "My" / "Мой" / "رحلتي") בכחול. איזו מהמילים זו — משתנה בין
+   שפה לשפה, כי סדר המילים שונה, ולכן script.js מסמן את הנכונה. */
+.page-title .is-accent { color: var(--color-accent-base); }
 .page-title h1 {
   font-family: var(--typography-family-heading);
   font-size: var(--typography-size-2xl);
@@ -1157,7 +1193,8 @@ button { font: inherit; color: inherit; }
   align-items: stretch;
   overflow: hidden;
   border: 1.5px solid var(--color-accent-base);
-  border-radius: var(--radius-sm);
+  /* היה radius-sm וזה בלט: .btn, .lang ו-.slot כולם radius-md. */
+  border-radius: var(--radius-md);
 }
 
 .lang-switch__btn {
