@@ -7,6 +7,12 @@
 <meta name="description" content="זימון מראש של חלון זמן לביקורת ביטחון בנמל התעופה בן גוריון, ומעקב סטטוס ביום הטיסה.">
 <meta name="theme-color" content="#1e5aba">
 <link rel="icon" href="assets/images/logo-leeway-white.png">
+<link rel="manifest" href="manifest.webmanifest">
+<!-- iOS ignores the manifest icons; it reads this one. Same 192 any icon. -->
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Leeway">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Heebo covers Hebrew+Latin but has no Arabic and no Cyrillic. Cairo carries
@@ -234,7 +240,7 @@
       </div>
     </div>
 
-    <div class="slots slots--masked" data-go="time-choosing" role="button" tabindex="0"
+    <div class="slots slots--masked" data-back role="button" tabindex="0"
          data-i18n-aria="aria.backToSlots" aria-label="חזרה לבחירת חלון זמן">
       <span class="slot">6:40-7:00</span>
       <span class="slot">7:00-7:20</span>
@@ -585,5 +591,15 @@
 </main>
 
 <script src="script.js"></script>
+<script>
+  /* Registered after load so it never competes with the first paint.
+     Failure is silent by design: a browser without service workers, or
+     a page opened over file://, must still run the whole app. */
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+</script>
 </body>
 </html>

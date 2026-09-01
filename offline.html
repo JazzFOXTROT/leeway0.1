@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>אין חיבור — Leeway</title>
+<meta name="theme-color" content="#1e5aba">
+<link rel="icon" href="assets/icons/icon-192.png">
+<!-- This page is the last line of defence, so it carries its own colours
+     instead of linking style.css. The values are copied from the same
+     tokens (--color-primary-base #1e5aba, --color-text-on-primary,
+     --color-blue-200, --radius-pill); if style.css ever fails to cache,
+     this screen still looks like the product. -->
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 24px;
+    text-align: center;
+    background: #1e5aba;
+    color: #ffffff;
+    font-family: "Heebo", "Rubik", system-ui, -apple-system, sans-serif;
+  }
+  img { inline-size: 180px; max-inline-size: 60%; height: auto; }
+  h1 { margin: 0; font-size: 28px; line-height: 36px; font-weight: 700; }
+  p  { margin: 0; max-inline-size: 34ch; font-size: 16px; line-height: 24px; color: #d6e6ff; }
+  button {
+    min-height: 48px;
+    padding-inline: 32px;
+    border: 0;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #0f3673;
+    font: inherit;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  button:focus-visible { outline: 3px solid #ffffff; outline-offset: 3px; }
+  .state { font-size: 14px; line-height: 20px; color: #d6e6ff; min-height: 20px; }
+</style>
+</head>
+<body>
+
+  <img src="assets/images/logo-leeway-white.png" alt="Leeway" width="224" height="75">
+
+  <h1>אין חיבור לאינטרנט</h1>
+
+  <p>לא הצלחנו לטעון את המסך המבוקש. ההזמנות שכבר נשמרו במכשיר לא נמחקו — הן יחזרו ברגע שהחיבור יחזור.</p>
+
+  <button type="button" id="retry">נסו שוב</button>
+
+  <p class="state" id="state" role="status" aria-live="polite"></p>
+
+<script>
+  var state = document.getElementById("state");
+
+  document.getElementById("retry").addEventListener("click", function () {
+    state.textContent = navigator.onLine ? "מתחבר מחדש…" : "עדיין אין חיבור.";
+    location.replace("./");
+  });
+
+  /* The moment the device is back online, leave on our own — the traveller
+     should not have to notice the button. */
+  window.addEventListener("online", function () {
+    state.textContent = "החיבור חזר, טוען…";
+    location.replace("./");
+  });
+
+  if (!navigator.onLine) state.textContent = "המכשיר במצב לא מקוון.";
+</script>
+
+</body>
+</html>

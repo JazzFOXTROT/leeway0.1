@@ -537,6 +537,44 @@
   }
   function qsa(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
 
+  /* ---------------------------------------------------------------------
+     Result titles fit themselves to one line.
+
+     The same sentence is 307px wide in Arabic and 543px in English at the
+     design's 40px, against 364px of usable width. One fixed size cannot
+     serve both: English would have to drop to 26px, dragging Hebrew and
+     Arabic down with it for no reason and breaking the match with the
+     Success screen. So each title is measured and keeps the largest size
+     that still fits on a single line.
+
+     Measuring needs the element laid out, so this runs when a screen
+     arrives — not while it is still hidden, where clientWidth is 0.
+     --------------------------------------------------------------------- */
+  var TITLE_MAX = 40;      /* the Figma size — nothing grows past it */
+  var TITLE_MIN = 22;      /* below this it stops being a display title */
+  var TITLE_LEADING = 1.2; /* 48/40, the design's own ratio */
+
+  function fitTitle(el) {
+    if (!el) return;
+    el.style.whiteSpace = "nowrap";
+    var size = TITLE_MAX;
+    el.style.fontSize = size + "px";
+    el.style.lineHeight = Math.round(size * TITLE_LEADING) + "px";
+    if (!el.clientWidth) { el.style.whiteSpace = ""; return; }   /* still hidden */
+    while (size > TITLE_MIN && el.scrollWidth > el.clientWidth) {
+      size -= 1;
+      el.style.fontSize = size + "px";
+      el.style.lineHeight = Math.round(size * TITLE_LEADING) + "px";
+    }
+    /* If even the floor overflows, wrapping beats clipping. */
+    if (el.scrollWidth > el.clientWidth) el.style.whiteSpace = "";
+  }
+
+  function fitTitlesIn(el) {
+    if (!el) return;
+    Array.prototype.forEach.call(el.querySelectorAll(".result__title"), fitTitle);
+  }
+
   function applyLanguage(code) {
     if (!LANGS[code]) return;
     lang = code;
@@ -554,6 +592,7 @@
 
     if (lastSlot) applySlot(lastSlot);
     applyTheme(theme);
+    fitTitlesIn(document);        /* the sentence just changed length */
     var photo = document.getElementById("route-photo");
     if (photo) photo.alt = t("alt.route");
     /* applyLanguage() has just overwritten every [data-i18n] node with the
@@ -690,6 +729,7 @@
   /* everything that should happen only after a screen has settled */
   function onScreenArrived(name, el) {
     if (typeof advanceProgress === "function") advanceProgress(el);
+    fitTitlesIn(el);
     if (name === "success") {
       var art = el.querySelector(".result__art");
       if (art) {
@@ -802,8 +842,83 @@
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Enter" && e.key !== " ") return;
     var el = e.target.closest('[data-go][role="button"], [data-go][tabindex]');
-    if (el) { e.preventDefault(); go(el.dataset.go); }
+    if (el) { e.preventDefault(); go(el.dataset.go); return; }
+    /* Elements that are back controls but are not real <button>s (the masked
+       slot strip) get no free Enter/Space from the browser. */
+    var backEl = e.target.closest('[data-back][role="button"], [data-back][tabindex]');
+    if (backEl) { e.preventDefault(); back(); }
   });
+
+  /* ---------------------------------------------------------------------
+     Swipe back, on every screen.
+
+     Direction is not a matter of taste: back() animates with
+     slide-from-start, so the incoming screen begins at translateX(-100%)
+     and travels rightwards. The gesture that drives that motion is a drag
+     to the RIGHT, and that is the only direction accepted.
+
+     Deliberately not edge-only — the ask was an easier way back from
+     anywhere. The guards are what keep that safe:
+       · a gesture starting inside a sideways scroller (the avatar lane)
+         belongs to that scroller, not to us;
+       · if the finger travelled further down than across it was a scroll;
+       · two fingers is a pinch;
+       · the menu dialog and the splash screens are left alone.
+     --------------------------------------------------------------------- */
+  var SWIPE_MIN = 70;        /* px travelled before it counts as a swipe */
+  var SWIPE_RATIO = 1.6;     /* horizontal must beat vertical by this    */
+  var SWIPE_MAX_MS = 800;    /* slower than this is a drag, not a swipe  */
+  var NO_SWIPE = { "loading-1": 1, "loading-2": 1 };
+  var swipe = null;
+
+  function scrollsSideways(node) {
+    while (node && node !== document.body) {
+      if (node.scrollWidth > node.clientWidth + 1) {
+        var ox = window.getComputedStyle(node).overflowX;
+        if (ox === "auto" || ox === "scroll") return true;
+      }
+      node = node.parentNode;
+    }
+    return false;
+  }
+
+  document.addEventListener("touchstart", function (e) {
+    swipe = null;
+    if (e.touches.length !== 1) return;
+    if (overlay.open) return;
+    if (NO_SWIPE[current]) return;
+    if (scrollsSideways(e.target)) return;
+    var t = e.touches[0];
+    swipe = { x: t.clientX, y: t.clientY, at: Date.now() };
+  }, { passive: true });
+
+  document.addEventListener("touchmove", function (e) {
+    if (swipe && e.touches.length !== 1) swipe = null;   /* became a pinch */
+  }, { passive: true });
+
+  document.addEventListener("touchcancel", function () { swipe = null; }, { passive: true });
+
+  /* Rotating the phone changes the available width, so the titles are
+     re-fitted. Debounced — resize fires continuously during rotation. */
+  var refitTimer;
+  window.addEventListener("resize", function () {
+    window.clearTimeout(refitTimer);
+    refitTimer = window.setTimeout(function () { fitTitlesIn(document); }, 150);
+  });
+
+  document.addEventListener("touchend", function (e) {
+    var s = swipe;
+    swipe = null;
+    if (!s) return;
+    var t = e.changedTouches && e.changedTouches[0];
+    if (!t) return;
+    if (Date.now() - s.at > SWIPE_MAX_MS) return;
+    var dx = t.clientX - s.x;
+    var dy = t.clientY - s.y;
+    if (dx < SWIPE_MIN) return;                       /* rightwards only */
+    if (dx < Math.abs(dy) * SWIPE_RATIO) return;      /* that was a scroll */
+    back();
+  }, { passive: true });
 
   /* ---------------------------------------------------------------------
      Pressed state. On touch this carries the whole load — there is no

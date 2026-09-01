@@ -94,6 +94,7 @@
   /* ---- Typography ---------------------------------------------------- */
   --typography-family-heading: "Heebo", "Rubik", system-ui, sans-serif;
   --typography-family-body: "Inter", "Source Sans 3", system-ui, sans-serif;
+  --typography-size-2xs: 10px;
   --typography-size-xs: 12px;
   --typography-size-sm: 14px;
   --typography-size-md: 16px;
@@ -103,6 +104,7 @@
   --typography-size-2xl: 40px;
   --typography-size-3xl: 48px;
 
+  --typography-line-2xs: 14px;
   --typography-line-xs: 18px;
   --typography-line-sm: 20px;
   --typography-line-md: 24px;
@@ -703,7 +705,13 @@ button { font: inherit; color: inherit; }
 .passenger { display: grid; gap: 10px; }
 .passenger__title { margin-block-start: var(--v-3); }
 
-.form__foot { margin-block-start: var(--v-5); display: grid; gap: var(--space-3); }
+/* ‎.form הוא grid עם gap של 10px, שכבר תורם את המרווח מעל הפוטר. מחסירים
+   אותו כדי ש"+ הוסף נוסע" ו"אישור" ישבו בדיוק 8px זה מזה, כמו שאר הזוגות. */
+.form__foot {
+  margin-block-start: calc(var(--space-2) - 10px);
+  display: grid;
+  gap: var(--space-2);
+}
 
 .link-btn {
   justify-self: center;
@@ -747,8 +755,13 @@ button { font: inherit; color: inherit; }
   pointer-events: none;
 }
 .clouds--sm { inline-size: 137px; max-block-size: clamp(34px, 11.2dvh, 103px); }
-/* גם העננים מוותרים על גובה לפני כל אלמנט אחר */
-.clouds { flex: 0 1 auto; min-block-size: 34px; }
+/* העננים כבר מקבלים סולם נזיל דרך max-block-size למעלה, שמגיע לגודל
+   ה-Figma במסך גבוה ומתכווץ באותו יחס כמו איורי התוצאה. מה שהרס את זה
+   היה flex-shrink: במסך טופס ארוך הם היו האלמנט הגמיש היחיד, ונמעכו עד
+   min-block-size — 36% מגודל העיצוב בטלפון רגיל, במקום 79% כמו המטוס.
+   עכשיו הם לא נמעכים, וה-clamp לבדו קובע. מסך שנשאר ארוך מדי פשוט
+   נגלל, וזה כבר הוגדר ב-.screen עם overflow-y: auto. */
+.clouds { flex: 0 0 auto; }
 .screen > :not(.clouds):not(.landing__art):not(.result__art) { flex-shrink: 0; }
 
 /* =========================================================================
@@ -887,7 +900,7 @@ button { font: inherit; color: inherit; }
   max-inline-size: 377px;
   margin-inline: calc(var(--canvas-gutter) / -2);
   margin-block: var(--v-4);
-  max-block-size: clamp(150px, 26dvh, 320px);   /* אותו היגיון כמו האיור בעמוד הנחיתה */
+  max-block-size: clamp(150px, 39dvh, 358px);   /* אותו היגיון כמו האיור בעמוד הנחיתה */
   block-size: auto;
   object-fit: contain;
   flex: 0 1 auto;
@@ -1601,6 +1614,9 @@ button { font: inherit; color: inherit; }
   margin-block-start: var(--v-5);
 }
 .settings__form--wide { margin-block-start: var(--v-6); gap: var(--space-4); }
+
+/* אזור המחיקה צמוד לכפתור השמירה שמעליו — 8px, כמו כל זוג כפתורים אחר. */
+.danger-zone { margin-block-start: var(--space-2); }
 .settings__form .btn { margin-block-start: var(--v-6); }
 
 /* שדה מלא — הווריאנט של מסך הפרופיל */
