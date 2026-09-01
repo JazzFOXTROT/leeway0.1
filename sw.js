@@ -45,6 +45,9 @@ const SHELL = [
   "style.css",
   "script.js",
   "manifest.webmanifest",
+  "privacy.html",     /* a store listing links straight here — without it, an
+                         offline visit would fall through to index.html and
+                         show the app instead of the policy. */
   OFFLINE_URL
 ];
 

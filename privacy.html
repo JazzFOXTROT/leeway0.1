@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מדיניות פרטיות — Leeway</title>
+<meta name="description" content="מדיניות הפרטיות של Leeway: מה נשמר על המכשיר, מה עובר לצד שלישי, ואיך מוחקים הכול.">
+<meta name="theme-color" content="#1e5aba">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Colours are the app's own tokens, copied so this page renders correctly
+     even if style.css is unavailable. Light values on :root, dark values
+     swapped under prefers-color-scheme — same behaviour as the app. */
+  :root {
+    --primary:      #1e5aba;   /* --color-blue-600  */
+    --primary-deep: #0f3673;   /* --color-blue-800  */
+    --surface:      #ffffff;
+    --surface-alt:  #e9f2ff;   /* --color-blue-100  */
+    --text:         #001b2a;   /* --color-navy-900  */
+    --muted:        #525f77;   /* --color-slate-600 */
+    --border:       #d6e6ff;   /* --color-blue-200  */
+    --danger:       #bb0307;   /* --color-red-700   */
+    --radius:       12px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --primary:      #b6975b; /* --color-gold-500  */
+      --primary-deep: #8d7546;
+      --surface:      #0a1220; /* --color-navy-950  */
+      --surface-alt:  #182a4a; /* --color-navy-800  */
+      --text:         #f2efe9; /* --color-cream-50  */
+      --muted:        #c9c8c8;
+      --border:       #525f77;
+      --danger:       #e0534f;
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--surface);
+    color: var(--text);
+    font-family: "Heebo", "Rubik", system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: var(--primary);
+    color: #fff;
+    padding: 40px 24px 32px;
+  }
+  header .inner { max-width: 760px; margin-inline: auto; }
+  header img { inline-size: 150px; height: auto; display: block; margin-block-end: 24px; }
+  header h1 { margin: 0 0 8px; font-size: clamp(28px, 6vw, 40px); line-height: 1.2; font-weight: 700; }
+  header p { margin: 0; opacity: 0.85; font-size: 15px; }
+
+  main { max-width: 760px; margin-inline: auto; padding: 40px 24px 80px; }
+
+  h2 {
+    margin: 48px 0 12px;
+    font-size: clamp(21px, 4vw, 26px);
+    line-height: 1.3;
+    font-weight: 700;
+    padding-block-end: 8px;
+    border-block-end: 2px solid var(--border);
+  }
+  h3 { margin: 32px 0 8px; font-size: 18px; font-weight: 600; }
+  p, li { margin: 0 0 14px; }
+  ul { padding-inline-start: 22px; }
+  a { color: var(--primary); }
+
+  code {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.88em;
+    background: var(--surface-alt);
+    padding: 2px 6px;
+    border-radius: 5px;
+    direction: ltr;
+    display: inline-block;
+  }
+
+  .lead {
+    background: var(--surface-alt);
+    border-inline-start: 4px solid var(--primary);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-block: 24px;
+  }
+  .lead p:last-child { margin-block-end: 0; }
+
+  .note {
+    border: 1px solid var(--danger);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-block: 20px;
+  }
+  .note strong { color: var(--danger); }
+  .note p:last-child { margin-block-end: 0; }
+
+  .scroll { overflow-x: auto; margin-block: 20px; }
+  table { border-collapse: collapse; inline-size: 100%; min-inline-size: 480px; font-size: 15px; }
+  th, td {
+    text-align: start;
+    padding: 12px 14px;
+    border-block-end: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th { background: var(--surface-alt); font-weight: 600; white-space: nowrap; }
+
+  footer {
+    max-width: 760px;
+    margin-inline: auto;
+    padding: 0 24px 60px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .back {
+    display: inline-block;
+    margin-block-start: 24px;
+    padding: 12px 26px;
+    background: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <img src="assets/images/logo-leeway-white.png" alt="Leeway" width="150" height="50">
+    <h1>מדיניות פרטיות</h1>
+    <p>עדכון אחרון: 1 בספטמבר 2026 · גרסת אפליקציה v1</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="lead">
+    <p><strong>בשורה אחת:</strong> ל-Leeway אין שרת. כל מה שאתם מקלידים נשאר על
+    המכשיר שלכם, ורק אם ביקשתם זאת. אין חשבונות, אין אנליטיקה, ואין מעקב.</p>
+  </div>
+
+  <p>המסמך הזה לא נכתב מתבנית. הוא נגזר מסריקה של קוד המקור של האפליקציה, וכל
+  טענה בו ניתנת לבדיקה מול הקוד.</p>
+
+  <h2>1. מה נשמר על המכשיר</h2>
+
+  <p>האפליקציה כותבת <strong>שלושה</strong> מפתחות ב-<code>localStorage</code>
+  ו<strong>שני</strong> מטמונים. זו הרשימה המלאה — אין יותר.</p>
+
+  <h3>שדות שאתם מזינים</h3>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>שם המפתח</th><th>מה בדיוק נשמר בו</th><th>מתי</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>leeway.remember</code></td>
+          <td>המחרוזת <code>"1"</code> בלבד — סימון שהפעלתם "זכרו אותי".</td>
+          <td>רק בלחיצה על "זכרו אותי"</td>
+        </tr>
+        <tr>
+          <td><code>leeway.passenger</code></td>
+          <td>ארבעה שדות של הנוסע הראשון בלבד: שם פרטי, שם משפחה, מספר דרכון ומספר טיסה.</td>
+          <td>רק כאשר "זכרו אותי" מופעל</td>
+        </tr>
+        <tr>
+          <td><code>leeway.profile</code></td>
+          <td>שם פרטי, שם משפחה, מספר דרכון, ומזהה טקסטואלי של האווטאר שבחרתם.</td>
+          <td>רק בלחיצה על "שמור פרטים שלי"</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p><strong>מספר דרכון הוא מזהה ממשלתי.</strong> הוא נשמר כטקסט גלוי, בלי
+    הצפנה. זה מקובל לאב-טיפוס, אבל צריך לומר אותו במפורש: מי שיש לו גישה
+    פיזית למכשיר לא נעול יכול לקרוא אותו. אם זה מטריד אתכם — אל תפעילו
+    "זכרו אותי", ואל תשמרו פרופיל. האפליקציה עובדת מצוין גם בלי.</p>
+  </div>
+
+  <h3>קבצי האפליקציה עצמה</h3>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>שם המטמון</th><th>מה יש בו</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>leeway-v1-shell</code></td>
+          <td>שישה קבצים של האפליקציה, כדי שתיפתח בלי רשת.</td>
+        </tr>
+        <tr>
+          <td><code>leeway-v1-assets</code></td>
+          <td>גיליונות סגנון, סקריפטים, תמונות וגופנים.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>שני המטמונים האלה מכילים <strong>אך ורק קבצים של האפליקציה</strong>. אין
+  בהם שום מידע אישי.</p>
+
+  <h3>מה לא נשמר</h3>
+
+  <ul>
+    <li><strong>עוגיות</strong> — אפס. האפליקציה לא משתמשת בעוגיות כלל.</li>
+    <li><strong>IndexedDB, sessionStorage</strong> — לא בשימוש.</li>
+    <li><strong>בחירת השפה</strong> — לא נשמרת. חוזרת לעברית בכל פתיחה.</li>
+    <li><strong>מצב כהה או בהיר</strong> — לא נשמר. נקבע לפי הגדרת הטלפון.</li>
+    <li><strong>מתגי ההתראות</strong> — תצוגה בלבד. האפליקציה לא שולחת התראות ולא שומרת את המצב.</li>
+    <li><strong>מיקום, מצלמה, מיקרופון, אנשי קשר</strong> — האפליקציה לא מבקשת ולא משתמשת.</li>
+  </ul>
+
+  <h2>2. מה עובר לצד שלישי</h2>
+
+  <p>שירות חיצוני אחד בלבד: <strong>Google Fonts</strong>, שממנו נטענים הגופנים.
+  כדי להגיש קובץ, שרת חייב לראות את <strong>כתובת ה-IP</strong> של המכשיר ואת
+  סוג הדפדפן. זו העברת נתונים, גם אם היא טכנית, ולכן היא כתובה כאן ולא מוסתרת.</p>
+
+  <p><strong>מה לא נשלח לשם:</strong> שום דבר ממה שהקלדתם. שם, מספר דרכון ומספר
+  טיסה לא יוצאים מהמכשיר בשום מצב.</p>
+
+  <p>אחרי הביקור הראשון הגופנים נשמרים במכשיר, ולכן ביקורים הבאים בדרך כלל לא
+  פונים ל-Google כלל.</p>
+
+  <p><strong>אין באפליקציה</strong> Google Analytics, פיקסלים, מזהי פרסום, כלי
+  מדידה או ערכות פיתוח של צד שלישי. אין אף אחד מהם.</p>
+
+  <h2>3. איך מוחקים הכול</h2>
+
+  <p>במסך <strong>"פרופיל שלי"</strong> יש כפתור
+  <strong>"מחק את כל מה שנשמר"</strong>.</p>
+
+  <p>הוא מוחק את שלושת המפתחות ואת כל המטמונים, ואז <strong>סופר מחדש ומדווח
+  לכם כמה נשארו</strong>. הדיווח הוא העיקר: הכפתור מוכיח את עצמו במקום להבטיח.</p>
+
+  <p>שימו לב שמחיקת המטמונים מוחקת גם את העותק הלא-מקוון של האפליקציה. זו
+  התנהגות מכוונת — "מחק הכול" הוא הכול. האפליקציה תיבנה מחדש בביקור המקוון הבא.</p>
+
+  <p><strong>כיבוי "זכרו אותי"</strong> מוחק מיד את הפרטים שנשמרו. כיבוי הוא
+  מחיקה, לא רק השבתה.</p>
+
+  <p>אפשר גם למחוק דרך הגדרות הדפדפן, במחיקת נתוני אתר.</p>
+
+  <h2>4. כמה זמן נשמר המידע</h2>
+
+  <p>עד שתמחקו אותו. אין תפוגה אוטומטית, ואין העתק אצל אף אחד אחר — כי אין שרת.</p>
+
+  <h2>5. ילדים</h2>
+
+  <p>האפליקציה לא מיועדת לילדים מתחת לגיל 13. היא לא אוספת מידע לשרת מאף אחד,
+  בכל גיל.</p>
+
+  <h2>6. יצירת קשר</h2>
+
+  <p>לשאלות בנושא פרטיות:
+  <a href="mailto:kirillblik@gmail.com">kirillblik@gmail.com</a></p>
+
+  <a class="back" href="./">חזרה לאפליקציה</a>
+
+</main>
+
+<footer>
+  <p>Leeway היא פרויקט גמר בעיצוב חוויית משתמש. היא מדגימה זרימה מלאה מקצה
+  לקצה ואינה מחוברת למערכות רשות שדות התעופה. הפרטים המוצגים בה הם דוגמה בלבד.</p>
+</footer>
+
+</body>
+</html>
