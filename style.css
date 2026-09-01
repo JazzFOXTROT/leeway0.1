@@ -775,6 +775,18 @@ button { font: inherit; color: inherit; }
 }
 .add-passenger:disabled { opacity: 0.45; cursor: not-allowed; }
 
+/* תוצאת חיפוש מספר הטיסה — שורה שקטה מתחת לשדה. */
+.flight-lookup {
+  margin: var(--space-1) 0 0;
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-sm);
+  color: var(--color-text-on-primary-muted);
+}
+.flight-lookup[hidden] { display: none; }
+.flight-lookup[data-state="found"] { color: var(--color-text-on-primary); }
+.flight-lookup[data-state="found"] strong { font-weight: var(--typography-weight-semibold); }
+.flight-lookup__route { unicode-bidi: isolate; direction: ltr; display: inline-block; }
+
 /* העננים הם קישוט. במסך גבוה הם בגודל המקורי מ-Figma, ובמסך נמוך הם
    הראשונים לוותר על גובה — לפני כל אלמנט שהמשתמש צריך לגעת בו. */
 .clouds {

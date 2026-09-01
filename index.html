@@ -124,6 +124,9 @@
           <input class="input" type="text" name="flight-1" data-i18n-ph="ph.flight" placeholder="מס׳ טיסה" data-rule="flight">
           <span class="field__error" data-i18n="err.flight">מספר טיסה לדוגמה: LY 315</span>
         </label>
+        <!-- תוצאת חיפוש מספר הטיסה. נשאר ריק עד שיש מה להראות, ולעולם
+             לא חוסם את הטופס — החיפוש הוא העשרה, לא אימות. -->
+        <p class="flight-lookup" data-flight-info role="status" aria-live="polite" hidden></p>
       </div>
 
       <h2 class="display"><span data-i18n="reg.h2a">טס</span> <em data-i18n="reg.h2b">לא לבד?</em></h2>

@@ -55,6 +55,13 @@ const VIDEO = /\.(mp4|webm|ogv|ogg|mov|m4v|m3u8|ts)$/i;
 
 const FONT_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com"];
 
+/* A destination photo fetched from Wikipedia is an image like any other:
+   worth keeping so the flight card still has it offline. The lookup APIs
+   themselves are deliberately NOT here — cache-first on a data endpoint
+   would serve yesterday's answer forever. They fall through to the
+   browser untouched. */
+const PHOTO_HOSTS = ["upload.wikimedia.org"];
+
 /* ---------------------------------------------------------------------- */
 
 self.addEventListener("install", (event) => {
@@ -92,6 +99,10 @@ function isDocument(request) {
 
 function isFont(url) {
   return FONT_HOSTS.indexOf(url.hostname) !== -1;
+}
+
+function isRemotePhoto(url) {
+  return PHOTO_HOSTS.indexOf(url.hostname) !== -1;
 }
 
 /* Documents: network first, cache second, offline screen last.
@@ -132,7 +143,14 @@ async function cacheFirst(request) {
 
   try {
     const res = await fetch(request);
-    if (res && res.ok && res.type !== "opaque") cache.put(request, res.clone());
+    /* Opaque responses are normally refused: status is always 0, so an error
+       page is indistinguishable from a real one and caching it would poison
+       the entry. A cross-origin <img> is always opaque, though, so the
+       destination photo could never be stored under that rule. It is allowed
+       here for the photo hosts only, where the cost of guessing wrong is one
+       broken image that falls back to the bundled artwork. */
+    const opaqueOk = res && res.type === "opaque" && isRemotePhoto(new URL(request.url));
+    if (res && ((res.ok && res.type !== "opaque") || opaqueOk)) cache.put(request, res.clone());
     return res;
   } catch (err) {
     /* Not in ASSET_CACHE and the network is gone — but it may still be in
@@ -163,7 +181,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.origin === self.location.origin || isFont(url)) {
+  if (url.origin === self.location.origin || isFont(url) || isRemotePhoto(url)) {
     event.respondWith(cacheFirst(request));
   }
   /* anything else cross-origin is left to the browser */

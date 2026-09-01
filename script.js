@@ -66,6 +66,10 @@
       "reg.h2a": "טס",
       "reg.h2b": "לא לבד?",
       "reg.addPassenger": "+ הוסף נוסע",
+      "flight.looking": "מאתר את פרטי הטיסה…",
+      "flight.notFound": "לא מצאנו את מספר הטיסה הזה. אפשר להמשיך בכל מקרה.",
+      "flight.offline": "אין חיבור — פרטי הטיסה יושלמו כשהרשת תחזור.",
+      "flight.found": "{airline} · {route}",
       "reg.removePassenger": "הסר",
       "aria.removePassenger": "הסרת נוסע",
       "reg.remember": "זכרו אותי",
@@ -191,6 +195,10 @@
       "reg.h2a": "Flying",
       "reg.h2b": "with others?",
       "reg.addPassenger": "+ Add passenger",
+      "flight.looking": "Looking up the flight…",
+      "flight.notFound": "We couldn’t find that flight number. You can continue anyway.",
+      "flight.offline": "No connection — flight details will fill in once you’re back online.",
+      "flight.found": "{airline} · {route}",
       "reg.removePassenger": "Remove",
       "aria.removePassenger": "Remove passenger",
       "reg.remember": "Remember me",
@@ -316,6 +324,10 @@
       "reg.h2a": "Летите",
       "reg.h2b": "не один?",
       "reg.addPassenger": "+ Добавить пассажира",
+      "flight.looking": "Ищем рейс…",
+      "flight.notFound": "Не удалось найти этот номер рейса. Можно продолжить.",
+      "flight.offline": "Нет соединения — данные рейса появятся позже.",
+      "flight.found": "{airline} · {route}",
       "reg.removePassenger": "Удалить",
       "aria.removePassenger": "Удалить пассажира",
       "reg.remember": "Запомнить меня",
@@ -441,6 +453,10 @@
       "reg.h2a": "هل تسافر",
       "reg.h2b": "مع آخرين؟",
       "reg.addPassenger": "+ إضافة مسافر",
+      "flight.looking": "جارٍ البحث عن الرحلة…",
+      "flight.notFound": "لم نعثر على رقم الرحلة. يمكنك المتابعة على أي حال.",
+      "flight.offline": "لا يوجد اتصال — ستُستكمل تفاصيل الرحلة لاحقًا.",
+      "flight.found": "{airline} · {route}",
       "reg.removePassenger": "إزالة",
       "aria.removePassenger": "إزالة مسافر",
       "reg.remember": "تذكّرني",
@@ -634,6 +650,195 @@
   var ROUTE_PHOTOS = {
     "TLV-SEA": { src: "assets/images/route-tlv-sea.png", altKey: "alt.route" }
   };
+
+  /* =====================================================================
+     Flight lookup + destination photo — two free, keyless, CORS-enabled APIs.
+
+     adsbdb.com      turns "LY315" into airline + origin + destination.
+     Wikipedia       turns the destination city into a photo.
+
+     Both were chosen because a static site on GitHub Pages cannot do
+     anything else: it has no server to hide a key in, and a key shipped in
+     this file would be readable by anyone. Verified before use — both send
+     Access-Control-Allow-Origin: * and neither needs credentials.
+
+     Everything here is ENRICHMENT. The form validates the flight number
+     locally, as it always did, and submitting never waits on the network.
+     Offline, or an unknown number, costs the traveller nothing.
+     ===================================================================== */
+  var ADSBDB = "https://api.adsbdb.com/v0";
+  var WIKI = "https://en.wikipedia.org/w/api.php";
+  var LOOKUP_TIMEOUT = 6000;
+  var flightCache = {};             /* in memory only — never written to disk */
+  var lookupSeq = 0;
+
+  /* Returned instead of null when the request never reached the server at
+     all. "We couldn't find that flight" and "your connection is down" are
+     different facts, and telling a traveller the first when the second is
+     true sends them hunting for a mistake they did not make. */
+  var UNREACHABLE = { unreachable: true };
+
+  function fetchJSON(url) {
+    /* AbortController so a slow lookup cannot pile up behind a fast typist. */
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = window.setTimeout(function () { if (ctrl) ctrl.abort(); }, LOOKUP_TIMEOUT);
+    return fetch(url, ctrl ? { signal: ctrl.signal } : undefined)
+      .then(function (r) {
+        if (r.ok) return r.json();
+        /* A 404 is a real answer: that callsign has no route on file. */
+        return r.status === 404 ? null : UNREACHABLE;
+      })
+      .catch(function () { return UNREACHABLE; })   /* offline, DNS, timeout, CORS */
+      .then(function (v) { window.clearTimeout(timer); return v; });
+  }
+
+  /* "LY 315" / "ly315" -> { iata: "LY", num: "315" } */
+  function parseFlight(raw) {
+    var m = String(raw || "").trim().toUpperCase().match(/^([A-Z]{2})\s?(\d{1,4})$/);
+    return m ? { iata: m[1], num: m[2] } : null;
+  }
+
+  /* adsbdb routes are keyed by ICAO callsign (ELY315), not IATA (LY315),
+     so the airline endpoint is asked for the ICAO code first. */
+  function lookupFlight(parsed) {
+    var key = parsed.iata + parsed.num;
+    if (flightCache[key]) return Promise.resolve(flightCache[key]);
+    return fetchJSON(ADSBDB + "/airline/" + encodeURIComponent(parsed.iata))
+      .then(function (a) {
+        if (a === UNREACHABLE) return UNREACHABLE;
+        var list = a && a.response;
+        var icao = list && list[0] && list[0].icao;
+        if (!icao) return null;
+        return fetchJSON(ADSBDB + "/callsign/" + encodeURIComponent(icao + parsed.num))
+          .then(function (c) {
+            if (c === UNREACHABLE) return UNREACHABLE;
+            var fr = c && c.response && c.response.flightroute;
+            if (!fr || !fr.origin || !fr.destination) return null;
+            var out = {
+              airline: (fr.airline && fr.airline.name) || list[0].name,
+              from: fr.origin.iata_code,
+              to: fr.destination.iata_code,
+              city: fr.destination.municipality || "",
+              toName: fr.destination.name || ""
+            };
+            flightCache[key] = out;
+            return out;
+          });
+      });
+  }
+
+  /* Wikipedia gives a right-sized thumbnail, so the phone is not made to
+     download an 8000px original just to fill a 343px card. */
+  function lookupCityPhoto(city) {
+    if (!city) return Promise.resolve(null);
+    var url = WIKI + "?action=query&prop=pageimages&piprop=thumbnail&pithumbsize=800" +
+              "&titles=" + encodeURIComponent(city) + "&format=json&origin=*";
+    return fetchJSON(url).then(function (d) {
+      var pages = d && d.query && d.query.pages;
+      if (!pages) return null;
+      for (var id in pages) {
+        var thumb = pages[id].thumbnail;
+        if (thumb && thumb.source) return thumb.source;
+      }
+      return null;
+    });
+  }
+
+  /* The route and photo the markup shipped with. A lookup that fails must
+     fall back to these rather than leaving the PREVIOUS flight's route on
+     the card — otherwise an unrecognised number silently inherits the last
+     recognised one, which is worse than showing nothing. */
+  var routeDefaults = null;
+
+  function captureRouteDefaults() {
+    if (routeDefaults) return;
+    var el = document.querySelector("[data-route]");
+    var photo = document.getElementById("route-photo");
+    routeDefaults = {
+      label: el ? el.textContent.trim() : "",
+      src: photo ? photo.getAttribute("src") : "",
+      alt: photo ? photo.getAttribute("alt") : ""
+    };
+  }
+
+  function resetFlightRoute() {
+    if (!routeDefaults) return;
+    qsa("[data-route]").forEach(function (el) { el.textContent = routeDefaults.label; });
+    var photo = document.getElementById("route-photo");
+    if (photo && routeDefaults.src) { photo.src = routeDefaults.src; photo.alt = routeDefaults.alt; }
+  }
+
+  function setLookupNote(state, text) {
+    var el = document.querySelector("[data-flight-info]");
+    if (!el) return;
+    if (!state) { el.hidden = true; el.textContent = ""; el.removeAttribute("data-state"); return; }
+    el.hidden = false;
+    el.setAttribute("data-state", state);
+    el.textContent = text;
+  }
+
+  /* Applies whatever the lookup found to the flight cards and the photo.
+     Called only on success, so a failed lookup leaves the shipped defaults
+     exactly as they were. */
+  function applyFlightRoute(info) {
+    var label = info.from + "-" + info.to;
+    qsa("[data-route]").forEach(function (el) { el.textContent = label; });
+
+    var photo = document.getElementById("route-photo");
+    if (!photo) return;
+    var local = ROUTE_PHOTOS[label];
+    if (local) { photo.src = local.src; photo.alt = t(local.altKey); return; }
+    lookupCityPhoto(info.city).then(function (src) {
+      if (!src) return;                       /* keep the bundled photo */
+      photo.src = src;
+      photo.alt = info.city || info.toName || t("alt.route");
+    });
+  }
+
+  function runFlightLookup(raw) {
+    var parsed = parseFlight(raw);
+    if (!parsed) { setLookupNote(null); resetFlightRoute(); return; }
+    if (!navigator.onLine) { setLookupNote("offline", t("flight.offline")); return; }
+
+    var seq = ++lookupSeq;
+    setLookupNote("looking", t("flight.looking"));
+    lookupFlight(parsed).then(function (info) {
+      if (seq !== lookupSeq) return;          /* a newer lookup already won */
+      if (info === UNREACHABLE) {
+        /* Say nothing about the number itself — we never got to ask. */
+        setLookupNote("offline", t("flight.offline"));
+        resetFlightRoute();
+        return;
+      }
+      if (!info) { setLookupNote("notfound", t("flight.notFound")); resetFlightRoute(); return; }
+      setLookupNote("found", fmt(t("flight.found"), {
+        airline: info.airline, route: info.from + " → " + info.to
+      }));
+      applyFlightRoute(info);
+    });
+  }
+
+  /* Delegated from document, not bound to the form element, because the
+     lookup engine is defined before `form` is assigned. Debounced at 500ms
+     so a typist is not chased down the wire on every keystroke. */
+  var flightTimer;
+  document.addEventListener("input", function (e) {
+    if (!e.target || e.target.name !== "flight-1") return;
+    var val = e.target.value;
+    /* Drop the previous answer the instant the number changes. Without this
+       the old airline and route stay on screen during the debounce, which
+       reads as though they belong to the number now in the field. */
+    setLookupNote(null);
+    lookupSeq++;                       /* orphan any lookup still in flight */
+    window.clearTimeout(flightTimer);
+    flightTimer = window.setTimeout(function () { runFlightLookup(val); }, 500);
+  });
+
+  /* If the number was typed while offline, try again the moment we're back. */
+  window.addEventListener("online", function () {
+    var el = document.querySelector('[name="flight-1"]');
+    if (el && el.value) runFlightLookup(el.value);
+  });
 
   /* ---------------------------------------------------------------------
      Transition table — "from>to". `dir` follows Figma's own semantics:
@@ -1645,6 +1850,11 @@
   applyProfileToRegistration(false);   /* fills only what restore left empty */
   syncStatefulLabels();
 
+  /* A remembered flight number should show its route without being retyped. */
+  var bootFlight = document.querySelector('[name="flight-1"]');
+  if (bootFlight && bootFlight.value) runFlightLookup(bootFlight.value);
+
   var routeEl = document.querySelector("[data-route]");
   applyRoutePhoto(routeEl ? routeEl.textContent.trim() : "TLV-SEA");
+  captureRouteDefaults();      /* after the shipped photo is in place */
 })();
