@@ -67,6 +67,7 @@
       "reg.h2b": "לא לבד?",
       "reg.addPassenger": "+ הוסף נוסע",
       "flight.looking": "מאתר את פרטי הטיסה…",
+      "alt.unknownRoute": "עננים — יעד הטיסה עדיין לא ידוע",
       "flight.notFound": "לא מצאנו את מספר הטיסה הזה. אפשר להמשיך בכל מקרה.",
       "flight.offline": "אין חיבור — פרטי הטיסה יושלמו כשהרשת תחזור.",
       "flight.found": "{airline} · {route}",
@@ -196,6 +197,7 @@
       "reg.h2b": "with others?",
       "reg.addPassenger": "+ Add passenger",
       "flight.looking": "Looking up the flight…",
+      "alt.unknownRoute": "Clouds — destination not identified yet",
       "flight.notFound": "We couldn’t find that flight number. You can continue anyway.",
       "flight.offline": "No connection — flight details will fill in once you’re back online.",
       "flight.found": "{airline} · {route}",
@@ -325,6 +327,7 @@
       "reg.h2b": "не один?",
       "reg.addPassenger": "+ Добавить пассажира",
       "flight.looking": "Ищем рейс…",
+      "alt.unknownRoute": "Облака — пункт назначения пока неизвестен",
       "flight.notFound": "Не удалось найти этот номер рейса. Можно продолжить.",
       "flight.offline": "Нет соединения — данные рейса появятся позже.",
       "flight.found": "{airline} · {route}",
@@ -454,6 +457,7 @@
       "reg.h2b": "مع آخرين؟",
       "reg.addPassenger": "+ إضافة مسافر",
       "flight.looking": "جارٍ البحث عن الرحلة…",
+      "alt.unknownRoute": "سحب — لم تُحدَّد الوجهة بعد",
       "flight.notFound": "لم نعثر على رقم الرحلة. يمكنك المتابعة على أي حال.",
       "flight.offline": "لا يوجد اتصال — ستُستكمل تفاصيل الرحلة لاحقًا.",
       "flight.found": "{airline} · {route}",
@@ -694,7 +698,9 @@
 
   /* "LY 315" / "ly315" -> { iata: "LY", num: "315" } */
   function parseFlight(raw) {
-    var m = String(raw || "").trim().toUpperCase().match(/^([A-Z]{2})\s?(\d{1,4})$/);
+    /* Same shape as RULES.flight above — see the note there on 6H / A3 / W6. */
+    var m = String(raw || "").trim().toUpperCase()
+      .match(/^([A-Z][A-Z0-9]|[0-9][A-Z])\s?(\d{1,4})$/);
     return m ? { iata: m[1], num: m[2] } : null;
   }
 
@@ -761,11 +767,33 @@
     };
   }
 
+  /* When the flight cannot be identified, the card must not fall back to the
+     shipped TLV-SEA demo route. Showing a specific wrong destination is worse
+     than showing none: it does not read as "unknown", it reads as an answer.
+     So the card carries the number the traveller actually typed, over a
+     neutral sky rather than a city they are not flying to. */
+  function showUnknownRoute(raw) {
+    var label = String(raw || "").trim().toUpperCase();
+    qsa("[data-route]").forEach(function (el) { el.textContent = label; });
+    var photo = document.getElementById("route-photo");
+    if (!photo) return;
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    photo.src = dark ? "assets/images/illustration-clouds-dark.png"
+                     : "assets/images/illustration-clouds.png";
+    photo.alt = t("alt.unknownRoute");
+    photo.setAttribute("data-src-light", "assets/images/illustration-clouds.png");
+    photo.setAttribute("data-src-dark", "assets/images/illustration-clouds-dark.png");
+  }
+
   function resetFlightRoute() {
     if (!routeDefaults) return;
     qsa("[data-route]").forEach(function (el) { el.textContent = routeDefaults.label; });
     var photo = document.getElementById("route-photo");
-    if (photo && routeDefaults.src) { photo.src = routeDefaults.src; photo.alt = routeDefaults.alt; }
+    if (!photo || !routeDefaults.src) return;
+    photo.removeAttribute("data-src-light");
+    photo.removeAttribute("data-src-dark");
+    photo.src = routeDefaults.src;
+    photo.alt = routeDefaults.alt;
   }
 
   function setLookupNote(state, text) {
@@ -786,6 +814,8 @@
 
     var photo = document.getElementById("route-photo");
     if (!photo) return;
+    photo.removeAttribute("data-src-light");   /* no longer the neutral sky */
+    photo.removeAttribute("data-src-dark");
     var local = ROUTE_PHOTOS[label];
     if (local) { photo.src = local.src; photo.alt = t(local.altKey); return; }
     lookupCityPhoto(info.city).then(function (src) {
@@ -798,7 +828,11 @@
   function runFlightLookup(raw) {
     var parsed = parseFlight(raw);
     if (!parsed) { setLookupNote(null); resetFlightRoute(); return; }
-    if (!navigator.onLine) { setLookupNote("offline", t("flight.offline")); return; }
+    if (!navigator.onLine) {
+      setLookupNote("offline", t("flight.offline"));
+      showUnknownRoute(raw);
+      return;
+    }
 
     var seq = ++lookupSeq;
     setLookupNote("looking", t("flight.looking"));
@@ -807,10 +841,14 @@
       if (info === UNREACHABLE) {
         /* Say nothing about the number itself — we never got to ask. */
         setLookupNote("offline", t("flight.offline"));
-        resetFlightRoute();
+        showUnknownRoute(raw);
         return;
       }
-      if (!info) { setLookupNote("notfound", t("flight.notFound")); resetFlightRoute(); return; }
+      if (!info) {
+        setLookupNote("notfound", t("flight.notFound"));
+        showUnknownRoute(raw);
+        return;
+      }
       setLookupNote("found", fmt(t("flight.found"), {
         airline: info.airline, route: info.from + " → " + info.to
       }));
@@ -1246,7 +1284,12 @@
   var RULES = {
     name:     { test: /^[\u0590-\u05FF\u0600-\u06FF\u0400-\u04FFA-Za-z][\u0590-\u05FF\u0600-\u06FF\u0400-\u04FFA-Za-z'\- ]{1,}$/, labelKey: "err.label.name" },
     passport: { test: /^\d{8}$/, labelKey: "err.label.passport" },
-    flight:   { test: /^[A-Za-z]{2}\s?\d{1,4}$/, labelKey: "err.label.flight" }
+    /* An IATA airline designator is two characters and only ONE of them has
+       to be a letter: 6H is Israir, A3 is Aegean, W6 is Wizz Air — all of
+       which fly out of Ben Gurion. The old [A-Za-z]{2} rejected every one of
+       them as an invalid flight number. Two digits is never a real code, so
+       that stays rejected. */
+    flight:   { test: /^(?:[A-Za-z][A-Za-z0-9]|[0-9][A-Za-z])\s?\d{1,4}$/, labelKey: "err.label.flight" }
   };
 
   var form = document.getElementById("registration-form");
