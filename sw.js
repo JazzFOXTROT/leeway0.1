@@ -25,9 +25,17 @@
    >>> IMPORTANT: assets are served cache-first, so editing style.css or
    >>> script.js will NOT reach anyone who already has the app until
    >>> VERSION below is bumped. Bump it in the same commit as the edit.
+   >>>
+   >>> The log exists because this was already missed once: v4 shipped, then
+   >>> three rounds of edits went out on top of it without a bump, and every
+   >>> returning visitor kept the v4 script.js — the app looked unchanged
+   >>> while the server had the new files all along.
+   >>>   v4  כרטיס סטטוס ריק, פתיחת/סגירת הכרטיס, נוסעים אמיתיים
+   >>>   v5  לוח רשות שדות התעופה: תאריך/שעה/טרמינל, חלונות לפי ההמראה,
+   >>>       שורת ההסבר, ושבבים בגודל אחיד
    ========================================================================= */
 
-const VERSION = "v4";
+const VERSION = "v5";
 
 const PREFIX = "leeway-" + VERSION;      /* every cache we own starts with this */
 const SHELL_CACHE = PREFIX + "-shell";   /* documents + the offline screen      */

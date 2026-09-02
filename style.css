@@ -938,10 +938,10 @@ button { font: inherit; color: inherit; }
 .slots__mask[hidden] { display: none !important; }
 
 /* שורה אחת שמסבירה למה דווקא השעות האלה. יושבת בין הכרטיס לחלונות,
-   באותו מרווח בדיוק שהיה קודם בין השניים — ולכן המרווח הזה מופיע גם
-   כאן וגם על .slots שמתחתיה. */
+   צמודה לשני הצדדים באותם 8px, כך שהמשפט והרשת נקראים כבלוק אחד ולא
+   כשני אלמנטים שמרחפים בנפרד. */
 .slots-note {
-  margin-block-start: var(--v-5);
+  margin-block-start: var(--space-2);
   font-family: var(--typography-family-heading);
   font-size: var(--typography-size-xs);
   line-height: var(--typography-line-sm);
@@ -954,6 +954,9 @@ button { font: inherit; color: inherit; }
   text-overflow: ellipsis;
 }
 .slots-note[hidden] { display: none !important; }
+/* רק כשהמשפט באמת מוצג. כשאין נתוני לוח הוא נעלם, ואז .slots חוזר
+   למרווח המקורי שלו מהכרטיס ולפריסה של הפריים כפי שהיה. */
+.slots-note:not([hidden]) + .slots { margin-block-start: var(--space-2); }
 
 .slots {
   position: relative;          /* מקום העגינה של שכבת העמעום */
