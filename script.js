@@ -100,6 +100,7 @@
       "time.srTitle": "בחירת חלון זמן לביקורת ביטחון",
       "time.legend": "חלונות זמן פנויים לביקורת ביטחון",
       "time.full": "מלא",
+      "time.windowsNote": "החלונות מסתיימים שעתיים לפני ההמראה ב-{time}",
       "time.passengers": "נוסעים",
       "flight.meta": "יום ג׳ · 25.05.2026 · טרמינל 3 · כניסה 03",
       "flight.terminal": "טרמינל {n}",
@@ -246,6 +247,7 @@
       "time.srTitle": "Choose a security-check time slot",
       "time.legend": "Available security-check slots",
       "time.full": "Full",
+      "time.windowsNote": "Windows end two hours before the {time} departure",
       "time.passengers": "Passengers",
       "flight.meta": "Tue · 25.05.2026 · Terminal 3 · Gate 03",
       "flight.terminal": "Terminal {n}",
@@ -392,6 +394,7 @@
       "time.srTitle": "Выбор окна для досмотра",
       "time.legend": "Свободные окна досмотра",
       "time.full": "Занято",
+      "time.windowsNote": "Окна заканчиваются за два часа до вылета в {time}",
       "time.passengers": "Пассажиры",
       "flight.meta": "Вт · 25.05.2026 · Терминал 3 · Выход 03",
       "flight.terminal": "Терминал {n}",
@@ -538,6 +541,7 @@
       "time.srTitle": "اختيار موعد الفحص الأمني",
       "time.legend": "المواعيد المتاحة للفحص الأمني",
       "time.full": "ممتلئ",
+      "time.windowsNote": "تنتهي النوافذ قبل ساعتين من الإقلاع في {time}",
       "time.passengers": "المسافرون",
       "flight.meta": "الثلاثاء · 25.05.2026 · المبنى 3 · البوابة 03",
       "flight.terminal": "المبنى {n}",
@@ -715,6 +719,7 @@
     /* applyLanguage() has just written the dictionary's demo meta over the
        live one; the weekday and the labels are language-dependent anyway. */
     if (flightInfo) applyFlightMeta(flightInfo);
+    if (typeof paintSlotsNote === "function") paintSlotsNote(flightInfo);
   }
 
   /* ---------------------------------------------------------------------
@@ -1820,7 +1825,7 @@
   var cardExtra  = flightCard ? flightCard.querySelector(".flight-card__extra") : null;
   var slotsMask  = slotsWrap ? slotsWrap.querySelector(".slots__mask") : null;
 
-  var MASK_H    = 42;                              /* one row of chips, as in Figma */
+  var MASK_H    = 42;                 /* the Figma value, and the fallback */
   var CARD_MS   = 420;
   var CARD_EASE = "cubic-bezier(0, 0, 0.58, 1)";   /* the product's own --ease-out */
   var cardOpen  = false;
@@ -1838,6 +1843,15 @@
     if (!cardExtra) return false;
     if (paxList && paxList.children.length) return true;
     return !!cardExtra.querySelector("[data-flight-when]:not([hidden]), [data-flight-status]:not([hidden])");
+  }
+
+  /* The masked strip is "one row, very nearly": Figma's 42px against 46px
+     chips. Measuring instead of hardcoding keeps that relationship after the
+     chips changed height, and on a phone whose text renders larger. */
+  function maskHeight() {
+    var chip = slotsWrap && slotsWrap.querySelector(".slot");
+    var h = chip ? chip.offsetHeight : 0;
+    return h ? Math.max(32, h - 4) : MASK_H;
   }
 
   function rowGapOf(el) {
@@ -1876,7 +1890,7 @@
     }
     if (slotsWrap) {
       slotsWrap.style.overflow = open ? "hidden" : "";
-      slotsWrap.style.height   = open ? MASK_H + "px" : "";
+      slotsWrap.style.height   = open ? maskHeight() + "px" : "";
     }
     if (slotsMask) { slotsMask.hidden = !open; slotsMask.style.opacity = ""; }
   }
@@ -1932,7 +1946,7 @@
 
     cardAnims.push(slotsWrap.animate(pair(
       { height: slotsH + "px" },
-      { height: MASK_H + "px" }
+      { height: maskHeight() + "px" }
     ), opts));
 
     if (slotsMask) cardAnims.push(slotsMask.animate(pair(
@@ -2128,14 +2142,27 @@
     });
   }
 
+  /* Why these particular hours. Kept apart from paintSlots() on purpose:
+     switching language must repaint the sentence WITHOUT rebuilding the
+     chips, because rebuilding them would throw away a window the traveller
+     had already chosen. */
+  function paintSlotsNote(info) {
+    var p = parseBoardTime(info && info.dep);
+    writeText("[data-slots-note]", p ? fmt(t("time.windowsNote"), { time: p.hm }) : "");
+  }
+
   function applySlotWindows(info) {
     var p = parseBoardTime(info && info.dep);
+    paintSlotsNote(info);
     if (!p) { paintSlots(slotDefaults); return; }
     var hm = p.hm.split(":");
     paintSlots(slotsForDeparture((+hm[0]) * 60 + (+hm[1])));
   }
 
-  function resetSlotWindows() { paintSlots(slotDefaults); }
+  function resetSlotWindows() {
+    paintSlotsNote(null);       /* no schedule, nothing to explain */
+    paintSlots(slotDefaults);
+  }
 
   /* ---------------------------------------------------------------------
      The landing status card. It opens empty — nothing has been booked yet,

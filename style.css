@@ -63,6 +63,10 @@
   --color-danger-text: var(--color-red-700);
   --color-danger-surface: var(--color-red-50);
   --color-neutral-base: var(--color-slate-500);
+  /* טקסט משני שיושב ישירות על רקע המסך ולא בתוך כרטיס לבן.
+     --color-text-muted נותן שם יחס ניגודיות של 1.91:1 בלבד, מתחת לרף,
+     ולכן לטקסט כזה יש טוקן משלו: 5.15:1 על הכחול. */
+  --color-text-on-canvas: var(--color-blue-200);
   --color-muted-surface-base: var(--color-gray-300);
   --color-focus-on-dark: var(--color-white-base);
   --color-focus-on-light: var(--color-blue-600);
@@ -199,6 +203,8 @@
   --color-info-base: var(--color-blueinfo-400);
   --color-danger-base: var(--color-red-400);
   --color-neutral-base: var(--color-slate-300);
+  /* על רקע הזהב של המצב הכהה רק דיו כהה עובר את הרף — 6.36:1. */
+  --color-text-on-canvas: var(--color-navy-900);
   /* accent, success and warning are intentionally identical in both
      modes — contrast-checked in docs/DESIGN_SYSTEM_AUDIT.md. */
   color-scheme: dark;
@@ -931,10 +937,31 @@ button { font: inherit; color: inherit; }
 .flight-card__pax[hidden],
 .slots__mask[hidden] { display: none !important; }
 
+/* שורה אחת שמסבירה למה דווקא השעות האלה. יושבת בין הכרטיס לחלונות,
+   באותו מרווח בדיוק שהיה קודם בין השניים — ולכן המרווח הזה מופיע גם
+   כאן וגם על .slots שמתחתיה. */
+.slots-note {
+  margin-block-start: var(--v-5);
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-xs);
+  line-height: var(--typography-line-sm);
+  color: var(--color-text-on-canvas);
+  text-align: start;
+  /* שורה אחת, תמיד. אם שפה כלשהי בכל זאת ארוכה מדי, עדיף קיצור בשלוש
+     נקודות מאשר שתי שורות שידחפו את הרשת מטה. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.slots-note[hidden] { display: none !important; }
+
 .slots {
   position: relative;          /* מקום העגינה של שכבת העמעום */
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* minmax(0,1fr) ולא 1fr: עם 1fr עמודה שהתוכן שלה רחב מהחלק שלה גדלה
+     על חשבון האחרות, והשעות הדו-ספרתיות ("20:40-21:00") נשברו לשתי
+     שורות רק בחלק מהשבבים. minmax(0,...) מכריח שלוש עמודות זהות. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-2);
   margin-block-start: var(--v-5);
   padding: 0;
@@ -943,18 +970,38 @@ button { font: inherit; color: inherit; }
 }
 .slots legend { padding: 0; }
 
+/* גובה השורה השנייה — זו שנושאת את "מלא". שמורה בכל שבב, גם כשאין בו
+   מלל, כדי שכל תשעת השבבים יהיו זהים בדיוק. */
+.slots { --slot-tag-line: 13px; }
+
 .slot {
   min-block-size: 46px;
-  padding-inline: var(--space-2);
+  /* 8px לא הותירו מספיק מקום ל-"20:40-21:00" ברוחב מסך אמיתי — נשארו
+     פחות מ-3px, ובמכשיר שמרנדר את הגופן מעט רחב יותר הטקסט נשבר. */
+  padding-inline: var(--space-1);
   border: 1px solid var(--color-surface-base);
   border-radius: var(--radius-md);
   background: var(--color-surface-base);
   font-family: var(--typography-family-body);
   font-size: var(--typography-size-sm);
   font-weight: var(--typography-weight-bold);
+  /* ספרות ברוחב אחיד: כל תשע השעות יוצאות בדיוק באותו רוחב. */
+  font-variant-numeric: tabular-nums;
   color: var(--color-primary-base);
   cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   transition: background var(--motion-base) var(--ease-out), color var(--motion-base) var(--ease-out);
+}
+/* שבב פנוי מקבל את אותה שורה שנייה כשורה ריקה, כך שגובהו זהה לשל שבב
+   מלא בכל גודל גופן ובכל אחת מארבע השפות — בלי מספר קסם. */
+.slot:not([data-full="true"])::after {
+  content: "";
+  display: block;
+  block-size: var(--slot-tag-line);
 }
 .slot[aria-pressed="true"] {
   background: var(--color-primary-strong);
@@ -973,6 +1020,8 @@ button { font: inherit; color: inherit; }
 .slot__full {
   display: block;
   font-size: 10px;
+  line-height: var(--slot-tag-line);
+  block-size: var(--slot-tag-line);
   font-weight: var(--typography-weight-regular);
 }
 
