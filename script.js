@@ -102,6 +102,17 @@
       "time.full": "מלא",
       "time.passengers": "נוסעים",
       "flight.meta": "יום ג׳ · 25.05.2026 · טרמינל 3 · כניסה 03",
+      "flight.terminal": "טרמינל {n}",
+      "flight.zone": "אזור {z}",
+      "flight.metaRoute": "{airline} · {city}",
+      "flight.departs": "המראה {time}",
+      "flight.updated": "עודכן ל-{time}",
+      "flight.counters": "דלפקים {n}",
+      "flight.canceled": "הטיסה בוטלה",
+      "flight.delayed": "הטיסה מתעכבת",
+      "flight.departed": "הטיסה כבר המריאה",
+      "flight.notOnBoard": "לוח הטיסות מתעדכן כשלושה ימים מראש — הטרמינל והשעה יופיעו אז.",
+      "flight.boardOffline": "לוח הטיסות לא זמין כרגע — הטרמינל והשעה יושלמו מאוחר יותר.",
       "pass.label": "כרטיס הכניסה שלך",
       "pass.where": "טרמינל 3 · כניסה 03",
       "pass.openFull": "פתיחה במסך מלא",
@@ -237,6 +248,17 @@
       "time.full": "Full",
       "time.passengers": "Passengers",
       "flight.meta": "Tue · 25.05.2026 · Terminal 3 · Gate 03",
+      "flight.terminal": "Terminal {n}",
+      "flight.zone": "Zone {z}",
+      "flight.metaRoute": "{airline} · {city}",
+      "flight.departs": "Departs {time}",
+      "flight.updated": "updated to {time}",
+      "flight.counters": "Desks {n}",
+      "flight.canceled": "Flight canceled",
+      "flight.delayed": "Flight delayed",
+      "flight.departed": "Already departed",
+      "flight.notOnBoard": "The daily board opens about three days ahead — terminal and time will appear then.",
+      "flight.boardOffline": "The airport board is unreachable right now — terminal and time will fill in later.",
       "pass.label": "Your entry pass",
       "pass.where": "Terminal 3 · Gate 03",
       "pass.openFull": "Open full screen",
@@ -372,6 +394,17 @@
       "time.full": "Занято",
       "time.passengers": "Пассажиры",
       "flight.meta": "Вт · 25.05.2026 · Терминал 3 · Выход 03",
+      "flight.terminal": "Терминал {n}",
+      "flight.zone": "Зона {z}",
+      "flight.metaRoute": "{airline} · {city}",
+      "flight.departs": "Вылет {time}",
+      "flight.updated": "обновлено на {time}",
+      "flight.counters": "Стойки {n}",
+      "flight.canceled": "Рейс отменён",
+      "flight.delayed": "Рейс задерживается",
+      "flight.departed": "Рейс уже вылетел",
+      "flight.notOnBoard": "Табло открывается примерно за три дня — тогда появятся терминал и время.",
+      "flight.boardOffline": "Табло аэропорта сейчас недоступно — терминал и время появятся позже.",
       "pass.label": "Ваш пропуск",
       "pass.where": "Терминал 3 · Выход 03",
       "pass.openFull": "Открыть во весь экран",
@@ -507,6 +540,17 @@
       "time.full": "ممتلئ",
       "time.passengers": "المسافرون",
       "flight.meta": "الثلاثاء · 25.05.2026 · المبنى 3 · البوابة 03",
+      "flight.terminal": "المبنى {n}",
+      "flight.zone": "منطقة {z}",
+      "flight.metaRoute": "{airline} · {city}",
+      "flight.departs": "الإقلاع {time}",
+      "flight.updated": "حُدِّث إلى {time}",
+      "flight.counters": "كاونترات {n}",
+      "flight.canceled": "أُلغيت الرحلة",
+      "flight.delayed": "تأخّرت الرحلة",
+      "flight.departed": "أقلعت الرحلة بالفعل",
+      "flight.notOnBoard": "تُفتح لوحة اليوم قبل نحو ثلاثة أيام — عندها يظهر المبنى والوقت.",
+      "flight.boardOffline": "لوحة المطار غير متاحة حاليًا — سيُستكمل المبنى والوقت لاحقًا.",
       "pass.label": "بطاقة دخولك",
       "pass.where": "المبنى 3 · البوابة 03",
       "pass.openFull": "فتح ملء الشاشة",
@@ -668,6 +712,9 @@
     /* The passenger rows and the pass names are generated, not marked up,
        so applyLanguage()'s [data-i18n] sweep cannot reach them. */
     if (typeof renderPassengers === "function") renderPassengers();
+    /* applyLanguage() has just written the dictionary's demo meta over the
+       live one; the weekday and the labels are language-dependent anyway. */
+    if (flightInfo) applyFlightMeta(flightInfo);
   }
 
   /* ---------------------------------------------------------------------
@@ -679,9 +726,15 @@
   };
 
   /* =====================================================================
-     Flight lookup + destination photo — two free, keyless, CORS-enabled APIs.
+     Flight lookup + destination photo — three free, keyless, CORS-enabled
+     APIs. None of them is ever sent a name or a passport number; the flight
+     number and the destination city are the only things that leave the
+     device, exactly as privacy.html says.
 
-     adsbdb.com      turns "LY315" into airline + origin + destination.
+     data.gov.il     the airport's OWN board: date, departure time, terminal,
+                     check-in zone and counters for this exact flight.
+     adsbdb.com      turns "LY315" into airline + origin + destination, and
+                     is the fallback for flights the board does not carry.
      Wikipedia       turns the destination city into a photo.
 
      Both were chosen because a static site on GitHub Pages cannot do
@@ -728,10 +781,12 @@
   }
 
   /* adsbdb routes are keyed by ICAO callsign (ELY315), not IATA (LY315),
-     so the airline endpoint is asked for the ICAO code first. */
-  function lookupFlight(parsed) {
-    var key = parsed.iata + parsed.num;
-    if (flightCache[key]) return Promise.resolve(flightCache[key]);
+     so the airline endpoint is asked for the ICAO code first.
+
+     This is the FALLBACK source: it knows where a flight number goes, but
+     it is a route database, not a schedule — no date, no time, no terminal.
+     Those come from the airport's own board in lookupBoard() below. */
+  function lookupRoute(parsed) {
     return fetchJSON(ADSBDB + "/airline/" + encodeURIComponent(parsed.iata))
       .then(function (a) {
         if (a === UNREACHABLE) return UNREACHABLE;
@@ -743,17 +798,118 @@
             if (c === UNREACHABLE) return UNREACHABLE;
             var fr = c && c.response && c.response.flightroute;
             if (!fr || !fr.origin || !fr.destination) return null;
-            var out = {
+            return {
               airline: (fr.airline && fr.airline.name) || list[0].name,
               from: fr.origin.iata_code,
               to: fr.destination.iata_code,
               city: fr.destination.municipality || "",
               toName: fr.destination.name || ""
             };
-            flightCache[key] = out;
-            return out;
           });
       });
+  }
+
+  /* =====================================================================
+     The live Ben Gurion board — data.gov.il, the Israel Airports Authority's
+     own departures and arrivals feed, published as open data.
+
+     This is what makes the date, the departure time, the terminal and the
+     check-in zone on the card REAL instead of the demo values from the Figma
+     frame. It was chosen for the same two reasons adsbdb and Wikipedia were:
+     it needs no API key (a static site on GitHub Pages has nowhere to hide
+     one) and it answers with Access-Control-Allow-Origin: *.
+
+     What it will NOT do, and why the fallback below still exists: the board
+     is a rolling window of roughly the next three days. A flight further out
+     than that is simply not on it yet, and inventing a terminal for it would
+     be worse than leaving it blank.
+     ===================================================================== */
+  var IAA = "https://data.gov.il/api/3/action/datastore_search";
+  var IAA_RESOURCE = "e83f763b-b7d7-479e-b172-ae981ddc6de5";
+  var IAA_FIELDS = "CHOPER,CHFLTN,CHOPERD,CHSTOL,CHPTOL,CHLOC1,CHLOC1T,CHLOC1TH," +
+                   "CHTERM,CHCINT,CHCKZN,CHRMINE,CHRMINH";
+  /* A flight in one of these states is behind us; the next one on the board
+     is the one the traveller means. */
+  var BOARD_GONE = { "DEPARTED": 1, "LANDED": 1, "CANCELED": 1 };
+
+  function boardURL(parsed) {
+    var n = parsed.num.replace(/^0+/, "") || "0";
+    /* CHFLTN is stored zero-padded to three characters — LY 3 is "003" — so
+       an exact-match filter has to ask for every padding the board may hold. */
+    var nums = [n, ("00" + n).slice(-3), ("000" + n).slice(-4)];
+    var filters = { CHOPER: parsed.iata, CHAORD: "D", CHFLTN: nums };
+    return IAA +
+      "?resource_id=" + encodeURIComponent(IAA_RESOURCE) +
+      "&fields=" + encodeURIComponent(IAA_FIELDS) +
+      "&sort=" + encodeURIComponent("CHSTOL asc") +
+      "&limit=8" +
+      "&filters=" + encodeURIComponent(JSON.stringify(filters));
+  }
+
+  /* "LONDON" / "NEW YORK" -> "London" / "New York", because Wikipedia is
+     asked for a page title, not for a boarding-card shout. */
+  function titleCase(str) {
+    return String(str || "").toLowerCase().replace(/(^|[\s\-'])([a-z])/g, function (m, pre, ch) {
+      return pre + ch.toUpperCase();
+    });
+  }
+
+  function lookupBoard(parsed) {
+    return fetchJSON(boardURL(parsed)).then(function (d) {
+      if (d === UNREACHABLE) return UNREACHABLE;
+      var recs = d && d.result && d.result.records;
+      if (!recs || !recs.length) return null;
+
+      var pick = null;
+      for (var i = 0; i < recs.length; i++) {
+        if (!BOARD_GONE[String(recs[i].CHRMINE || "").toUpperCase()]) { pick = recs[i]; break; }
+      }
+      /* Every one of them has already gone — show the most recent rather
+         than nothing, and let the status line say so. */
+      if (!pick) pick = recs[recs.length - 1];
+
+      return {
+        airline: titleCase(pick.CHOPERD) || parsed.iata,
+        from: "TLV",                       /* CHAORD "D" — a departure from TLV */
+        to: pick.CHLOC1 || "",
+        city: titleCase(pick.CHLOC1T),
+        cityLocal: pick.CHLOC1TH || "",
+        toName: titleCase(pick.CHLOC1T),
+        dep: pick.CHSTOL || "",
+        depUpdated: pick.CHPTOL || "",
+        terminal: (pick.CHTERM == null || pick.CHTERM === "") ? "" : String(pick.CHTERM),
+        zone: pick.CHCKZN || "",
+        counters: pick.CHCINT || "",
+        status: String(pick.CHRMINE || "").toUpperCase()
+      };
+    });
+  }
+
+  /* The board first — it is the airport speaking about this exact departure.
+     Only when it has nothing do we fall back to the route database, and the
+     card then shows what we actually know and no more. */
+  function lookupFlight(parsed) {
+    var key = parsed.iata + parsed.num;
+    if (flightCache[key]) return Promise.resolve(flightCache[key]);
+    return lookupBoard(parsed).then(function (board) {
+      if (board && board !== UNREACHABLE) { flightCache[key] = board; return board; }
+      var boardUnreachable = board === UNREACHABLE;
+      return lookupRoute(parsed).then(function (route) {
+        if (route && route !== UNREACHABLE) {
+          /* "the board has not opened for this flight yet" and "we could not
+             reach the board" are different facts, and the note must not tell
+             the traveller the first when the second is true. A result that
+             only got this far is deliberately NOT cached — the board may be
+             back before the next keystroke. */
+          route.boardDown = boardUnreachable;
+          if (!boardUnreachable) flightCache[key] = route;
+          return route;
+        }
+        /* Neither source answered. If the board was merely silent but the
+           route database was unreachable, that is a network problem. */
+        return (boardUnreachable || route === UNREACHABLE) ? UNREACHABLE : null;
+      });
+    });
   }
 
   /* Wikipedia gives a right-sized thumbnail, so the phone is not made to
@@ -790,12 +946,144 @@
     };
   }
 
+  /* =====================================================================
+     Turning a board record into the two meta lines.
+
+     Times arrive as "2026-09-02T10:10:00" with no offset — that is Ben
+     Gurion's wall clock. They are read with a regex and never through
+     Date.parse, so a phone set to another timezone cannot shift a 10:10
+     departure to 07:10. The only Date built here is a date-only one, used
+     purely to name the weekday.
+     ===================================================================== */
+  var flightInfo = null;            /* the last successful lookup, or null */
+
+  function parseBoardTime(raw) {
+    var m = String(raw || "").match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    return m ? { y: +m[1], mo: +m[2], d: +m[3], hm: m[4] + ":" + m[5] } : null;
+  }
+
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+
+  function weekdayName(date) {
+    if (!date || !window.Intl || !window.Intl.DateTimeFormat) return "";
+    try {
+      return new Intl.DateTimeFormat(lang, { weekday: "short" }).format(date);
+    } catch (err) { return ""; }
+  }
+
+  /* Minutes past midnight of the first time in "19:00-19:20". */
+  function slotStartMinutes(raw) {
+    var m = String(raw || "").match(/(\d{1,2}):(\d{2})/);
+    return m ? (+m[1]) * 60 + (+m[2]) : null;
+  }
+
+  /* The windows are built backwards from take-off, so for a 00:05 departure
+     they land on the evening BEFORE the flight. The boarding pass is shown
+     at the security check, not at the aircraft, so it has to carry the
+     window's own date — otherwise it reads 03.09 next to 19:00 and sends
+     someone to the airport a full day late. */
+  function windowDayShift(info) {
+    var p = parseBoardTime(info && info.dep);
+    var win = slotStartMinutes(lastSlot);
+    if (!p || win == null) return 0;
+    var dep = slotStartMinutes(p.hm);
+    return (dep != null && win > dep) ? -1 : 0;
+  }
+
+  /* The card carries the full year and stops at the terminal; the boarding
+     pass drops the year and adds the check-in zone. That is not decoration:
+     with the year in place a fourth segment pushes the card's meta onto a
+     second line, and the zone is check-in information anyway — on the card
+     it rides with the counters, one line further down. */
+  function metaLine(info, opts) {
+    opts = opts || {};
+    var out = [], p = parseBoardTime(info.dep);
+    if (p) {
+      /* Date arithmetic, not string arithmetic: a shift of one day off the
+         first of the month has to roll the month, and the year with it. */
+      var on = new Date(p.y, p.mo - 1, p.d + (opts.dayShift || 0));
+      var day = weekdayName(on);
+      if (day) out.push(day);
+      out.push(pad2(on.getDate()) + "." + pad2(on.getMonth() + 1) +
+               (opts.year ? "." + on.getFullYear() : ""));
+    }
+    if (info.terminal) out.push(fmt(t("flight.terminal"), { n: info.terminal }));
+    if (opts.zone && info.zone) out.push(fmt(t("flight.zone"), { z: info.zone }));
+    if (out.length) return out.join(" · ");
+
+    /* Not on the board: say what the route database gave us and stop.
+       A terminal we do not know must not be filled in with a plausible one. */
+    var city = (lang === "he" && info.cityLocal) ? info.cityLocal : (info.city || info.to || "");
+    if (!info.airline && !city) return "";
+    return fmt(t("flight.metaRoute"), { airline: info.airline || "", city: city })
+             .replace(/^ · | · $/g, "");
+  }
+
+  function whenLine(info) {
+    var p = parseBoardTime(info.dep);
+    if (!p) return "";
+    var bits = [fmt(t("flight.departs"), { time: p.hm })];
+    var upd = parseBoardTime(info.depUpdated);
+    if (upd && upd.hm !== p.hm) bits.push(fmt(t("flight.updated"), { time: upd.hm }));
+    if (info.zone) bits.push(fmt(t("flight.zone"), { z: info.zone }));
+    if (info.counters) bits.push(fmt(t("flight.counters"), { n: info.counters }));
+    return bits.join(" · ");
+  }
+
+  var BOARD_STATUS_KEY = {
+    "CANCELED": "flight.canceled",
+    "DELAYED": "flight.delayed",
+    "DEPARTED": "flight.departed"
+  };
+
+  function writeText(sel, text) {
+    var el = document.querySelector(sel);
+    if (!el) return;
+    el.textContent = text || "";
+    el.hidden = !text;
+  }
+
+  function applyFlightMeta(info) {
+    if (!info) return;
+    var card = document.querySelector("[data-flight-meta]");
+    var qr = document.querySelector("[data-qr-meta]");
+    /* The card describes the FLIGHT, so it keeps the flight's own date.
+       The pass describes the security window, so it follows that. */
+    if (card) card.textContent = metaLine(info, { year: true });
+    if (qr) qr.textContent = metaLine(info, { zone: true, dayShift: windowDayShift(info) });
+    writeText("[data-flight-when]", whenLine(info));
+    var key = BOARD_STATUS_KEY[info.status];
+    writeText("[data-flight-status]", key ? t(key) : "");
+  }
+
+  /* Two different "no data" cases, and they must not look the same.
+
+     blank=false — the field is empty or not a flight number yet, so the card
+     goes back to the frame the file shipped with. The meta nodes still carry
+     their data-i18n, so the dictionary stays the single source for that text.
+
+     blank=true — a number WAS typed and we could not identify it. Restoring
+     the demo line here would put a specific, plausible, wrong terminal in
+     front of the traveller, which reads as an answer rather than as "we
+     don't know". Same reasoning as showUnknownRoute()'s neutral sky. */
+  function resetFlightMeta(blank) {
+    flightInfo = null;
+    qsa("[data-flight-meta], [data-qr-meta]").forEach(function (el) {
+      el.textContent = (!blank && el.dataset.i18n) ? t(el.dataset.i18n) : "";
+    });
+    writeText("[data-flight-when]", "");
+    writeText("[data-flight-status]", "");
+    /* No flight, no schedule to hang the grid on — back to the shipped nine. */
+    if (typeof resetSlotWindows === "function") resetSlotWindows();
+  }
+
   /* When the flight cannot be identified, the card must not fall back to the
      shipped TLV-SEA demo route. Showing a specific wrong destination is worse
      than showing none: it does not read as "unknown", it reads as an answer.
      So the card carries the number the traveller actually typed, over a
      neutral sky rather than a city they are not flying to. */
   function showUnknownRoute(raw) {
+    resetFlightMeta(true);      /* never keep — or invent — a terminal */
     var label = String(raw || "").trim().toUpperCase();
     qsa("[data-route]").forEach(function (el) { el.textContent = label; });
     var photo = document.getElementById("route-photo");
@@ -809,6 +1097,7 @@
   }
 
   function resetFlightRoute() {
+    resetFlightMeta();
     if (!routeDefaults) return;
     qsa("[data-route]").forEach(function (el) { el.textContent = routeDefaults.label; });
     var photo = document.getElementById("route-photo");
@@ -834,6 +1123,9 @@
   function applyFlightRoute(info) {
     var label = info.from + "-" + info.to;
     qsa("[data-route]").forEach(function (el) { el.textContent = label; });
+    flightInfo = info;
+    applyFlightMeta(info);
+    applySlotWindows(info);
 
     var photo = document.getElementById("route-photo");
     if (!photo) return;
@@ -872,9 +1164,18 @@
         showUnknownRoute(raw);
         return;
       }
-      setLookupNote("found", fmt(t("flight.found"), {
+      var note = fmt(t("flight.found"), {
         airline: info.airline, route: info.from + " → " + info.to
-      }));
+      });
+      if (info.dep) {
+        note += " · " + metaLine(info, { zone: true });
+      } else {
+        /* The route is known but there is no board record. Saying which of
+           the two reasons applies is better than a card that quietly drops
+           the terminal. */
+        note += " · " + t(info.boardDown ? "flight.boardOffline" : "flight.notOnBoard");
+      }
+      setLookupNote("found", note);
       applyFlightRoute(info);
     });
   }
@@ -1474,6 +1775,15 @@
   var slotsWrap = document.getElementById("slots");
   var chosenSlot = null;
 
+  /* The nine windows the file ships with are the Figma frame, and they are
+     also the fallback for every flight the board cannot tell us about. Read
+     them synchronously, before any lookup can overwrite the grid. */
+  var slotDefaults = slotsWrap
+    ? Array.prototype.map.call(slotsWrap.querySelectorAll(".slot"), function (el) {
+        return { label: el.dataset.slot, full: el.dataset.full === "true" };
+      })
+    : [];
+
   if (slotsWrap) {
     slotsWrap.addEventListener("click", function (e) {
       var btn = e.target.closest(".slot");
@@ -1505,6 +1815,9 @@
   var flightCard = document.getElementById("flight-card");
   var cardPhoto  = flightCard ? flightCard.querySelector(".flight-card__photo-wrap") : null;
   var paxList    = document.getElementById("pax-list");
+  /* The bottom half that unfurls is the wrapper, not the passenger list on
+     its own — the departure time and the flight status live in there too. */
+  var cardExtra  = flightCard ? flightCard.querySelector(".flight-card__extra") : null;
   var slotsMask  = slotsWrap ? slotsWrap.querySelector(".slots__mask") : null;
 
   var MASK_H    = 42;                              /* one row of chips, as in Figma */
@@ -1517,6 +1830,14 @@
   function stopCardAnims() {
     cardAnims.forEach(function (a) { try { a.cancel(); } catch (err) {} });
     cardAnims = [];
+  }
+
+  /* Nothing to unfurl if neither the board nor the form gave us anything —
+     an empty white gap under the route would read as a loading failure. */
+  function extraHasContent() {
+    if (!cardExtra) return false;
+    if (paxList && paxList.children.length) return true;
+    return !!cardExtra.querySelector("[data-flight-when]:not([hidden]), [data-flight-status]:not([hidden])");
   }
 
   function rowGapOf(el) {
@@ -1548,10 +1869,10 @@
       cardPhoto.style.height = ""; cardPhoto.style.marginBottom = "";
       cardPhoto.style.overflow = ""; cardPhoto.style.opacity = "";
     }
-    if (paxList) {
-      paxList.hidden = !open;
-      paxList.style.height = ""; paxList.style.marginTop = "";
-      paxList.style.overflow = ""; paxList.style.opacity = "";
+    if (cardExtra) {
+      cardExtra.hidden = !open || !extraHasContent();
+      cardExtra.style.height = ""; cardExtra.style.marginTop = "";
+      cardExtra.style.overflow = ""; cardExtra.style.opacity = "";
     }
     if (slotsWrap) {
       slotsWrap.style.overflow = open ? "hidden" : "";
@@ -1589,11 +1910,11 @@
 
     var gap     = rowGapOf(flightCard);
     var photoH  = naturalHeight(cardPhoto);
-    var paxH    = (paxList && paxList.children.length) ? naturalHeight(paxList) : 0;
+    var extraH  = extraHasContent() ? naturalHeight(cardExtra) : 0;
     var slotsH  = naturalHeight(slotsWrap);
 
     if (cardPhoto) { cardPhoto.hidden = false; cardPhoto.style.overflow = "hidden"; }
-    if (paxList)   { paxList.hidden = !paxH;   paxList.style.overflow = "hidden"; }
+    if (cardExtra) { cardExtra.hidden = !extraH; cardExtra.style.overflow = "hidden"; }
     slotsWrap.style.overflow = "hidden";
 
     var opts = { duration: CARD_MS, easing: CARD_EASE, fill: "both" };
@@ -1604,9 +1925,9 @@
       { height: photoH + "px",   marginBottom: "0px",         opacity: 1 }
     ), opts));
 
-    if (paxH) cardAnims.push(paxList.animate(pair(
+    if (extraH) cardAnims.push(cardExtra.animate(pair(
       { height: "0px",           marginTop: (-gap) + "px", opacity: 0 },
-      { height: paxH + "px",     marginTop: "0px",         opacity: 1 }
+      { height: extraH + "px",   marginTop: "0px",         opacity: 1 }
     ), opts));
 
     cardAnims.push(slotsWrap.animate(pair(
@@ -1725,6 +2046,98 @@
   }
 
   /* ---------------------------------------------------------------------
+     The windows follow the flight.
+
+     Until now the nine chips were the Figma frame's own times, frozen: a
+     21:10 departure to Paphos was still offered a 06:40 security slot,
+     fourteen hours early. Now that the board tells us when the aircraft
+     actually leaves, the grid is built backwards from that.
+
+     The numbers below are the product decision, and they are in one place
+     so they can be argued with:
+       · a window is 20 minutes and there are nine of them — the 3x3 grid
+         the screen was designed around, so the layout is untouched;
+       · the LAST window ends two hours before take-off. Security is the
+         first step of the journey, and check-in, passport control and the
+         walk to the gate all still have to happen after it;
+       · which means the earliest window opens five hours before take-off.
+     The two "מלא" windows keep the positions the prototype gave them, so
+     the "this window is full" path to the Fail screen still demonstrates.
+     --------------------------------------------------------------------- */
+  var SLOT_PLAN = {
+    windowMin: 20,
+    count: 9,
+    latestEndsBeforeMin: 120,
+    fullIndexes: [4, 7]
+  };
+
+  /* The chips are written "6:40", not "06:40" — the padded form belongs to
+     the boarding pass (hhmm), not to the grid. */
+  function chipTime(mins) {
+    mins = ((mins % 1440) + 1440) % 1440;
+    var h = Math.floor(mins / 60), m = mins % 60;
+    return h + ":" + (m < 10 ? "0" : "") + m;
+  }
+
+  function slotsForDeparture(depMinutes) {
+    var step = SLOT_PLAN.windowMin;
+    /* Anchored to a clean :00 / :20 / :40 boundary so the grid reads as a
+       timetable rather than as arithmetic on the departure time. */
+    var lastEnd = Math.floor((depMinutes - SLOT_PLAN.latestEndsBeforeMin) / step) * step;
+    var out = [];
+    for (var i = SLOT_PLAN.count - 1; i >= 0; i--) {
+      var end = lastEnd - i * step;
+      out.push({
+        label: chipTime(end - step) + "-" + chipTime(end),
+        full: SLOT_PLAN.fullIndexes.indexOf(SLOT_PLAN.count - 1 - i) !== -1
+      });
+    }
+    return out;
+  }
+
+  function paintSlots(list) {
+    if (!slotsWrap || !list.length) return;
+    /* Only the chips are replaced. The legend and the masking overlay belong
+       to the screen, not to the timetable, and must survive. */
+    Array.prototype.forEach.call(slotsWrap.querySelectorAll(".slot"), function (el) {
+      el.parentNode.removeChild(el);
+    });
+    /* The previous choice pointed at a node that no longer exists — and it
+       was a time for a different flight anyway. */
+    chosenSlot = null;
+
+    list.forEach(function (w) {
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "slot";
+      chip.setAttribute("aria-pressed", "false");
+      chip.dataset.slot = w.label;
+      chip.appendChild(document.createTextNode(w.label));
+      if (w.full) {
+        chip.dataset.full = "true";
+        var tag = document.createElement("span");
+        tag.className = "slot__full";
+        tag.dataset.i18n = "time.full";       /* so a language switch reaches it */
+        tag.textContent = t("time.full");
+        chip.appendChild(tag);
+      }
+      /* Rebuilt while the card happens to be open: the chips are behind the
+         mask, so they stay out of the tab order like their predecessors. */
+      if (cardOpen) chip.setAttribute("tabindex", "-1");
+      slotsWrap.insertBefore(chip, slotsMask || null);
+    });
+  }
+
+  function applySlotWindows(info) {
+    var p = parseBoardTime(info && info.dep);
+    if (!p) { paintSlots(slotDefaults); return; }
+    var hm = p.hm.split(":");
+    paintSlots(slotsForDeparture((+hm[0]) * 60 + (+hm[1])));
+  }
+
+  function resetSlotWindows() { paintSlots(slotDefaults); }
+
+  /* ---------------------------------------------------------------------
      The landing status card. It opens empty — nothing has been booked yet,
      so there is no step to report and tapping it belongs in the booking
      flow, not on a status screen with nothing on it. A confirmed booking
@@ -1815,6 +2228,8 @@
     writeTime('[data-time="identify-in"]',  hhmm(start + TIME_OFFSETS.identifyIn));
     writeTime('[data-time="identify-out"]', hhmm(end   + TIME_OFFSETS.identifyOut));
     writeTime('[data-time="security-eta"]', t("tl.eta") + " " + hhmm(end + TIME_OFFSETS.securityEta));
+    /* The chosen window decides which day the pass is for. */
+    if (flightInfo) applyFlightMeta(flightInfo);
   }
 
   function failWith(reason) {

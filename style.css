@@ -898,9 +898,36 @@ button { font: inherit; color: inherit; }
 .flight-card__pax .pax__name { min-inline-size: 0; overflow-wrap: anywhere; }
 .flight-card__pax .pax__doc { color: var(--color-neutral-base); white-space: nowrap; }
 .flight-card__pax:empty { display: none; }
+
+/* החצי התחתון שנפרש: שעת ההמראה והדלפקים מלוח רשות שדות התעופה, ואחריהם
+   הנוסעים. אותם טוקני מרווח כמו שאר הכרטיס, כדי ששורה אחת ותשע שורות
+   יישבו באותו יחס למסגרת הלבנה. */
+.flight-card__extra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.flight-card__when {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-sm);
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-text-base);
+}
+/* מופיע רק כשללוח יש משהו חריג לומר — ביטול, עיכוב, או טיסה שכבר המריאה. */
+.flight-card__status {
+  align-self: start;
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-sm);
+  color: var(--color-danger-base);
+}
+
 /* display מפורש על מחלקה גובר על [hidden] של הדפדפן, אז המצב הסגור
    חייב את ההצהרה הזו — בלעדיה הכרטיס נפתח פתוח. */
 .flight-card__photo-wrap[hidden],
+.flight-card__extra[hidden],
+.flight-card__when[hidden],
+.flight-card__status[hidden],
 .flight-card__pax[hidden],
 .slots__mask[hidden] { display: none !important; }
 

@@ -188,14 +188,22 @@
       </span>
       <span>
         <span class="flight-card__route" data-route>TLV-SEA</span>
-        <span class="flight-card__meta" data-i18n="flight.meta">יום ג׳ · 25.05.2026 · טרמינל 3 · כניסה 03</span>
+        <!-- ברירת המחדל היא הפריים של פיגמה. ברגע שהטיסה נמצאת בלוח של
+             רשות שדות התעופה, applyFlightMeta() מחליף אותה בתאריך, בטרמינל
+             ובאזור הצ'ק-אין האמיתיים. -->
+        <span class="flight-card__meta" data-flight-meta data-i18n="flight.meta">יום ג׳ · 25.05.2026 · טרמינל 3 · כניסה 03</span>
       </span>
       <span class="flight-card__row">
         <span class="flight-card__count"><span data-i18n="time.passengers">נוסעים</span> (<span data-pax-count>1</span>)</span>
         <span class="flight-card__edit" data-i18n="common.edit">עריכה</span>
       </span>
-      <!-- מתמלא מ-renderPassengers() לפי מי שנרשם בפועל -->
-      <span class="flight-card__pax" id="pax-list"></span>
+      <!-- החלק שנפרש: שעת ההמראה ודלפקי הצ'ק-אין מהלוח, ואחריהם הנוסעים
+           שנרשמו בפועל. שניהם מתמלאים בזמן ריצה. -->
+      <span class="flight-card__extra">
+        <span class="flight-card__when" data-flight-when hidden></span>
+        <span class="flight-card__status" data-flight-status hidden></span>
+        <span class="flight-card__pax" id="pax-list"></span>
+      </span>
     </button>
 
     <fieldset class="slots" id="slots">
@@ -401,7 +409,7 @@
         <!-- מתמלא מ-renderPassNames(): הנוסע הראשי + מספר הנלווים בפועל -->
         <p class="qr-pass__names" data-qr-names><bdi>נוסע</bdi></p>
         <p class="qr-pass__time" dir="ltr" data-slot-display>06:40 – 07:00</p>
-        <p class="qr-pass__where" data-i18n="qr.meta">יום ג׳ · 25.05 · טרמינל 3 · כניסה 03</p>
+        <p class="qr-pass__where" data-qr-meta data-i18n="qr.meta">יום ג׳ · 25.05 · טרמינל 3 · כניסה 03</p>
         <img class="qr-pass__code" src="assets/images/qr-pass.png"
              data-i18n-alt="alt.qrFull" alt="קוד QR של אישור הזימון להצגה בעמדת הביקורת" width="212" height="212">
         <p class="qr-pass__scan" data-i18n="qr.scan">סרקו בעמדת הכניסה המהירה</p>
