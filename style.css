@@ -683,6 +683,10 @@ button { font: inherit; color: inherit; }
   line-height: var(--typography-line-sm);
   color: var(--color-text-muted);
 }
+/* מצב פתיחה: אין עדיין הזמנה, אז אין שלב פעיל להאיר. הצ'יפ נשאר במקומו
+   כדי שהכרטיס לא יקפוץ כשמצב אמיתי נכנס אליו — רק הצבע מתעמעם. */
+.status-card[data-booking="none"] .status-card__step { color: var(--color-text-muted); }
+.status-card[data-booking="none"] .status-card__chip img { opacity: .45; }
 
 /* =========================================================================
    Loading / splash (nodes 2072:1219, 2039:614)
@@ -813,6 +817,9 @@ button { font: inherit; color: inherit; }
    Flight card + time chips (nodes 4014:2291 / 2072:1179)
    ========================================================================= */
 
+/* flex ולא grid: הפתיחה והסגירה מכווצות את התמונה ואת רשימת הנוסעים
+   לגובה 0, ורק ב-flex margin שלילי מבטל גם את ה-gap שנשאר אחריהן —
+   אחרת נשארים 12px ריקים שקופצים בסוף האנימציה. */
 .flight-card {
   margin-block-start: var(--v-6);
   padding: var(--space-4);
@@ -822,8 +829,16 @@ button { font: inherit; color: inherit; }
   inline-size: 100%;
   border: 0;
   cursor: pointer;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
+}
+/* עוטף חותך: התמונה שומרת על גובהה המלא בזמן שהעוטף נפתח, כך שהיא
+   נחשפת כמו וילון במקום להימתח. */
+.flight-card__photo-wrap {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
 }
 .flight-card__photo {
   inline-size: 100%;
@@ -864,16 +879,33 @@ button { font: inherit; color: inherit; }
   color: var(--color-primary-base);
   text-decoration: underline;
 }
+/* הרשימה נבנית מהטופס, ולכן מספר השורות משתנה. אין גבהים קבועים:
+   המרווחים בין השורות ובין הרשימה למסגרת הלבנה יוצאים מאותם טוקנים,
+   כך שנוסע אחד ותשעה נוסעים נראים אותו דבר. */
 .flight-card__pax {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-1);
   font-size: var(--typography-size-sm);
   color: var(--color-text-base);
 }
-.flight-card__pax div { display: flex; justify-content: space-between; }
-.flight-card__pax span:last-child { color: var(--color-neutral-base); }
+.flight-card__pax > span {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+.flight-card__pax .pax__name { min-inline-size: 0; overflow-wrap: anywhere; }
+.flight-card__pax .pax__doc { color: var(--color-neutral-base); white-space: nowrap; }
+.flight-card__pax:empty { display: none; }
+/* display מפורש על מחלקה גובר על [hidden] של הדפדפן, אז המצב הסגור
+   חייב את ההצהרה הזו — בלעדיה הכרטיס נפתח פתוח. */
+.flight-card__photo-wrap[hidden],
+.flight-card__pax[hidden],
+.slots__mask[hidden] { display: none !important; }
 
 .slots {
+  position: relative;          /* מקום העגינה של שכבת העמעום */
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2);
@@ -917,19 +949,22 @@ button { font: inherit; color: inherit; }
   font-weight: var(--typography-weight-regular);
 }
 
-/* the collapsed / masked chip strip on "Time choosing extended info" */
-.slots--masked {
-  position: relative;
-  block-size: 42px;
-  overflow: hidden;
-}
-.slots--masked::after {
-  content: "";
+/* שכבת העמעום מעל החלונות כשהכרטיס פתוח. פעם זו הייתה רצועה נפרדת
+   במסך נפרד; היום זו שכבה אחת מעל אותה רשת, והיא גם כפתור החזרה. */
+.slots__mask {
   position: absolute;
   inset: 0;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  /* בלי פינות מעוגלות: הן היו משאירות פינה חשופה של השבב שמתחת. הקצה
+     האטום ממילא באותו כחול של הרקע, ולכן הריבוע לא נראה. */
+  border-radius: 0;
   background: var(--gradient-reveal-from-blue, linear-gradient(160deg, var(--color-primary-base) 0%, rgb(115 115 115 / 0) 100%));
   cursor: pointer;
 }
+/* בזמן שהכרטיס פתוח הרשת חתוכה לשורה אחת (הגובה עצמו מונפש ב-JS). */
+.slots[data-masked="true"] { overflow: hidden; }
 
 /* =========================================================================
    Success / Fail (nodes 2038:534, 2058:1184)
@@ -1386,7 +1421,7 @@ button { font: inherit; color: inherit; }
 .link-btn,
 .hamburger,
 .pass-shell[role="button"],
-.slots--masked {
+.slots__mask {
   transition: transform var(--motion-press-out) var(--ease-out),
               background-color var(--motion-press-out) var(--ease-out);
 }
@@ -1402,7 +1437,7 @@ button { font: inherit; color: inherit; }
 .link-btn[data-pressed],
 .hamburger[data-pressed],
 .pass-shell[data-pressed],
-.slots--masked[data-pressed] {
+.slots__mask[data-pressed] {
   transform: scale(var(--motion-press-scale));
   transition-duration: var(--motion-press-in);
 }

@@ -52,6 +52,8 @@
       "landing.myBooking": "הזמנה שלי",
       "status.cardTitle": "סטטוס שלי",
       "status.note": "מידע כללי בלבד — ללא רמת עומס חזויה",
+      "status.noneStep": "אין הזמנה פעילה",
+      "status.noneState": "טרם נבחר חלון זמן",
       "status.h1a": "סטטוס",
       "status.h1b": "שלי",
       "step.checkin": "צ'ק-אין",
@@ -99,7 +101,6 @@
       "time.legend": "חלונות זמן פנויים לביקורת ביטחון",
       "time.full": "מלא",
       "time.passengers": "נוסעים",
-      "timeExt.srTitle": "פרטי ההזמנה המלאים",
       "flight.meta": "יום ג׳ · 25.05.2026 · טרמינל 3 · כניסה 03",
       "pass.label": "כרטיס הכניסה שלך",
       "pass.where": "טרמינל 3 · כניסה 03",
@@ -118,6 +119,10 @@
       "aria.notifications": "הפעלת התראות",
       "aria.share": "שיתוף ההזמנה",
       "aria.backToSlots": "חזרה לבחירת חלון זמן",
+      "aria.expandCard": "פתיחת פרטי ההזמנה המלאים",
+      "aria.collapseCard": "סגירת פרטי ההזמנה וחזרה לבחירת חלון זמן",
+      "aria.statusCard": "מעבר לסטטוס ההזמנה שלי",
+      "aria.statusCardEmpty": "אין הזמנה פעילה — מעבר להזמנת חלון זמן",
       "aria.closeFull": "סגירת התצוגה המלאה",
       "alt.terminal": "איור של טרמינל נמל התעופה בן גוריון עם מגדל פיקוח ומטוס ממריא",
       "alt.airplane": "איור של מטוס ממריא",
@@ -182,6 +187,8 @@
       "landing.myBooking": "My booking",
       "status.cardTitle": "My status",
       "status.note": "General information only — no predicted queue level",
+      "status.noneStep": "No active booking",
+      "status.noneState": "No time window chosen yet",
       "status.h1a": "My",
       "status.h1b": "status",
       "step.checkin": "Check-in",
@@ -229,7 +236,6 @@
       "time.legend": "Available security-check slots",
       "time.full": "Full",
       "time.passengers": "Passengers",
-      "timeExt.srTitle": "Full booking details",
       "flight.meta": "Tue · 25.05.2026 · Terminal 3 · Gate 03",
       "pass.label": "Your entry pass",
       "pass.where": "Terminal 3 · Gate 03",
@@ -248,6 +254,10 @@
       "aria.notifications": "Enable notifications",
       "aria.share": "Share booking",
       "aria.backToSlots": "Back to slot selection",
+      "aria.expandCard": "Show the full booking details",
+      "aria.collapseCard": "Hide the booking details and go back to the time windows",
+      "aria.statusCard": "Go to my booking status",
+      "aria.statusCardEmpty": "No active booking — start a new one",
       "aria.closeFull": "Close full screen",
       "alt.terminal": "Illustration of Ben Gurion Airport terminal with a control tower and a departing plane",
       "alt.airplane": "Illustration of a departing airplane",
@@ -312,6 +322,8 @@
       "landing.myBooking": "Моя бронь",
       "status.cardTitle": "Мой статус",
       "status.note": "Только общая информация — без прогноза загруженности",
+      "status.noneStep": "Нет активного бронирования",
+      "status.noneState": "Окно времени ещё не выбрано",
       "status.h1a": "Мой",
       "status.h1b": "статус",
       "step.checkin": "Регистрация",
@@ -359,7 +371,6 @@
       "time.legend": "Свободные окна досмотра",
       "time.full": "Занято",
       "time.passengers": "Пассажиры",
-      "timeExt.srTitle": "Полные данные брони",
       "flight.meta": "Вт · 25.05.2026 · Терминал 3 · Выход 03",
       "pass.label": "Ваш пропуск",
       "pass.where": "Терминал 3 · Выход 03",
@@ -378,6 +389,10 @@
       "aria.notifications": "Включить уведомления",
       "aria.share": "Поделиться бронью",
       "aria.backToSlots": "Назад к выбору окна",
+      "aria.expandCard": "Показать все данные бронирования",
+      "aria.collapseCard": "Скрыть данные и вернуться к выбору окна",
+      "aria.statusCard": "Перейти к статусу бронирования",
+      "aria.statusCardEmpty": "Нет активного бронирования — создать новое",
       "aria.closeFull": "Закрыть полный экран",
       "alt.terminal": "Иллюстрация терминала аэропорта Бен-Гурион с диспетчерской вышкой и взлетающим самолётом",
       "alt.airplane": "Иллюстрация взлетающего самолёта",
@@ -442,6 +457,8 @@
       "landing.myBooking": "حجزي",
       "status.cardTitle": "حالتي",
       "status.note": "معلومات عامة فقط — بدون توقّع الازدحام",
+      "status.noneStep": "لا يوجد حجز نشط",
+      "status.noneState": "لم يتم اختيار نافذة زمنية بعد",
       "status.h1a": "حالة",
       "status.h1b": "رحلتي",
       "step.checkin": "تسجيل الوصول",
@@ -489,7 +506,6 @@
       "time.legend": "المواعيد المتاحة للفحص الأمني",
       "time.full": "ممتلئ",
       "time.passengers": "المسافرون",
-      "timeExt.srTitle": "تفاصيل الحجز الكاملة",
       "flight.meta": "الثلاثاء · 25.05.2026 · المبنى 3 · البوابة 03",
       "pass.label": "بطاقة دخولك",
       "pass.where": "المبنى 3 · البوابة 03",
@@ -508,6 +524,10 @@
       "aria.notifications": "تفعيل الإشعارات",
       "aria.share": "مشاركة الحجز",
       "aria.backToSlots": "العودة لاختيار الموعد",
+      "aria.expandCard": "عرض تفاصيل الحجز الكاملة",
+      "aria.collapseCard": "إخفاء التفاصيل والعودة إلى نوافذ الوقت",
+      "aria.statusCard": "الانتقال إلى حالة الحجز",
+      "aria.statusCardEmpty": "لا يوجد حجز نشط — ابدأ حجزًا جديدًا",
       "aria.closeFull": "إغلاق ملء الشاشة",
       "alt.terminal": "رسم توضيحي لمبنى مطار بن غوريون مع برج المراقبة وطائرة مغادرة",
       "alt.airplane": "رسم توضيحي لطائرة مغادرة",
@@ -645,6 +665,9 @@
        dictionary default, including the two that carry state: the
        "remember me" label and the saved profile name. Put them back. */
     if (typeof syncStatefulLabels === "function") syncStatefulLabels();
+    /* The passenger rows and the pass names are generated, not marked up,
+       so applyLanguage()'s [data-i18n] sweep cannot reach them. */
+    if (typeof renderPassengers === "function") renderPassengers();
   }
 
   /* ---------------------------------------------------------------------
@@ -890,11 +913,11 @@
     "landing>status":                 { type: "move", dir: "right", ms: 500, ease: "out" },
     "registration>time-choosing":     { type: "smart", ms: 300, ease: "out" },
     "registration>landing":           { type: "move", dir: "right", ms: 500, ease: "out" },
-    "time-choosing>time-extended":    { type: "smart", ms: 500, ease: "out" },
+    /* time-choosing>time-extended נמחק: המעבר בין הכרטיס המורחב לחלונות
+       הזמן הוא כבר לא החלפת מסך אלא פתיחה וסגירה בתוך המסך — ראו
+       setCardOpen(). */
     "time-choosing>success":          { type: "smart", ms: 500, ease: "out" },
     "time-choosing>landing":          { type: "move", dir: "right", ms: 500, ease: "out" },
-    "time-extended>success":          { type: "smart", ms: 500, ease: "out" },
-    "time-extended>time-choosing":    { type: "smart", ms: 500, ease: "out" },
     "success>status":                 { type: "move", dir: "left", ms: 500, ease: "out" },
     "success>landing":                { type: "move", dir: "right", ms: 300, ease: "linear" },
     "success>time-choosing":          { type: "smart", ms: 300, ease: "in" },
@@ -999,6 +1022,8 @@
   function onScreenArrived(name, el) {
     if (typeof advanceProgress === "function") advanceProgress(el);
     fitTitlesIn(el);
+    /* המסך תמיד נפתח על מצב הבחירה, גם כשחוזרים אליו מ-Success. */
+    if (name === "time-choosing") setCardOpen(false, false);
     if (name === "success") {
       var art = el.querySelector(".result__art");
       if (art) {
@@ -1104,7 +1129,13 @@
 
     var goEl = e.target.closest("[data-go]");
     if (goEl) { go(goEl.dataset.go); return; }
-    if (e.target.closest("[data-back]")) { back(); return; }
+    if (e.target.closest("[data-back]")) {
+      /* בזמן שהכרטיס פתוח "חזרה" היא סגירה שלו, לא יציאה מהמסך — זה
+         היה עד היום מעבר בין שני מסכים, והמשמעות נשמרת. */
+      if (current === "time-choosing" && cardOpen) { setCardOpen(false); return; }
+      back();
+      return;
+    }
   });
 
   document.addEventListener("keydown", function (e) {
@@ -1197,7 +1228,7 @@
                   ".lang, .lang-switch__btn, .avatar-lane__item, .settings__link," +
                   ".overlay__link, .add-passenger, .link-btn, .hamburger," +
                   ".passenger__remove," +
-                  '.logo[role="button"], .pass-shell[role="button"], .slots--masked';
+                  '.logo[role="button"], .pass-shell[role="button"], .slots__mask';
 
   document.addEventListener("pointerdown", function (e) {
     var el = e.target.closest(PRESSABLE);
@@ -1390,8 +1421,9 @@
   }
 
   function updatePaxCount() {
+    var n = (passengers && passengers.length) || paxCount;
     Array.prototype.forEach.call(document.querySelectorAll("[data-pax-count]"), function (el) {
-      el.textContent = String(paxCount);
+      el.textContent = String(n);
     });
   }
 
@@ -1417,6 +1449,8 @@
         failWith(t("fail.badDetails") + bad.join(", ") + ".");
         return;
       }
+      passengers = readPassengers();   /* the card and the pass follow the form */
+      renderPassengers();
       withLoading(e.submitter || form.querySelector("button[type=submit]"), 450, function () {
         go("time-choosing");
       });
@@ -1451,6 +1485,271 @@
     });
   }
 
+  /* ---------------------------------------------------------------------
+     Flight card — open and close.
+
+     Until now these were two screens (Time choosing / Time choosing extended
+     info) and the "closing" direction could never be the real reverse of the
+     opening one: the screen you were closing sat UNDERNEATH the one coming
+     in, so its collapse was invisible. Folding both Figma frames into one
+     screen makes it one motion played forwards and backwards.
+
+     What actually moves, in both directions at once:
+       · the destination photo and the passenger list unfurl from height 0,
+         each cancelling its own flex gap with a negative margin so nothing
+         jumps by 12px at the end;
+       · the window grid shrinks to a single masked row (going down, behind
+         the gradient) and grows back out of it (coming up).
+     Everything below — the buttons, the clouds — simply follows the flow.
+     --------------------------------------------------------------------- */
+  var flightCard = document.getElementById("flight-card");
+  var cardPhoto  = flightCard ? flightCard.querySelector(".flight-card__photo-wrap") : null;
+  var paxList    = document.getElementById("pax-list");
+  var slotsMask  = slotsWrap ? slotsWrap.querySelector(".slots__mask") : null;
+
+  var MASK_H    = 42;                              /* one row of chips, as in Figma */
+  var CARD_MS   = 420;
+  var CARD_EASE = "cubic-bezier(0, 0, 0.58, 1)";   /* the product's own --ease-out */
+  var cardOpen  = false;
+  var cardAnims = [];
+  var cardRun   = 0;              /* which open/close is the current one */
+
+  function stopCardAnims() {
+    cardAnims.forEach(function (a) { try { a.cancel(); } catch (err) {} });
+    cardAnims = [];
+  }
+
+  function rowGapOf(el) {
+    var g = parseFloat(window.getComputedStyle(el).rowGap);
+    return isNaN(g) ? 12 : g;
+  }
+
+  /* The height an element WOULD have, measured while it is hidden or pinned
+     to a fixed height by a previous run. Everything is put back before the
+     browser paints, so this is invisible. */
+  function naturalHeight(el) {
+    if (!el) return 0;
+    var wasHidden = el.hidden, h = el.style.height, ov = el.style.overflow;
+    el.hidden = false;
+    el.style.height = "";
+    el.style.overflow = "";
+    var value = el.getBoundingClientRect().height;
+    el.style.height = h;
+    el.style.overflow = ov;
+    el.hidden = wasHidden;
+    return value;
+  }
+
+  /* The resting state for whichever side we ended on — no leftover inline
+     heights, so the layout stays responsive to text length and screen size. */
+  function settleCard(open) {
+    if (cardPhoto) {
+      cardPhoto.hidden = !open;
+      cardPhoto.style.height = ""; cardPhoto.style.marginBottom = "";
+      cardPhoto.style.overflow = ""; cardPhoto.style.opacity = "";
+    }
+    if (paxList) {
+      paxList.hidden = !open;
+      paxList.style.height = ""; paxList.style.marginTop = "";
+      paxList.style.overflow = ""; paxList.style.opacity = "";
+    }
+    if (slotsWrap) {
+      slotsWrap.style.overflow = open ? "hidden" : "";
+      slotsWrap.style.height   = open ? MASK_H + "px" : "";
+    }
+    if (slotsMask) { slotsMask.hidden = !open; slotsMask.style.opacity = ""; }
+  }
+
+  function setCardOpen(open, animate) {
+    if (!flightCard || !slotsWrap) return;
+    open = !!open;
+    if (cardOpen === open && animate !== false) return;
+    cardOpen = open;
+    stopCardAnims();
+
+    var lblKey = open ? "aria.collapseCard" : "aria.expandCard";
+    flightCard.setAttribute("aria-expanded", String(open));
+    flightCard.dataset.i18nAria = lblKey;
+    flightCard.setAttribute("aria-label", t(lblKey));
+
+    /* The masked grid is one target, not nine: while it is covered the chips
+       come out of the tab order so a keyboard never lands on a hidden one. */
+    slotsWrap.dataset.masked = String(open);
+    /* Shown for the whole of BOTH directions; settleCard() is what finally
+       removes it, so the closing fade has something to fade. */
+    if (slotsMask) slotsMask.hidden = false;
+    Array.prototype.forEach.call(slotsWrap.querySelectorAll(".slot"), function (chip) {
+      if (open) chip.setAttribute("tabindex", "-1"); else chip.removeAttribute("tabindex");
+    });
+
+    var run = ++cardRun;
+    var canAnimate = animate !== false && !reduced &&
+                     typeof flightCard.animate === "function";
+    if (!canAnimate) { settleCard(open); return; }
+
+    var gap     = rowGapOf(flightCard);
+    var photoH  = naturalHeight(cardPhoto);
+    var paxH    = (paxList && paxList.children.length) ? naturalHeight(paxList) : 0;
+    var slotsH  = naturalHeight(slotsWrap);
+
+    if (cardPhoto) { cardPhoto.hidden = false; cardPhoto.style.overflow = "hidden"; }
+    if (paxList)   { paxList.hidden = !paxH;   paxList.style.overflow = "hidden"; }
+    slotsWrap.style.overflow = "hidden";
+
+    var opts = { duration: CARD_MS, easing: CARD_EASE, fill: "both" };
+    var pair = function (a, b) { return open ? [a, b] : [b, a]; };
+
+    if (cardPhoto) cardAnims.push(cardPhoto.animate(pair(
+      { height: "0px",           marginBottom: (-gap) + "px", opacity: 0 },
+      { height: photoH + "px",   marginBottom: "0px",         opacity: 1 }
+    ), opts));
+
+    if (paxH) cardAnims.push(paxList.animate(pair(
+      { height: "0px",           marginTop: (-gap) + "px", opacity: 0 },
+      { height: paxH + "px",     marginTop: "0px",         opacity: 1 }
+    ), opts));
+
+    cardAnims.push(slotsWrap.animate(pair(
+      { height: slotsH + "px" },
+      { height: MASK_H + "px" }
+    ), opts));
+
+    if (slotsMask) cardAnims.push(slotsMask.animate(pair(
+      { opacity: 0 }, { opacity: 1 }
+    ), opts));
+
+    /* fill:"both" holds the last frame; settleCard() replaces it with the
+       real resting styles, and only then are the animations dropped. It is
+       idempotent and both paths are guarded by `run`, so whichever arrives
+       first wins. The timer is not redundant: a phone backgrounded
+       mid-animation may never deliver `finished`, and without it the card
+       would stay pinned to inline heights that no longer match the text. */
+    var finish = function () {
+      if (run !== cardRun) return;          /* a newer open/close took over */
+      settleCard(open);
+      stopCardAnims();
+    };
+    Promise.all(cardAnims.map(function (a) { return a.finished; })).then(finish, function () {});
+    window.setTimeout(finish, CARD_MS + 60);
+  }
+
+  if (flightCard) {
+    flightCard.addEventListener("click", function () { setCardOpen(!cardOpen); });
+  }
+  if (slotsMask) {
+    slotsMask.addEventListener("click", function (e) {
+      e.stopPropagation();
+      /* The button the traveller just used is about to be removed. Hand the
+         focus to what they came back for instead of dropping it on <body>. */
+      var hadFocus = document.activeElement === slotsMask;
+      setCardOpen(false);
+      if (hadFocus) {
+        var first = slotsWrap.querySelector(".slot");
+        if (first) first.focus({ preventScroll: true });
+      }
+    });
+  }
+  settleCard(false);
+
+  /* ---------------------------------------------------------------------
+     Who is actually flying.
+
+     The card and the boarding pass used to carry two names typed into the
+     markup, so a solo traveller was told she was two people and a family of
+     five never saw three of them. Both now read the registration form.
+     --------------------------------------------------------------------- */
+  var passengers = [];
+
+  function readPassengers() {
+    if (!form) return [];
+    var out = [];
+    for (var n = 1; n <= paxCount; n++) {
+      var first = field(form, "first-" + n);
+      var last  = field(form, "last-" + n);
+      var doc   = field(form, "passport-" + n);
+      var name  = [first && first.value.trim(), last && last.value.trim()]
+                    .filter(Boolean).join(" ");
+      if (!name) continue;
+      out.push({ name: name, passport: doc ? doc.value.trim() : "" });
+    }
+    return out;
+  }
+
+  function renderPassengers() {
+    var list = passengers || [];
+    if (paxList) {
+      paxList.textContent = "";
+      list.forEach(function (p) {
+        var row = document.createElement("span");
+        var name = document.createElement("span");
+        name.className = "pax__name";
+        name.setAttribute("dir", "auto");         /* a Latin name inside RTL */
+        name.textContent = p.name;
+        row.appendChild(name);
+        if (p.passport) {
+          var doc = document.createElement("span");
+          doc.className = "pax__doc";
+          doc.setAttribute("dir", "auto");
+          doc.textContent = t("common.passportShort") + " " + p.passport;
+          row.appendChild(doc);
+        }
+        paxList.appendChild(row);
+      });
+      /* An open card whose list just changed length must re-measure. */
+      if (cardOpen) settleCard(true);
+    }
+    renderPassNames();
+    updatePaxCount();
+  }
+
+  /* The pass names the lead traveller and counts the rest, exactly as the
+     Figma frame does — "נוסע +1 · Daniel Cohen" — but with the real numbers,
+     so one passenger reads "נוסע" and five read "נוסע +4". */
+  function renderPassNames() {
+    var el = document.querySelector("[data-qr-names]");
+    if (!el) return;
+    var list = passengers || [];
+    var total = list.length || paxCount;
+    var extra = Math.max(0, total - 1);
+    el.textContent = "";
+    var who = document.createElement("bdi");
+    who.textContent = t("qr.passenger") + (extra ? " +" + extra : "");
+    el.appendChild(who);
+    if (list.length) {
+      el.appendChild(document.createTextNode(" · "));
+      var lead = document.createElement("bdi");
+      lead.setAttribute("dir", "auto");
+      lead.textContent = list[0].name;
+      el.appendChild(lead);
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     The landing status card. It opens empty — nothing has been booked yet,
+     so there is no step to report and tapping it belongs in the booking
+     flow, not on a status screen with nothing on it. A confirmed booking
+     turns it into the live step.
+     --------------------------------------------------------------------- */
+  var statusCard  = document.querySelector("[data-status-card]");
+  var statusStep  = document.querySelector("[data-status-step]");
+  var statusState = document.querySelector("[data-status-state]");
+  var hasBooking  = false;
+
+  function paintStatusCard() {
+    if (!statusCard) return;
+    var stepKey  = hasBooking ? "tl.security"     : "status.noneStep";
+    var stateKey = hasBooking ? "state.inprogress" : "status.noneState";
+    var ariaKey  = hasBooking ? "aria.statusCard"  : "aria.statusCardEmpty";
+    statusCard.dataset.booking = hasBooking ? "active" : "none";
+    statusCard.dataset.go      = hasBooking ? "status" : "registration";
+    statusCard.dataset.i18nAria = ariaKey;
+    statusCard.setAttribute("aria-label", t(ariaKey));
+    /* data-i18n carries the state, so a language switch keeps it. */
+    if (statusStep)  { statusStep.dataset.i18n  = stepKey;  statusStep.textContent  = t(stepKey); }
+    if (statusState) { statusState.dataset.i18n = stateKey; statusState.textContent = t(stateKey); }
+  }
+  paintStatusCard();
+
   Array.prototype.forEach.call(document.querySelectorAll("[data-confirm-slot]"), function (btn) {
     btn.addEventListener("click", function () {
       if (!chosenSlot) {
@@ -1462,6 +1761,8 @@
         return;
       }
       applySlot(chosenSlot.dataset.slot);
+      hasBooking = true;              /* the landing card has something to show now */
+      paintStatusCard();
       withLoading(btn, 450, function () { go("success"); });
     });
   });

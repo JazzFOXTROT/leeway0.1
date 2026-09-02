@@ -50,12 +50,16 @@
       <button type="button" class="btn btn--secondary" data-go="status" data-i18n="landing.myBooking">הזמנה שלי</button>
     </div>
 
-    <button type="button" class="status-card" data-go="status">
+    <!-- כרטיס הסטטוס נפתח ריק: כל עוד לא נבחר חלון זמן אין מה לעקוב אחריו,
+         והקשה עליו שולחת להזמנה חדשה ולא למסך סטטוס ריק. הטקסט והיעד
+         מתחלפים ב-paintStatusCard() ברגע שהזמנה נסגרת בהצלחה. -->
+    <button type="button" class="status-card" data-status-card data-booking="none" data-go="registration"
+            data-i18n-aria="aria.statusCardEmpty" aria-label="אין הזמנה פעילה — מעבר להזמנת חלון זמן">
       <span class="status-card__title" data-i18n="status.cardTitle">סטטוס שלי</span>
       <span class="status-card__chip">
         <span class="status-card__chip-text">
-          <span class="status-card__step" data-i18n="step.checkin">צ'ק-אין</span>
-          <span class="status-card__state" data-i18n="state.inprogress">בתהליך</span>
+          <span class="status-card__step" data-status-step data-i18n="status.noneStep">אין הזמנה פעילה</span>
+          <span class="status-card__state" data-status-state data-i18n="status.noneState">טרם נבחר חלון זמן</span>
         </span>
         <img src="assets/icons/icon-briefcase.svg" alt="" width="24" height="24">
       </span>
@@ -144,7 +148,10 @@
     <img data-src-light="assets/images/illustration-clouds.png" data-src-dark="assets/images/illustration-clouds-dark.png" class="clouds clouds--sm" src="assets/images/illustration-clouds.png" alt="" width="137" height="103">
   </section>
 
-  <!-- ═══ 5. Time choosing main — node 24:3461 ═══ -->
+  <!-- ═══ 5. Time choosing — nodes 24:3461 (סגור) + 2049:918 (פתוח) ═══
+       שני הפריימים של פיגמה הם מסך אחד עם שני מצבים. פריים 6 לשעבר
+       ("Time choosing extended info") נמחק, כי רק ככה הפתיחה והסגירה
+       הן אותה תנועה בדיוק, הפוכה בכיוון. -->
   <section class="screen" id="screen-time-choosing" data-screen="time-choosing" hidden aria-labelledby="time-title">
     <header class="header">
       <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
@@ -169,15 +176,26 @@
 
     <h1 class="visually-hidden" id="time-title" data-i18n="time.srTitle">בחירת חלון זמן לביקורת ביטחון</h1>
 
-    <button type="button" class="flight-card" data-go="time-extended">
+    <!-- כרטיס הטיסה הוא מתג: סגור הוא שורת סיכום, פתוח הוא נפרש כלפי מטה
+         ומגלה את תמונת היעד ואת רשימת הנוסעים בפועל. אין יותר מסך נפרד
+         לתצוגה המורחבת — זה מצב אחד של אותו מסך, ולכן הסגירה היא בדיוק
+         ההפך של הפתיחה. -->
+    <button type="button" class="flight-card" id="flight-card" aria-expanded="false"
+            data-i18n-aria="aria.expandCard" aria-label="פתיחת פרטי ההזמנה המלאים">
+      <span class="flight-card__photo-wrap">
+        <img class="flight-card__photo" id="route-photo" src="assets/images/route-tlv-sea.png"
+             data-i18n-alt="alt.route" alt="קו הרקיע של סיאטל — יעד הטיסה" width="333" height="125">
+      </span>
       <span>
         <span class="flight-card__route" data-route>TLV-SEA</span>
         <span class="flight-card__meta" data-i18n="flight.meta">יום ג׳ · 25.05.2026 · טרמינל 3 · כניסה 03</span>
       </span>
       <span class="flight-card__row">
-        <span class="flight-card__count"><span data-i18n="time.passengers">נוסעים</span> (<span data-pax-count>2</span>)</span>
+        <span class="flight-card__count"><span data-i18n="time.passengers">נוסעים</span> (<span data-pax-count>1</span>)</span>
         <span class="flight-card__edit" data-i18n="common.edit">עריכה</span>
       </span>
+      <!-- מתמלא מ-renderPassengers() לפי מי שנרשם בפועל -->
+      <span class="flight-card__pax" id="pax-list"></span>
     </button>
 
     <fieldset class="slots" id="slots">
@@ -191,64 +209,11 @@
       <button type="button" class="slot" aria-pressed="false" data-slot="8:40-9:00">8:40-9:00</button>
       <button type="button" class="slot" aria-pressed="false" data-slot="9:00-9:20" data-full="true">9:00-9:20<span class="slot__full" data-i18n="time.full">מלא</span></button>
       <button type="button" class="slot" aria-pressed="false" data-slot="9:20-9:40">9:20-9:40</button>
+      <!-- כשהכרטיס פתוח החלונות יורדים למצב מעומעם והשכבה הזו מכסה אותם:
+           הקשה עליה מחזירה לבחירת חלון זמן. מוסתרת לגמרי כשהכרטיס סגור. -->
+      <button type="button" class="slots__mask" hidden
+              data-i18n-aria="aria.backToSlots" aria-label="חזרה לבחירת חלון זמן"></button>
     </fieldset>
-
-    <div class="btn-row">
-      <button type="button" class="btn btn--primary" data-confirm-slot data-i18n="common.continue">המשך</button>
-      <button type="button" class="btn btn--secondary" data-back data-i18n="common.back">חזרה</button>
-    </div>
-
-    <img data-src-light="assets/images/illustration-clouds.png" data-src-dark="assets/images/illustration-clouds-dark.png" class="clouds" src="assets/images/illustration-clouds.png" alt="" width="253" height="190">
-  </section>
-
-  <!-- ═══ 6. Time choosing extended info — node 2049:918 ═══ -->
-  <section class="screen" id="screen-time-extended" data-screen="time-extended" hidden aria-labelledby="time-ext-title">
-    <header class="header">
-      <img class="logo" src="assets/images/logo-leeway-white.png" alt="Leeway" width="111" height="37" data-go="landing" role="button" tabindex="0">
-      <button type="button" class="hamburger" data-menu-open data-i18n-aria="menu.open" aria-label="פתיחת תפריט">
-        <svg class="burger" viewBox="0 0 48 23" aria-hidden="true" focusable="false"><rect class="burger__bar burger__bar--top" x="0" y="0.07" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--mid" x="0" y="9.11" width="38.84" height="4" rx="2"/><rect class="burger__bar burger__bar--bot" x="0" y="18.19" width="38.84" height="4" rx="2"/></svg>
-      </button>
-    </header>
-
-    <div class="progress" data-progress="2">
-      <div class="progress__track">
-        <div class="progress__fill"></div>
-        <span class="progress__dot"></span>
-        <span class="progress__dot"></span>
-        <span class="progress__dot"></span>
-      </div>
-      <div class="progress__labels">
-        <span class="progress__label" data-i18n="step.passenger">פרטי נוסע</span>
-        <span class="progress__label" data-i18n="step.time">בחירת חלון זמן</span>
-        <span class="progress__label" data-i18n="step.confirm">אישור הזמנה</span>
-      </div>
-    </div>
-
-    <h1 class="visually-hidden" id="time-ext-title" data-i18n="timeExt.srTitle">פרטי ההזמנה המלאים</h1>
-
-    <div class="flight-card">
-      <img class="flight-card__photo" id="route-photo" src="assets/images/route-tlv-sea.png"
-           data-i18n-alt="alt.route" alt="קו הרקיע של סיאטל — יעד הטיסה" width="333" height="125">
-      <span>
-        <span class="flight-card__route" data-route>TLV-SEA</span>
-        <span class="flight-card__meta" data-i18n="flight.meta">יום ג׳ · 25.05.2026 · טרמינל 3 · כניסה 03</span>
-      </span>
-      <span class="flight-card__row">
-        <span class="flight-card__count"><span data-i18n="time.passengers">נוסעים</span> (<span data-pax-count>2</span>)</span>
-        <span class="flight-card__edit" data-i18n="common.edit">עריכה</span>
-      </span>
-      <div class="flight-card__pax" id="pax-list">
-        <div><span>Daniel Cohen</span><span><span data-i18n="common.passportShort">דרכון</span> 12345678</span></div>
-        <div><span>Maya Cohen</span><span><span data-i18n="common.passportShort">דרכון</span> 87654321</span></div>
-      </div>
-    </div>
-
-    <div class="slots slots--masked" data-back role="button" tabindex="0"
-         data-i18n-aria="aria.backToSlots" aria-label="חזרה לבחירת חלון זמן">
-      <span class="slot">6:40-7:00</span>
-      <span class="slot">7:00-7:20</span>
-      <span class="slot">7:20-7:40</span>
-    </div>
 
     <div class="btn-row">
       <button type="button" class="btn btn--primary" data-confirm-slot data-i18n="common.continue">המשך</button>
@@ -433,7 +398,8 @@
 
     <div class="pass-shell" data-go="status" role="button" tabindex="0" data-i18n-aria="aria.closeFull" aria-label="סגירת התצוגה המלאה">
       <div class="qr-pass qr-pass--full">
-        <p class="qr-pass__names"><bdi><span data-i18n="qr.passenger">נוסע</span> +1</bdi> · <bdi dir="ltr">Daniel Cohen</bdi></p>
+        <!-- מתמלא מ-renderPassNames(): הנוסע הראשי + מספר הנלווים בפועל -->
+        <p class="qr-pass__names" data-qr-names><bdi>נוסע</bdi></p>
         <p class="qr-pass__time" dir="ltr" data-slot-display>06:40 – 07:00</p>
         <p class="qr-pass__where" data-i18n="qr.meta">יום ג׳ · 25.05 · טרמינל 3 · כניסה 03</p>
         <img class="qr-pass__code" src="assets/images/qr-pass.png"
