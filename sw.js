@@ -35,7 +35,7 @@
    >>>       שורת ההסבר, ושבבים בגודל אחיד
    ========================================================================= */
 
-const VERSION = "v5";
+const VERSION = "v6";
 
 const PREFIX = "leeway-" + VERSION;      /* every cache we own starts with this */
 const SHELL_CACHE = PREFIX + "-shell";   /* documents + the offline screen      */

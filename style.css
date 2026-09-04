@@ -24,8 +24,6 @@
   --color-slate-500: #606573;
   --color-slate-400: #808d95;
   --color-slate-300: #8b93a7;
-  --color-gold-500: #b6975b;
-  --color-gold-700: #8d7546;
   --color-cream-50: #f2efe9;
   --color-lavender-100: #e6e6ec;
   --color-green-700: #1e6b41;
@@ -41,6 +39,12 @@
   --color-red-50: #fcebea;
 
   /* ---- Color · semantic (Light mode) --------------------------------- */
+  /* The canvas is the layer every card sits on. In light mode it is the
+     primary blue, exactly as in Figma. It gets a token of its own rather
+     than reading --color-primary-base directly, because primary is a fill
+     colour (buttons, filled fields, the chosen slot) and in dark mode the
+     canvas is the dark bg instead — see the dark block below. */
+  --color-canvas-base: var(--color-primary-base);
   --color-surface-base: var(--color-white-base);
   --color-surface-raised: var(--color-blue-100);
   --color-border-base: var(--color-gray-100);
@@ -51,6 +55,13 @@
   --color-primary-base: var(--color-blue-600);
   --color-primary-strong: var(--color-blue-700);
   --color-primary-deep: var(--color-blue-800);
+  /* Primary wears two hats. As a fill (buttons, filled fields, the chosen
+     slot) it is the deep blue above. As ink — interactive text, borders and
+     small marks sitting on a card — it has to read against that card, and
+     blue/700 on the dark card is 1.6:1. Splitting the roles lets dark mode
+     swap the ink for accent while the fills stay exactly where Figma puts
+     them. In light mode the two are the same colour, so nothing moves. */
+  --color-primary-ink: var(--color-primary-base);
   --color-accent-base: var(--color-blue-400);
   --color-success-base: var(--color-green-600);
   --color-success-text: var(--color-green-700);
@@ -177,34 +188,53 @@
   /* ---- Elevation ----------------------------------------------------- */
   --shadow-pass: 0 7.367px 18.419px -4px rgb(0 27 42 / 0.16);
 
-  /* ---- Gradients · named styles gradient/reveal-mask/* ---------------- */
-  --gradient-reveal-to-blue: linear-gradient(160deg, rgb(217 217 217 / 0) 0%, var(--color-primary-base) 92%);
-  --gradient-reveal-from-blue: linear-gradient(160deg, var(--color-primary-base) 0%, rgb(115 115 115 / 0) 100%);
-  --gradient-scrim-up: linear-gradient(to top, var(--color-primary-base) 55%, rgb(30 90 186 / 0) 100%);
+  /* ---- Gradients · named styles gradient/reveal-mask/* ----------------
+     All three fade into the screen behind them, so they follow the canvas
+     rather than primary. In light mode the canvas *is* primary, so these
+     resolve to the same blue the Figma styles specify.                    */
+  --gradient-reveal-to-blue: linear-gradient(160deg, rgb(217 217 217 / 0) 0%, var(--color-canvas-base) 92%);
+  --gradient-reveal-from-blue: linear-gradient(160deg, var(--color-canvas-base) 0%, rgb(115 115 115 / 0) 100%);
+  --gradient-scrim-up: linear-gradient(to top, var(--color-canvas-base) 55%, rgb(30 90 186 / 0) 100%);
 
   color-scheme: light;
 }
 
 /* ---- Color · semantic (Dark mode) ------------------------------------
-   Values read from the "Dark" mode of the Figma Color collection.
+   Values read from the "Dark" mode of the Figma Color collection
+   (Design System page, node 21:156).
    The page opens in whichever mode the phone is set to, and the switch on the
    Landing page (or in the menu) overrides that for the rest of the visit.
    script.js stamps data-theme on <html>; this block only reacts to it.
    It re-declares colour variables only — it never touches layout, so
-   deleting it leaves the light design byte-for-byte identical.           */
+   deleting it leaves the light design byte-for-byte identical.
+
+   The layering is inverted from light mode on purpose. Light mode is a blue
+   canvas carrying white cards; dark mode is Figma's dark bg (navy/950)
+   carrying Figma's dark surface (navy/800). Those are the only two dark
+   surfaces the Figma file defines, so a strip nested inside a card falls
+   back to the canvas colour and reads as inset — canvas → card → inset,
+   rather than inventing a third navy that is in no design file.         */
 :root[data-theme="dark"] {
-  --color-surface-base: var(--color-navy-950);
-  --color-surface-raised: var(--color-navy-800);
+  --color-canvas-base: var(--color-navy-950);    /* Figma dark · bg      */
+  --color-surface-base: var(--color-navy-800);   /* Figma dark · surface */
+  --color-surface-raised: var(--color-navy-950);
   --color-border-base: var(--color-slate-600);
   --color-text-base: var(--color-cream-50);
   --color-text-muted: var(--color-lavender-100);
-  --color-primary-base: var(--color-gold-500);
-  --color-primary-strong: var(--color-gold-700);
+  --color-primary-base: var(--color-blue-700);
+  --color-primary-strong: var(--color-blue-800);
+  /* Down here primary is a fill and nothing else. Accent carries the ink:
+     8.2:1 on the canvas, 6.2:1 on a card. */
+  --color-primary-ink: var(--color-accent-base);
   --color-info-base: var(--color-blueinfo-400);
   --color-danger-base: var(--color-red-400);
   --color-neutral-base: var(--color-slate-300);
-  /* על רקע הזהב של המצב הכהה רק דיו כהה עובר את הרף — 6.36:1. */
-  --color-text-on-canvas: var(--color-navy-900);
+  /* On the blue canvas of light mode muted text needed a token of its own.
+     On navy the muted lavender clears the bar on its own — 15:1. */
+  --color-text-on-canvas: var(--color-text-muted);
+  /* The ring on cards and on the settings screens is blue/600 in light
+     mode, where it lands on white. On navy that is 2.2:1; accent is 6.2:1. */
+  --color-focus-on-light: var(--color-accent-base);
   /* accent, success and warning are intentionally identical in both
      modes — contrast-checked in docs/DESIGN_SYSTEM_AUDIT.md. */
   color-scheme: dark;
@@ -277,7 +307,7 @@ button { font: inherit; color: inherit; }
   min-height: 100dvh;
   margin-inline: auto;
   overflow: hidden;
-  background: var(--color-primary-base);
+  background: var(--color-canvas-base);
   isolation: isolate;
 }
 
@@ -288,7 +318,7 @@ button { font: inherit; color: inherit; }
   flex-direction: column;
   padding-inline: var(--canvas-gutter);
   padding-block-end: max(var(--v-5), env(safe-area-inset-bottom));
-  background: var(--color-primary-base);
+  background: var(--color-canvas-base);
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -677,7 +707,7 @@ button { font: inherit; color: inherit; }
   font-family: var(--typography-family-heading);
   font-size: 15px;
   font-weight: var(--typography-weight-semibold);
-  color: var(--color-primary-base);
+  color: var(--color-primary-ink);
 }
 .status-card__state {
   font-family: var(--typography-family-heading);
@@ -882,7 +912,7 @@ button { font: inherit; color: inherit; }
 }
 .flight-card__edit {
   font-size: var(--typography-size-sm);
-  color: var(--color-primary-base);
+  color: var(--color-primary-ink);
   text-decoration: underline;
 }
 /* הרשימה נבנית מהטופס, ולכן מספר השורות משתנה. אין גבהים קבועים:
@@ -990,7 +1020,7 @@ button { font: inherit; color: inherit; }
   font-weight: var(--typography-weight-bold);
   /* ספרות ברוחב אחיד: כל תשע השעות יוצאות בדיוק באותו רוחב. */
   font-variant-numeric: tabular-nums;
-  color: var(--color-primary-base);
+  color: var(--color-primary-ink);
   cursor: pointer;
   white-space: nowrap;
   display: flex;
@@ -1037,9 +1067,10 @@ button { font: inherit; color: inherit; }
   padding: 0;
   border: 0;
   /* בלי פינות מעוגלות: הן היו משאירות פינה חשופה של השבב שמתחת. הקצה
-     האטום ממילא באותו כחול של הרקע, ולכן הריבוע לא נראה. */
+     האטום ממילא באותו צבע של רקע המסך — כחול במצב הבהיר, נייבי במצב
+     הכהה — ולכן הריבוע לא נראה. */
   border-radius: 0;
-  background: var(--gradient-reveal-from-blue, linear-gradient(160deg, var(--color-primary-base) 0%, rgb(115 115 115 / 0) 100%));
+  background: var(--gradient-reveal-from-blue, linear-gradient(160deg, var(--color-canvas-base) 0%, rgb(115 115 115 / 0) 100%));
   cursor: pointer;
 }
 /* בזמן שהכרטיס פתוח הרשת חתוכה לשורה אחת (הגובה עצמו מונפש ב-JS). */
@@ -1447,6 +1478,31 @@ button { font: inherit; color: inherit; }
 [data-theme="dark"] .step__eta,
 [data-theme="dark"] .step--upcoming .step__name { color: var(--color-slate-400); }
 
+/* -------------------------------------------------------------------------
+   Dark mode · the edges that light mode gets for free
+   A white card on a blue canvas needs no outline; navy/800 on navy/950 is
+   1.3:1 and does. Most surfaces already carry a --color-border-base hairline
+   (.input, .status-card, .settings__row, .lang), so only the three that
+   relied on their fill alone are treated here. Where no border exists the
+   edge is an inset shadow rather than a real border: a border would grow
+   the box by 2px and this file's dark block does not move layout.
+   ------------------------------------------------------------------------- */
+[data-theme="dark"] .flight-card,
+[data-theme="dark"] .status-card__chip {
+  box-shadow: inset 0 0 0 1px var(--color-border-base);
+}
+/* The slot already has a 1px border painted in its own fill colour — in
+   light mode deliberately edgeless. Here it only needs a colour. Chosen and
+   full chips are excluded: they carry their own border colour, and this
+   selector outranks theirs. */
+[data-theme="dark"] .slot:not([aria-pressed="true"]):not([data-full="true"]) {
+  border-color: var(--color-border-base);
+}
+/* The profile screen's filled fields are blue-on-white in light mode, where
+   the fill alone bounds the field. On a navy card the fill is 1.6:1, so the
+   field needs a visible edge to still read as a field. */
+[data-theme="dark"] .input--filled { border-color: var(--color-accent-base); }
+
 /* מסך נמוך: הכותרת הראשית יורדת מדרגה אחת. שתי שורות של 48px הן
    96px מתוך תקציב גובה שאין ממנו הרבה — 42px לשורה עדיין קריאות
    לגמרי ומחזירות את כפתורי הפעולה אל מעל קו הקיפול. */
@@ -1658,7 +1714,7 @@ button { font: inherit; color: inherit; }
 
 .is-open .burger__bar--top,
 .is-open .burger__bar--bot { fill: var(--color-gray-300); }
-.is-open .burger__bar--mid { fill: var(--color-primary-base); transform: translateX(8.31px); }
+.is-open .burger__bar--mid { fill: var(--color-primary-ink); transform: translateX(8.31px); }
 .is-open .burger__bar--bot { transform-origin: right center; transform: scaleX(0.659); }
 
 /* ---- 10. פס ההתקדמות זז בין השלבים ------------------------------------
@@ -1726,7 +1782,7 @@ button { font: inherit; color: inherit; }
 /* על רקע לבן הלוגו הלבן והפסים הלבנים נעלמים */
 .screen--light .burger__bar--top,
 .screen--light .burger__bar--bot { fill: var(--color-text-base); }
-.screen--light .burger__bar--mid { fill: var(--color-primary-base); }
+.screen--light .burger__bar--mid { fill: var(--color-primary-ink); }
 
 .settings__title {
   align-self: center;
@@ -1823,7 +1879,7 @@ button { font: inherit; color: inherit; }
               border-color var(--motion-base) var(--ease-out);
 }
 .avatar-lane__item img { inline-size: 96px; block-size: auto; border-radius: var(--radius-pill); }
-.avatar-lane__item[aria-checked="true"] { border-color: var(--color-primary-base); }
+.avatar-lane__item[aria-checked="true"] { border-color: var(--color-primary-ink); }
 .avatar-lane__item[data-pressed] {
   transform: scale(var(--motion-press-scale));
   transition-duration: var(--motion-press-in);
@@ -1852,13 +1908,13 @@ button { font: inherit; color: inherit; }
   min-block-size: 44px;
   min-inline-size: 104px;
   padding-inline: var(--space-3);
-  border: 1.5px solid var(--color-primary-base);
+  border: 1.5px solid var(--color-primary-ink);
   border-radius: var(--radius-sm);
   background: var(--color-surface-base);
   font-family: var(--typography-family-heading);
   font-size: var(--typography-size-sm);
   font-weight: var(--typography-weight-semibold);
-  color: var(--color-primary-base);
+  color: var(--color-primary-ink);
   cursor: pointer;
 }
 
@@ -1890,15 +1946,15 @@ button { font: inherit; color: inherit; }
               background-color var(--motion-base) var(--ease-out);
 }
 .lang[aria-checked="true"] {
-  border-color: var(--color-primary-base);
+  border-color: var(--color-primary-ink);
   background: var(--color-surface-base);
-  color: var(--color-primary-base);
+  color: var(--color-primary-ink);
 }
 .lang[aria-checked="true"]::after {
   content: "";
   inline-size: 20px; block-size: 20px;
   border-radius: var(--radius-pill);
-  background-color: var(--color-primary-base);
+  background-color: var(--color-primary-ink);
   /* סימן וי לבן כ-SVG מוטבע — בלי קובץ נוסף ובלי פשרה על הצורה */
   background-image: var(--icon-check);
   background-size: 20px 20px;
