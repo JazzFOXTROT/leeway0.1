@@ -50,9 +50,16 @@
       "landing.h1b": "כדי לא לחכות אחר כך",
       "landing.newBooking": "הזמינו חלון זמן חדש",
       "landing.myBooking": "הזמנה שלי",
-      "onboard.title": "הזמינו חלון זמן עכשיו",
-      "onboard.body": "מספר טיסה ושם — וחלון הזמן לביקורת הביטחון שמור לכם מראש.",
-      "onboard.dismiss": "סגירת ההודעה",
+      "coach.step": "שלב {n} מתוך {total}",
+      "coach.next": "הבא",
+      "coach.done": "מתחילים",
+      "coach.skip": "דילוג",
+      "coach.s1.title": "מזמינים חלון זמן",
+      "coach.s1.body": "מספר טיסה ושם, ואתם בוחרים חלון פנוי לביקורת הביטחון — לפני שיצאתם מהבית.",
+      "coach.s2.title": "עוקבים ביום הטיסה",
+      "coach.s2.body": "הכרטיס מתעדכן לבד לאורך היום: צ'ק-אין, ביקורת ביטחון, ושער העלייה.",
+      "coach.s3.title": "מציגים בעמדה",
+      "coach.s3.body": "בכניסה לביקורת פותחים את ההזמנה ומציגים את קוד ה-QR. זהו.",
       "status.cardTitle": "סטטוס שלי",
       "status.note": "מידע כללי בלבד — ללא רמת עומס חזויה",
       "status.noneStep": "אין הזמנה פעילה",
@@ -200,9 +207,16 @@
       "landing.h1b": "so you never queue later",
       "landing.newBooking": "Book a new time slot",
       "landing.myBooking": "My booking",
-      "onboard.title": "Book a time slot now",
-      "onboard.body": "A flight number and a name — and your security-check slot is held in advance.",
-      "onboard.dismiss": "Dismiss this message",
+      "coach.step": "Step {n} of {total}",
+      "coach.next": "Next",
+      "coach.done": "Let's start",
+      "coach.skip": "Skip",
+      "coach.s1.title": "Book a time slot",
+      "coach.s1.body": "A flight number and a name, and you pick a free security-check window — before you leave home.",
+      "coach.s2.title": "Track it on the day",
+      "coach.s2.body": "The card updates itself through the day: check-in, security check, and the gate.",
+      "coach.s3.title": "Show it at the desk",
+      "coach.s3.body": "At the security entrance you open the booking and show the QR code. That's it.",
       "status.cardTitle": "My status",
       "status.note": "General information only — no predicted queue level",
       "status.noneStep": "No active booking",
@@ -350,9 +364,16 @@
       "landing.h1b": "чтобы не стоять в очереди",
       "landing.newBooking": "Забронировать новое окно",
       "landing.myBooking": "Моя бронь",
-      "onboard.title": "Забронируйте окно сейчас",
-      "onboard.body": "Номер рейса и имя — и окно для проверки безопасности закреплено за вами заранее.",
-      "onboard.dismiss": "Закрыть сообщение",
+      "coach.step": "Шаг {n} из {total}",
+      "coach.next": "Далее",
+      "coach.done": "Начнём",
+      "coach.skip": "Пропустить",
+      "coach.s1.title": "Бронируете окно",
+      "coach.s1.body": "Номер рейса и имя — и вы выбираете свободное окно для проверки безопасности, ещё до выхода из дома.",
+      "coach.s2.title": "Следите в день вылета",
+      "coach.s2.body": "Карточка обновляется сама: регистрация, проверка безопасности и выход на посадку.",
+      "coach.s3.title": "Показываете на месте",
+      "coach.s3.body": "На входе в зону досмотра открываете бронь и показываете QR-код. Всё.",
       "status.cardTitle": "Мой статус",
       "status.note": "Только общая информация — без прогноза загруженности",
       "status.noneStep": "Нет активного бронирования",
@@ -500,9 +521,16 @@
       "landing.h1b": "حتى لا تنتظر في الطابور",
       "landing.newBooking": "احجز موعدًا جديدًا",
       "landing.myBooking": "حجزي",
-      "onboard.title": "احجزوا نافذة زمنية الآن",
-      "onboard.body": "رقم الرحلة والاسم — ونافذة الفحص الأمني محجوزة لكم مسبقًا.",
-      "onboard.dismiss": "إغلاق الرسالة",
+      "coach.step": "الخطوة {n} من {total}",
+      "coach.next": "التالي",
+      "coach.done": "لنبدأ",
+      "coach.skip": "تخطٍّ",
+      "coach.s1.title": "احجزوا نافذة زمنية",
+      "coach.s1.body": "رقم الرحلة والاسم، وتختارون نافذة فحص أمني متاحة — قبل مغادرة البيت.",
+      "coach.s2.title": "تابعوا يوم الرحلة",
+      "coach.s2.body": "تتحدّث البطاقة وحدها خلال اليوم: تسجيل الوصول، الفحص الأمني، وبوابة الصعود.",
+      "coach.s3.title": "اعرضوها عند النقطة",
+      "coach.s3.body": "عند مدخل الفحص تفتحون الحجز وتعرضون رمز الـ QR. هذا كل شيء.",
       "status.cardTitle": "حالتي",
       "status.note": "معلومات عامة فقط — بدون توقّع الازدحام",
       "status.noneStep": "لا يوجد حجز نشط",
@@ -710,6 +738,10 @@
     root.style.setProperty("--typography-family-body", cfg.body);
 
     qsa("[data-i18n]").forEach(function (el) { el.textContent = t(el.dataset.i18n); });
+    /* טקסט ההדרכה נכתב ב-JS לפי השלב, ולכן אינו נושא data-i18n ולא
+       מתעדכן בלולאה שמעליו. החלפת שפה באמצע ההדרכה חייבת להחליף גם
+       אותו — אחרת המסך מתורגם וההסבר עליו נשאר בעברית. */
+    if (typeof paintCoach === "function") paintCoach();
     qsa("[data-i18n-ph]").forEach(function (el) { el.placeholder = t(el.dataset.i18nPh); });
     qsa("[data-i18n-aria]").forEach(function (el) { el.setAttribute("aria-label", t(el.dataset.i18nAria)); });
     qsa("[data-i18n-alt]").forEach(function (el) { el.alt = t(el.dataset.i18nAlt); });
@@ -1340,12 +1372,12 @@
   function onScreenArrived(name, el) {
     if (typeof advanceProgress === "function") advanceProgress(el);
     fitTitlesIn(el);
-    /* טוסט ההדרכה שייך למסך הבית בלבד. קיצור דרך בכתובת (?screen=...)
-       חולף דרך הבית בדרך ליעד — שם אין למי להדריך, ולכן הוא לא עולה. */
+    /* ההדרכה שייכת למסך הבית בלבד. קיצור דרך בכתובת (?screen=...) חולף
+       דרך הבית בדרך ליעד — שם אין למי להסביר, ולכן היא לא נפתחת. */
     if (name === "landing" && !shortcutScreen) {
-      onboardTimer = window.setTimeout(showOnboard, ONBOARD_DELAY);
+      coachTimer = window.setTimeout(openCoach, COACH_DELAY);
     } else {
-      hideOnboard();
+      closeCoach();
     }
     /* המסך תמיד נפתח על מצב הבחירה, גם כשחוזרים אליו מ-Success. */
     if (name === "time-choosing") setCardOpen(false, false);
@@ -1417,7 +1449,6 @@
 
   function openMenu() {
     if (overlay.open) return;
-    hideOnboard();                       /* התפריט מכסה אותו — אין טעם שיישאר */
     overlay.showModal();                 /* <dialog> gives focus-trap + Escape */
     var panel = overlay.querySelector(".overlay__panel");
     if (panel) panel.focus({ preventScroll: true });   /* not the close button */
@@ -1449,7 +1480,8 @@
       applyTheme(theme === "dark" ? "light" : "dark");
       return;
     }
-    if (e.target.closest("[data-onboard-dismiss]")) { hideOnboard(); return; }
+    if (e.target.closest("[data-coach-skip]")) { closeCoach(); return; }
+    if (e.target.closest("[data-coach-next]")) { coachNext(); return; }
     var t = e.target.closest("[data-menu-open]");
     if (t) { openMenu(); return; }
     if (e.target.closest("[data-menu-close]")) { closeMenu(); return; }
@@ -1555,7 +1587,6 @@
                   ".lang, .lang-switch__btn, .avatar-lane__item, .settings__link," +
                   ".overlay__link, .add-passenger, .link-btn, .hamburger," +
                   ".passenger__remove," +
-                  ".toast__close," +
                   '.logo[role="button"], .pass-shell[role="button"], .slots__mask';
 
   document.addEventListener("pointerdown", function (e) {
@@ -1638,63 +1669,235 @@
 
 
   /* ---------------------------------------------------------------------
-     ONBOARDING TOAST — כניסה ראשונה בלבד
+     ONBOARDING — הדרכת כניסה ראשונה
 
-     מי שנכנס לראשונה לא יודע מה האפליקציה מבקשת ממנו לעשות. הכפתור
-     הראשי אומר "הזמינו חלון זמן חדש", אבל הוא כפתור אחד מתוך שניים
-     ומתחתיו כרטיס סטטוס ריק — אין שום דבר שמסמן מאיפה מתחילים. הטוסט
-     עונה בדיוק על זה: משפט אחד שאומר מה לעשות עכשיו, ושורה שנייה
-     שאומרת כמה זה עולה בזמן (מספר טיסה ושם).
+     מי שנכנס לראשונה לא יודע מה המוצר הזה עושה. שלושה שלבים מסבירים
+     את כל התהליך, וכל שלב מצביע על אלמנט אמיתי שקיים כאן ועכשיו במסך
+     הבית — אין הסבר על מסך שלא רואים, ואין סיור בין מסכים.
 
-     הוא עולה פעם אחת בחיי המכשיר ולא חוזר:
+       1. הכפתור הראשי   → מזמינים חלון זמן
+       2. כרטיס הסטטוס   → עוקבים ביום הטיסה
+       3. "הזמנה שלי"     → מציגים את הקוד בעמדה
 
-       · נרשם כ"נראה" ברגע ההצגה, לא בסגירה. משתמש שלא הספיק לקרוא לא
-         יראה אותו שוב — זו התנהגות טוסט, לא התנהגות מודאל. אילו נרשם
-         בסגירה, מי שיוצא מהאפליקציה מיד היה מקבל אותו שוב ושוב.
-       · אם הכתיבה ל-localStorage נכשלת (ספארי בגלישה פרטית זורק), הטוסט
-         פשוט יופיע שוב בכניסה הבאה. זו התנהגות סבירה למי שביקש מהדפדפן
-         לא לזכור אותו כלום.
-       · "מחק את כל מה שנשמר" מוחק גם אותו — מכשיר שנוקה חוזר להיות
-         מכשיר של משתמש חדש, וזה מה שהכפתור מבטיח.
+     ההדרכה עולה פעם אחת בחיי המכשיר:
 
-     הוא נדחה ב-ONBOARD_DELAY אחרי שהמסך התיישב, כדי שלא יתחרה במעבר
-     של 500ms מ-loading-2, ונעלם לבד אחרי ONBOARD_MS.
+       · נרשמת כ"נראתה" ברגע הפתיחה ולא בסגירה. מי שיצא באמצע לא יקבל
+         אותה שוב — אילו נרשמה בסגירה, יציאה מהאפליקציה הייתה מחזירה
+         אותה בכל כניסה.
+       · אם הכתיבה ל-localStorage נכשלת (ספארי בגלישה פרטית זורק), היא
+         תופיע שוב בכניסה הבאה. זו התנהגות סבירה למי שביקש מהדפדפן לא
+         לזכור עליו כלום.
+       · "מחק את כל מה שנשמר" מוחק גם אותה — מכשיר שנוקה חוזר להיות
+         מכשיר של משתמש חדש.
      --------------------------------------------------------------------- */
-  var ONBOARD_KEY = "leeway.onboarded";
-  var ONBOARD_DELAY = 350;    /* אחרי שהמעבר למסך הבית כבר נגמר */
-  var ONBOARD_MS = 8000;      /* שתי שורות בעברית, בקצב קריאה נינוח */
-  var onboardEl = document.querySelector("[data-onboard-toast]");
-  var onboardTimer = null;
+  var COACH_KEY = "leeway.onboarded";
+  var COACH_DELAY = 350;      /* אחרי שהמעבר למסך הבית כבר נגמר */
 
-  function onboardSeen() { return readKey(ONBOARD_KEY) === "1"; }
+  /* ההדגמות. שלושה "פריימים" לכל שלב, שמתחלפים בלולאה בתוך מסגרת אחת
+     ומראים את הפעולה שהטקסט מתאר. הם נבנים כאן ולא יושבים ב-HTML כי
+     רק אחד מהם מוצג בכל רגע, ותשעה בלוקים מתים במסמך היו רעש. */
+  function beat(inner) { return '<span class="mini__beat">' + inner + "</span>"; }
 
-  function hideOnboard() {
-    /* לפני הבדיקה, לא אחריה: אותו handle נושא גם את ההשהיה שלפני ההצגה
-       וגם את ההיעלמות מעצמה, ויציאה מוקדמת הייתה משאירה טיימר תלוי. */
-    window.clearTimeout(onboardTimer);
-    onboardTimer = null;
-    if (!onboardEl || onboardEl.hidden) return;
-    if (reduced) { onboardEl.hidden = true; return; }
-    onboardEl.classList.add("is-leaving");
-    window.setTimeout(function () {
-      onboardEl.classList.remove("is-leaving");
-      onboardEl.hidden = true;
-    }, 140);                  /* = --motion-fast */
+  function demoBook() {
+    return beat('<span class="mini__bar"><span class="mini__ink"></span><i class="mini__caret"></i></span>' +
+                '<span class="mini__bar mini__bar--dim"></span>') +
+           beat('<span class="mini__grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>') +
+           beat('<span class="mini__grid"><i></i><i></i><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>' +
+                '<span class="mini__bar mini__bar--cta"></span>');
+  }
+  function rows(on) {
+    var out = "";
+    for (var i = 0; i < 3; i += 1) out += '<i class="' + (i === on ? "is-on" : "") + '"></i>';
+    return '<span class="mini__rows">' + out + "</span>";
+  }
+  function demoTrack() { return beat(rows(0)) + beat(rows(1)) + beat(rows(2)); }
+  function demoPass() {
+    return beat('<span class="mini__bar mini__bar--cta"></span>') +
+           beat('<span class="mini__code"></span>') +
+           beat('<span class="mini__code"></span><span class="mini__bar mini__bar--cta"></span>');
   }
 
-  function showOnboard() {
-    if (!onboardEl || onboardSeen() || current !== "landing") return;
-    writeKey(ONBOARD_KEY, "1");
-    /* מודדים את שורת ההגדרות ומרימים את הטוסט מעליה, כדי שמתג השפה
-       יישאר גלוי (ראו ההערה ליד .toast ב-style.css). */
+  var COACH_STEPS = [
+    { key: "s1", target: '.landing__actions [data-go="registration"]', demo: demoBook },
+    { key: "s2", target: ".status-card",                               demo: demoTrack },
+    { key: "s3", target: '.landing__actions [data-go="status"]',       demo: demoPass }
+  ];
+
+  var coachEl = document.querySelector("[data-coach]");
+  var coachScrim = document.querySelector("[data-coach-scrim]");
+  var coachDemo = coachEl && coachEl.querySelector("[data-coach-demo]");
+  var coachStepEl = coachEl && coachEl.querySelector("[data-coach-step]");
+  var coachTitle = coachEl && coachEl.querySelector("[data-coach-title]");
+  var coachBody = coachEl && coachEl.querySelector("[data-coach-body]");
+  var coachNextBtn = coachEl && coachEl.querySelector("[data-coach-next]");
+  var coachDots = coachEl ? Array.prototype.slice.call(coachEl.querySelectorAll(".coach__dot")) : [];
+  var coachIndex = -1;        /* ‎-1 = סגורה */
+  var coachTimer = null;
+  var coachReturn = null;     /* לאן להחזיר את הפוקוס בסגירה */
+  var coachShift = 0;         /* כמה עמודת התוכן נדחפה למעלה, בפיקסלים */
+  var coachDrawn = -1;        /* השלב שההדגמה שלו כבר בנויה ב-DOM */
+  var COACH_GAP = 16;         /* אוויר בין האלמנט המסומן לגג הגיליון */
+
+  /* המיקום האנכי של כל יעד ביחס לראש המסך, כפי שהוא בלי הדחיפה.
+
+     נמדד מחדש בכל ציור ולא נשמר פעם אחת בפתיחה: הגבהים כאן זזים מתחת
+     לרגליים יותר משנדמה — Heebo נטען אחרי הצבע הראשון ומזיז את הכותרת
+     הגדולה, והחלפת שפה שוברת אותה למספר שורות אחר. כל גרסה ששמרה
+     מדידה אחת מצאה את עצמה מיישרת מול מסך שכבר לא קיים. */
+  function coachMeasure() {
+    var el = screens.landing;
+    var prev = coachShift;
+    /* מודדים על אפס דחיפה, עם המעבר מנוטרל: קריאת מלבן באמצע מעבר
+       מחזירה מיקום בדרך ולא מיקום סופי. אחרי המדידה הערך הקודם חוזר
+       בעודנו מנוטרלים, כדי שהמדידה עצמה לא תיראה כקפיצה. */
+    el.classList.add("is-measuring");
+    el.style.setProperty("--coach-shift", "0px");
+    var screenTop = el.getBoundingClientRect().top;
+    COACH_STEPS.forEach(function (st) {
+      var node = el.querySelector(st.target);
+      st.bottom = node ? (node.getBoundingClientRect().bottom - screenTop) : 0;
+    });
+    el.style.setProperty("--coach-shift", prev + "px");
+    el.getBoundingClientRect();          /* מחייב חישוב לפני שהמעבר חוזר */
+    el.classList.remove("is-measuring");
+  }
+
+  /* offsetTop ולא getBoundingClientRect: בשנייה הראשונה הגיליון עדיין
+     נכנס מלמטה, והמלבן החי שלו היה מחזיר מיקום שאין לו קשר למקום
+     שבו הוא ייעצר. offsetTop מתעלם מההנפשה. */
+  function coachAlign() {
+    var step = COACH_STEPS[coachIndex];
+    if (!step) return;
+    var over = step.bottom + COACH_GAP - coachEl.offsetTop;
+    coachShift = over > 0 ? -Math.ceil(over) : 0;
+    screens.landing.style.setProperty("--coach-shift", coachShift + "px");
+  }
+
+  function clearCoachTarget() {
+    qsa("[data-coach-target]").forEach(function (el) { el.removeAttribute("data-coach-target"); });
+  }
+
+  /* נקראת גם מ-applyLanguage: החלפת שפה באמצע ההדרכה חייבת להחליף גם
+     את הטקסט שלה, ולא רק את המסך שמאחוריה. */
+  function paintCoach() {
+    if (coachIndex < 0 || !coachEl) return;
+    var step = COACH_STEPS[coachIndex];
+    var last = coachIndex === COACH_STEPS.length - 1;
+
+    coachStepEl.textContent = fmt(t("coach.step"), { n: coachIndex + 1, total: COACH_STEPS.length });
+    coachTitle.textContent = t("coach." + step.key + ".title");
+    coachBody.textContent = t("coach." + step.key + ".body");
+    coachNextBtn.textContent = t(last ? "coach.done" : "coach.next");
+    /* רק כשהשלב באמת התחלף. ציור חוזר (החלפת שפה, טעינת גופן, סיבוב
+       מסך) לא אמור להתחיל את ההדגמה מהתחלה באמצע הלולאה. */
+    if (coachDrawn !== coachIndex) {
+      coachDemo.innerHTML = step.demo();
+      coachDrawn = coachIndex;
+    }
+    coachDots.forEach(function (dot, i) { dot.classList.toggle("is-on", i === coachIndex); });
+
+    clearCoachTarget();
+    var target = screens.landing.querySelector(step.target);
+    if (target) target.setAttribute("data-coach-target", "");
+
+    /* אחרי שהתוכן החדש כבר בפנים: גובה הגיליון הוא חצי מהחישוב. */
+    coachMeasure();
+    coachAlign();
+  }
+
+  function openCoach() {
+    if (!coachEl || current !== "landing" || readKey(COACH_KEY) === "1") return;
+    writeKey(COACH_KEY, "1");
+    coachReturn = document.activeElement;
+
+    /* מודדים את שורת ההגדרות ועוצרים את הגיליון מעליה, כדי שמתג השפה
+       יישאר גלוי ולחיץ (ראו ההערה ליד .coach ב-style.css). */
     var foot = screens.landing.querySelector(".landing__foot");
     if (foot) {
       var clear = app.getBoundingClientRect().bottom - foot.getBoundingClientRect().top;
-      onboardEl.style.setProperty("--toast-clear", Math.max(0, Math.round(clear)) + "px");
+      coachEl.style.setProperty("--coach-clear", Math.max(0, Math.round(clear)) + "px");
     }
-    onboardEl.classList.remove("is-leaving");
-    onboardEl.hidden = false;
-    onboardTimer = window.setTimeout(hideOnboard, ONBOARD_MS);
+
+    coachIndex = 0;
+    coachShift = 0;
+    coachDrawn = -1;
+    screens.landing.style.setProperty("--coach-shift", "0px");
+    /* נועלים את גובה האיור על מה שהוא עכשיו (ראו ההערה ב-style.css). */
+    var art = screens.landing.querySelector(".landing__art");
+    if (art) art.style.blockSize = Math.round(art.getBoundingClientRect().height) + "px";
+    screens.landing.setAttribute("data-coach", "");
+    coachEl.classList.remove("is-leaving");
+    coachScrim.hidden = false;
+    coachEl.hidden = false;
+    paintCoach();
+    coachNextBtn.focus({ preventScroll: true });
+  }
+
+  function closeCoach() {
+    window.clearTimeout(coachTimer);
+    coachTimer = null;
+    if (coachIndex < 0) return;
+    /* האינדקס יורד ראשון: מכאן והלאה הרקע שוב לחיץ, גם בזמן שהשכבות
+       עדיין דועכות. */
+    coachIndex = -1;
+
+    var strip = function () {
+      coachEl.classList.remove("is-leaving");
+      coachScrim.classList.remove("is-leaving");
+      coachEl.hidden = true;
+      coachScrim.hidden = true;
+      screens.landing.removeAttribute("data-coach");
+      screens.landing.style.removeProperty("--coach-shift");
+      var art = screens.landing.querySelector(".landing__art");
+      if (art) art.style.removeProperty("block-size");
+      clearCoachTarget();
+    };
+    coachShift = 0;
+
+    if (reduced) {
+      strip();
+    } else {
+      coachEl.classList.add("is-leaving");
+      coachScrim.classList.add("is-leaving");
+      window.setTimeout(strip, 140);        /* = --motion-fast */
+    }
+    if (coachReturn && coachReturn.focus) coachReturn.focus({ preventScroll: true });
+    coachReturn = null;
+  }
+
+  function coachNext() {
+    if (coachIndex < 0) return;
+    if (coachIndex >= COACH_STEPS.length - 1) { closeCoach(); return; }
+    coachIndex += 1;
+    coachEl.classList.remove("is-swapping");
+    void coachEl.offsetWidth;              /* מאתחל את ההנפשה מחדש */
+    coachEl.classList.add("is-swapping");
+    paintCoach();
+  }
+
+  /* שלב הלכידה, לפני המאזין הרגיל של האפליקציה: בזמן ההדרכה אף כפתור
+     ברקע לא מנווט לשום מקום. היוצאים מן הכלל הם הגיליון עצמו ושורת
+     ההגדרות. הקשה על האלמנט המסומן מתקדמת לשלב הבא — זו התשובה
+     הטבעית ל"הנה, זה מה שלוחצים". */
+  document.addEventListener("click", function (e) {
+    if (coachIndex < 0) return;
+    if (e.target.closest(".coach") || e.target.closest(".landing__foot")) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.target.closest("[data-coach-target]")) coachNext();
+  }, true);
+
+  document.addEventListener("keydown", function (e) {
+    if (coachIndex >= 0 && e.key === "Escape") { e.preventDefault(); closeCoach(); }
+  });
+
+  window.addEventListener("resize", paintCoach);
+
+  /* Heebo נטען אחרי הצבע הראשון. עד שהוא מגיע, הכותרת הגדולה נמדדת
+     בגופן החלופי — וכשהוא מחליף אותה, כל העמודה מתחתיה זזה. בלי
+     המדידה החוזרת הזאת השלב הראשון מסתדר מול מסך שכבר לא קיים. */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { paintCoach(); });
   }
 
   /* ---------------------------------------------------------------------
@@ -2507,10 +2710,10 @@
                          is "1", removed the moment it is switched off.
        leeway.profile    what the profile screen's save button saves,
                          including the chosen avatar.
-       leeway.onboarded  "1" once the first-visit toast has been shown.
-                         Carries no personal data — it is a single flag,
-                         and its only job is to keep the toast from
-                         appearing a second time.
+       leeway.onboarded  "1" once the first-visit walkthrough has opened.
+                         Carries no personal data — a single flag, whose
+                         only job is to keep the walkthrough from opening
+                         a second time.
 
      Every access is wrapped. Safari in private mode does not return null
      from localStorage — it throws, and an unguarded read would take the

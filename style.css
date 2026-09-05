@@ -725,100 +725,268 @@ button { font: inherit; color: inherit; }
 .status-card[data-booking="none"] .status-card__chip img { opacity: .45; }
 
 /* =========================================================================
-   Onboarding toast — כניסה ראשונה בלבד
+   Onboarding — הדרכת כניסה ראשונה (אין לה node ב-Figma)
 
-   אין לו node ב-Figma. הוא נשען על אותם טוקנים של כרטיס הסטטוס שמתחתיו
-   (אותו משטח, אותו רדיוס, אותו גבול), כדי שייקרא כחלק מהמסך ולא כשכבה
-   זרה שנחתה עליו. ההגבהה היחידה שיצאה מהקובץ היא --shadow-pass, ולכן
-   היא זו שמשמשת כאן — עדיף להשתמש בערך ההגבהה היחיד שיש למוצר מאשר
-   להמציא hex חדש שאין לו מקור.
+   שלוש שכבות מעל מסך הבית, כולן ילדות של המסך עצמו ולא של .app:
+   רק כך אפשר להרים אלמנט שיושב *בתוך* המסך (הכפתור שמוסבר, שורת
+   ההגדרות) מעל ההחשכה. שכבה מחוץ למסך הייתה מחייבת להרים את המסך
+   כולו — כלומר לבטל את ההחשכה שהיא כל העניין.
 
-   הוא נמשך לרוחב מסגרת האפליקציה (.app, position:relative) ולא לחלון,
-   כך שבדסקטופ הוא נשאר בתוך ה-412px של הטלפון ולא בורח לקצה המסך.
+     z 5  ההחשכה
+     z 6  האלמנט שמוסבר כרגע
+     z 7  הגיליון
+     z 8  שורת ההגדרות — שפה ומצב תצוגה נשארים מעל הכול ופעילים.
+          זה לא קישוט: מי שלא קורא עברית חייב להחליף שפה תוך כדי
+          ההסבר, ולא אחריו.
    ========================================================================= */
 
-.toast {
+.coach-scrim {
   position: absolute;
-  z-index: 9;                  /* מתחת לתפריט (10), מעל המסך */
-  /* צר מכרטיס הסטטוס שמתחתיו בשמונה פיקסלים מכל צד. הטוסט והכרטיס
-     חולקים את אותו משטח, אותו רדיוס ואותו גבול — בלי ההפרש הזה שתי
-     הקופסאות היו נקראות כקופסה אחת שגדלה, ולא כשכבה שנחתה מעל. */
-  inset-inline: calc(var(--canvas-gutter) + var(--space-2));
-  /* לא צמוד לתחתית: שורת ההגדרות יושבת שם, ובתוכה מתג השפה — הדבר
-     הראשון שמישהו שלא קורא עברית מחפש בשנייה הראשונה. --toast-clear
-     הוא הגובה של אותה שורה, נמדד ב-JS ולא מנוחש (הוא משתנה בין שפות
-     ובין גדלי מסך); בלי JS הטוסט נופל בחזרה לתחתית ועדיין קריא.
-     מה שהוא כן מכסה הוא כרטיס הסטטוס — ולמשתמש בכניסה ראשונה הכרטיס
-     הזה ריק מהגדרה ("אין הזמנה פעילה"), כלומר אין שם מה להסתיר. */
-  inset-block-end: calc(var(--toast-clear, max(var(--v-4), env(safe-area-inset-bottom))) + var(--v-3));
+  inset: 0;
+  z-index: 5;
+  /* 25% — חצי מהעוצמה של תפריט ההמבורגר (35%). ההסבר לא אמור למחוק
+     את המסך שהוא מסביר, רק להוריד אותו רמה אחת. */
+  background: rgb(0 27 42 / 0.25);
+  animation: fade-in var(--motion-dissolve) var(--ease-out) both;
+}
+.coach-scrim[hidden] { display: none !important; }
+.coach-scrim.is-leaving { animation: fade-out var(--motion-fast) var(--ease-out) both; }
+
+/* האלמנט שמוסבר כרגע. outline ולא box-shadow: הוא עוקב לבד אחרי
+   ה-border-radius של כל יעד (כפתור radius-md, כרטיס radius-lg) בלי
+   שנצטרך לחזור על הרדיוס לכל אחד. הצבע הוא טוקן הפוקוס של הקנבס
+   הכהה — בדיוק המקרה הזה: טבעת בהירה מעל רקע מוחשך. */
+.screen--landing[data-coach] [data-coach-target] {
+  position: relative;
+  z-index: 6;
+  outline: 3px solid var(--color-focus-on-dark);
+  outline-offset: 3px;
+  animation: coach-ring 1400ms var(--ease-out) infinite alternate;
+}
+
+/* מביא את האלמנט שמוסבר אל השטח שמעל הגיליון.
+
+   סיור מודרך שמסמן אלמנט שמסתתר מאחורי הגיליון שלו לא מסביר כלום,
+   וכרטיס הסטטוס יושב נמוך במסך. במקום להזיז את הגיליון (הוא נכנס
+   מלמטה, זה התפקיד שלו), נדחפת כל עמודת התוכן למעלה — בדיוק כמו
+   גלילה. מרווח שלילי על הכותרת העליונה ולא transform, כי transform
+   על היעד היה מתנגש עם ה-scale של מצב הלחיצה ומקפיץ אותו חזרה.
+   שורת ההגדרות לא זזה: היא נעוצה לתחתית ב-margin-block-start:auto,
+   והמרווח השלילי רק מגדיל את השטח הפנוי שהיא בולעת. */
+/* האיור הוא האלמנט היחיד במסך שמוותר על גובה. בלי הקפאה נוצר לולאה:
+   הדחיפה למעלה מפנה מקום, האיור גדל בחזרה, והיעד יורד שוב מתחת לגג
+   הגיליון. ה-JS נועל את הגובה שנמדד בפתיחה, וכאן נסגרת גם ההתכווצות. */
+.screen--landing[data-coach] .landing__art { flex-shrink: 0; }
+
+.screen--landing[data-coach] .header {
+  margin-block-start: var(--coach-shift, 0px);
+  transition: margin-block-start var(--motion-move) var(--ease-out);
+}
+.screen--landing.is-measuring .header { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .screen--landing[data-coach] .header { transition: none; }
+}
+
+/* שורת ההגדרות מעל הכול. static→relative רק בזמן ההדרכה, כדי שה-z
+   לא ישנה סדר ציור בשאר הזמן. */
+.screen--landing[data-coach] .landing__foot { position: relative; z-index: 8; }
+
+.coach {
+  position: absolute;
+  z-index: 7;
+  /* הבלוק המכיל של אלמנט abs הוא תיבת ה-padding של המסך, כלומר כולל
+     את המרווח הצדדי. inset של גוטר אחד מיישר את הגיליון בדיוק לקו של
+     הכפתורים ושל כרטיס הסטטוס. */
+  inset-inline: var(--canvas-gutter);
+  /* נעצר מעל שורת ההגדרות. --coach-clear הוא גובה השורה, נמדד ב-JS
+     ולא מנוחש — הוא משתנה בין שפות ובין גדלי מסך. */
+  inset-block-end: calc(var(--coach-clear, max(var(--v-4), env(safe-area-inset-bottom))) + var(--v-3));
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-4);
+  flex-direction: column;
+  gap: var(--v-2);
+  padding: var(--v-4) var(--space-5);
   border: 1px solid var(--color-border-base);
   border-radius: var(--radius-lg);
-  /* raised ולא base: כרטיס הסטטוס שמתחת הוא כבר surface-base. במצב כהה
-     שני המשטחים היו יוצאים אותו נייבי והטוסט היה נבלע בכרטיס — raised
-     מפריד ביניהם בשני המצבים באותו טוקן אחד, בלי כלל שמסתעף לפי theme. */
-  background: var(--color-surface-raised);
+  background: var(--color-surface-base);
   box-shadow: var(--shadow-pass);
-  animation: toast-in var(--motion-base) var(--ease-out) both;
+  animation: coach-in var(--motion-move) var(--ease-out) both;
 }
-.toast[hidden] { display: none !important; }
+.coach[hidden] { display: none !important; }
+.coach.is-leaving { animation: coach-out var(--motion-fast) var(--ease-in) both; }
+/* הטבעת של המערכת לבנה — היא נועדה לקנבס הכחול ונעלמת על הגיליון. */
+.coach :focus-visible { outline-color: var(--color-focus-on-light); }
 
-.toast.is-leaving { animation: toast-out var(--motion-fast) var(--ease-in) both; }
-
-.toast__icon {
-  flex: 0 0 auto;
-  inline-size: 21px;
-  block-size: 21px;
-  margin-block-start: 2px;      /* מיישר את המגן לשורת הכותרת, לא לתיבה */
+.coach__step {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-xs);
+  line-height: var(--typography-line-xs);
+  font-weight: var(--typography-weight-semibold);
   color: var(--color-primary-ink);
 }
-.toast__text { display: flex; flex-direction: column; gap: var(--space-1); flex: 1 1 auto; }
-.toast__title {
+.coach__title {
   font-family: var(--typography-family-heading);
-  font-size: var(--typography-size-md);
-  line-height: var(--typography-line-md);
-  font-weight: var(--typography-weight-semibold);
+  font-size: var(--typography-size-lg);
+  line-height: var(--typography-line-lg);
+  font-weight: var(--typography-weight-bold);
   color: var(--color-text-base);
 }
-/* neutral ולא muted: הטקסט המשני של המוצר (--color-text-muted) יוצא
-   3.44:1 מול משטח לבן — עובר AA לטקסט גדול בלבד, וזה כאן 14px.
-   --color-neutral-base נותן 5.8:1 במצב בהיר ו-6.1:1 במצב כהה. */
-.toast__body {
+/* neutral ולא muted: --color-text-muted יוצא 3.44:1 מול משטח בהיר,
+   כלומר AA לטקסט גדול בלבד — וזה כאן 14px. neutral נותן 5.8:1 בבהיר
+   ו-4.6:1 בכהה. */
+.coach__body {
   font-size: var(--typography-size-sm);
   line-height: var(--typography-line-sm);
   color: var(--color-neutral-base);
 }
 
-/* שטח המגע הוא 44px גם כשה-X עצמו 16px — המרווח השלילי מחזיר לטוסט את
-   הריווח שהכפתור המוגדל היה גונב ממנו. */
-.toast__close {
-  flex: 0 0 auto;
+/* נקודות, דילוג והבא בשורה אחת. שורה נפרדת לכפתור הייתה מוסיפה
+   כ-56px לגובה הגיליון, וכל פיקסל כאן נגרע מהשטח שבו רואים את
+   האלמנט שמוסבר. */
+.coach__foot {
   display: flex;
   align-items: center;
-  justify-content: center;
-  inline-size: 44px;
-  block-size: 44px;
-  margin-block: calc(var(--space-3) * -1);
-  margin-inline-end: calc(var(--space-3) * -1);
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--color-neutral-base);
-  cursor: pointer;
+  gap: var(--space-3);
+  margin-block-start: var(--space-1);
 }
-.toast__close svg { inline-size: 16px; block-size: 16px; }
+.coach .coach__skip { margin-inline-start: auto; color: var(--color-neutral-base); }
+/* flex:0 0 auto — בלעדיו הכפתור נדחס בשורה והתווית נשברת לשתי שורות. */
+.coach__next { flex: 0 0 auto; inline-size: auto; padding-inline: var(--space-5); white-space: nowrap; }
+.coach__dots { display: flex; align-items: center; gap: var(--space-2); }
+.coach__dot {
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: var(--radius-pill);
+  background: var(--color-muted-surface-base);
+  transition: inline-size var(--motion-base) var(--ease-out),
+              background-color var(--motion-base) var(--ease-out);
+}
+.coach__dot.is-on { inline-size: 20px; background: var(--color-primary-base); }
 
-/* שני טוקני הפוקוס שקיימים במערכת הם לבן (לקנבס הכחול) וכחול-600
-   (למשטחים בהירים). הטוסט הוא כרטיס בהיר במצב בהיר וכרטיס נייבי במצב
-   כהה — הלבן נעלם בראשון והכחול הכהה נעלם בשני. primary-ink הוא הטוקן
-   היחיד שכבר מתהפך עם המצב, ולכן הוא זה שנושא כאן את הטבעת. */
-.toast :focus-visible { outline-color: var(--color-primary-ink); }
+/* -------------------------------------------------------------------------
+   ההדגמה — "הקלטת מסך" קטנה של הפעולה שהטקסט מסביר.
 
-@keyframes toast-in  { from { opacity: 0; transform: translateY(calc(var(--space-4) + var(--motion-lift))) } to { opacity: 1; transform: translateY(0) } }
-@keyframes toast-out { from { opacity: 1; transform: translateY(0) } to { opacity: 0; transform: translateY(var(--motion-lift)) } }
+   שלושה פריימים שמתחלפים בלולאה בתוך מסגרת אחת. הם לא צילום מסך אלא
+   שחזור מופשט של אותם רכיבים (שדה, רשת חלונות, שורות סטטוס, קוד) —
+   בגודל הזה צילום אמיתי היה כתם, והמופשט קריא. הכול מטוקנים, כך
+   שההדגמה מתחלפת יחד עם מצב התצוגה בלי קוד נוסף.
+   ------------------------------------------------------------------------- */
+.mini {
+  position: relative;
+  block-size: 64px;
+  border: 1px solid var(--color-border-base);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  overflow: hidden;
+}
+.mini__beat {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  opacity: 0;
+  /* 3 × 1700ms. כל פריים נראה כשנייה וחצי — מספיק לקלוט, קצר מכדי
+     להפוך ללולאה שמושכת את העין מהטקסט. */
+  animation: mini-beat 5100ms var(--ease-out) infinite both;
+}
+.mini__beat:nth-child(2) { animation-delay: 1700ms; }
+.mini__beat:nth-child(3) { animation-delay: 3400ms; }
+
+.mini__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  inline-size: 100%;
+  block-size: 15px;
+  padding-inline: var(--space-2);
+  /* border-base כמעט זהה ל-surface-base, ובגודל הזה הצורות נעלמו.
+     muted-surface הוא הקו הנראה של המערכת. */
+  border: 1px solid var(--color-muted-surface-base);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-base);
+}
+.mini__bar--dim { opacity: 0.5; }
+.mini__bar--cta {
+  justify-content: center;
+  block-size: 17px;
+  border-color: var(--color-accent-base);
+  background: var(--color-accent-base);
+}
+.mini__ink {
+  block-size: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--color-neutral-base);
+  animation: mini-type 1100ms var(--ease-linear) both;
+}
+.mini__caret {
+  inline-size: 1.5px;
+  block-size: 8px;
+  background: var(--color-primary-ink);
+  animation: mini-caret 800ms steps(1) infinite;
+}
+
+.mini__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-1);
+  inline-size: 100%;
+}
+.mini__grid i {
+  block-size: 17px;
+  border: 1px solid var(--color-muted-surface-base);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-base);
+}
+.mini__grid i.is-on {
+  border-color: var(--color-accent-base);
+  background: var(--color-accent-base);
+}
+
+.mini__rows { display: flex; flex-direction: column; gap: var(--space-1); inline-size: 100%; }
+.mini__rows i {
+  block-size: 15px;
+  border: 1px solid var(--color-muted-surface-base);
+  /* logical ולא box-shadow: הפס חייב להתהפך לצד השני באנגלית וברוסית */
+  border-inline-start: 3px solid transparent;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-base);
+  opacity: 0.6;
+}
+.mini__rows i.is-on { opacity: 1; border-inline-start-color: var(--color-accent-base); }
+
+.mini__code {
+  inline-size: 38px;
+  block-size: 38px;
+  border: 1px solid var(--color-muted-surface-base);
+  border-radius: var(--radius-sm);
+  background:
+    repeating-conic-gradient(var(--color-text-base) 0% 25%, var(--color-surface-base) 0% 50%)
+    0 0 / 9px 9px;
+}
+
+/* החלפת שלב: התוכן החדש נכנס בדעיכה קצרה, אחרת הטקסט פשוט מתחלף
+   בתוך קופסה שלא זזה וזה נקרא כתקלה ולא כמעבר. */
+.coach.is-swapping .coach__demo,
+.coach.is-swapping .coach__step,
+.coach.is-swapping .coach__title,
+.coach.is-swapping .coach__body {
+  animation: coach-swap var(--motion-base) var(--ease-out) both;
+}
+
+@keyframes coach-swap { from { opacity: 0; transform: translateY(var(--motion-lift)) } to { opacity: 1; transform: none } }
+@keyframes coach-in  { from { opacity: 0; transform: translateY(100%) } to { opacity: 1; transform: none } }
+@keyframes coach-out { from { opacity: 1; transform: none } to { opacity: 0; transform: translateY(var(--space-4)) } }
+@keyframes coach-ring { from { outline-offset: 2px } to { outline-offset: 7px } }
+@keyframes mini-beat {
+  0%       { opacity: 0; transform: translateY(6px) }
+  4%, 28%  { opacity: 1; transform: none }
+  33%,100% { opacity: 0; transform: translateY(-6px) }
+}
+@keyframes mini-type  { from { inline-size: 0 } to { inline-size: 46px } }
+@keyframes mini-caret { 50% { opacity: 0 } }
 
 /* =========================================================================
    Loading / splash (nodes 2072:1219, 2039:614)
@@ -1652,8 +1820,7 @@ button { font: inherit; color: inherit; }
 .link-btn,
 .hamburger,
 .pass-shell[role="button"],
-.slots__mask,
-.toast__close {
+.slots__mask {
   transition: transform var(--motion-press-out) var(--ease-out),
               background-color var(--motion-press-out) var(--ease-out);
 }
@@ -1669,8 +1836,7 @@ button { font: inherit; color: inherit; }
 .link-btn[data-pressed],
 .hamburger[data-pressed],
 .pass-shell[data-pressed],
-.slots__mask[data-pressed],
-.toast__close[data-pressed] {
+.slots__mask[data-pressed] {
   transform: scale(var(--motion-press-scale));
   transition-duration: var(--motion-press-in);
 }
@@ -1855,8 +2021,15 @@ button { font: inherit; color: inherit; }
   .overlay__panel,
   .overlay[open] .overlay__panel { transform: none; }
   .passenger--entering { animation: fade-in var(--motion-fast) var(--ease-out) both; }
-  .toast { animation: fade-in var(--motion-fast) var(--ease-out) both; }
-  .toast.is-leaving { animation: fade-out var(--motion-fast) var(--ease-out) both; }
+  /* ההדרכה נכנסת בדעיכה במקום מלמטה, הטבעת מפסיקה לנשום, וההדגמה
+     קופאת על הפריים האחרון — זה שמראה את התוצאה. */
+  .coach { animation: fade-in var(--motion-fast) var(--ease-out) both; }
+  .coach.is-leaving { animation: fade-out var(--motion-fast) var(--ease-out) both; }
+  .screen--landing[data-coach] [data-coach-target] { animation: none; outline-offset: 4px; }
+  .mini__beat { animation: none; opacity: 0; }
+  .mini__beat:last-child { opacity: 1; }
+  .mini__caret { animation: none; }
+  .mini__ink { animation: none; inline-size: 46px; }
   .result__art--celebrate { animation: fade-in var(--motion-fast) var(--ease-out) both; }
   .is-open .burger__bar--mid,
   .is-open .burger__bar--bot { transform: none; }
