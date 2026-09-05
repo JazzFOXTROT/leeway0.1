@@ -725,6 +725,102 @@ button { font: inherit; color: inherit; }
 .status-card[data-booking="none"] .status-card__chip img { opacity: .45; }
 
 /* =========================================================================
+   Onboarding toast — כניסה ראשונה בלבד
+
+   אין לו node ב-Figma. הוא נשען על אותם טוקנים של כרטיס הסטטוס שמתחתיו
+   (אותו משטח, אותו רדיוס, אותו גבול), כדי שייקרא כחלק מהמסך ולא כשכבה
+   זרה שנחתה עליו. ההגבהה היחידה שיצאה מהקובץ היא --shadow-pass, ולכן
+   היא זו שמשמשת כאן — עדיף להשתמש בערך ההגבהה היחיד שיש למוצר מאשר
+   להמציא hex חדש שאין לו מקור.
+
+   הוא נמשך לרוחב מסגרת האפליקציה (.app, position:relative) ולא לחלון,
+   כך שבדסקטופ הוא נשאר בתוך ה-412px של הטלפון ולא בורח לקצה המסך.
+   ========================================================================= */
+
+.toast {
+  position: absolute;
+  z-index: 9;                  /* מתחת לתפריט (10), מעל המסך */
+  /* צר מכרטיס הסטטוס שמתחתיו בשמונה פיקסלים מכל צד. הטוסט והכרטיס
+     חולקים את אותו משטח, אותו רדיוס ואותו גבול — בלי ההפרש הזה שתי
+     הקופסאות היו נקראות כקופסה אחת שגדלה, ולא כשכבה שנחתה מעל. */
+  inset-inline: calc(var(--canvas-gutter) + var(--space-2));
+  /* לא צמוד לתחתית: שורת ההגדרות יושבת שם, ובתוכה מתג השפה — הדבר
+     הראשון שמישהו שלא קורא עברית מחפש בשנייה הראשונה. --toast-clear
+     הוא הגובה של אותה שורה, נמדד ב-JS ולא מנוחש (הוא משתנה בין שפות
+     ובין גדלי מסך); בלי JS הטוסט נופל בחזרה לתחתית ועדיין קריא.
+     מה שהוא כן מכסה הוא כרטיס הסטטוס — ולמשתמש בכניסה ראשונה הכרטיס
+     הזה ריק מהגדרה ("אין הזמנה פעילה"), כלומר אין שם מה להסתיר. */
+  inset-block-end: calc(var(--toast-clear, max(var(--v-4), env(safe-area-inset-bottom))) + var(--v-3));
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border-base);
+  border-radius: var(--radius-lg);
+  /* raised ולא base: כרטיס הסטטוס שמתחת הוא כבר surface-base. במצב כהה
+     שני המשטחים היו יוצאים אותו נייבי והטוסט היה נבלע בכרטיס — raised
+     מפריד ביניהם בשני המצבים באותו טוקן אחד, בלי כלל שמסתעף לפי theme. */
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-pass);
+  animation: toast-in var(--motion-base) var(--ease-out) both;
+}
+.toast[hidden] { display: none !important; }
+
+.toast.is-leaving { animation: toast-out var(--motion-fast) var(--ease-in) both; }
+
+.toast__icon {
+  flex: 0 0 auto;
+  inline-size: 21px;
+  block-size: 21px;
+  margin-block-start: 2px;      /* מיישר את המגן לשורת הכותרת, לא לתיבה */
+  color: var(--color-primary-ink);
+}
+.toast__text { display: flex; flex-direction: column; gap: var(--space-1); flex: 1 1 auto; }
+.toast__title {
+  font-family: var(--typography-family-heading);
+  font-size: var(--typography-size-md);
+  line-height: var(--typography-line-md);
+  font-weight: var(--typography-weight-semibold);
+  color: var(--color-text-base);
+}
+/* neutral ולא muted: הטקסט המשני של המוצר (--color-text-muted) יוצא
+   3.44:1 מול משטח לבן — עובר AA לטקסט גדול בלבד, וזה כאן 14px.
+   --color-neutral-base נותן 5.8:1 במצב בהיר ו-6.1:1 במצב כהה. */
+.toast__body {
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-sm);
+  color: var(--color-neutral-base);
+}
+
+/* שטח המגע הוא 44px גם כשה-X עצמו 16px — המרווח השלילי מחזיר לטוסט את
+   הריווח שהכפתור המוגדל היה גונב ממנו. */
+.toast__close {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 44px;
+  block-size: 44px;
+  margin-block: calc(var(--space-3) * -1);
+  margin-inline-end: calc(var(--space-3) * -1);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-neutral-base);
+  cursor: pointer;
+}
+.toast__close svg { inline-size: 16px; block-size: 16px; }
+
+/* שני טוקני הפוקוס שקיימים במערכת הם לבן (לקנבס הכחול) וכחול-600
+   (למשטחים בהירים). הטוסט הוא כרטיס בהיר במצב בהיר וכרטיס נייבי במצב
+   כהה — הלבן נעלם בראשון והכחול הכהה נעלם בשני. primary-ink הוא הטוקן
+   היחיד שכבר מתהפך עם המצב, ולכן הוא זה שנושא כאן את הטבעת. */
+.toast :focus-visible { outline-color: var(--color-primary-ink); }
+
+@keyframes toast-in  { from { opacity: 0; transform: translateY(calc(var(--space-4) + var(--motion-lift))) } to { opacity: 1; transform: translateY(0) } }
+@keyframes toast-out { from { opacity: 1; transform: translateY(0) } to { opacity: 0; transform: translateY(var(--motion-lift)) } }
+
+/* =========================================================================
    Loading / splash (nodes 2072:1219, 2039:614)
    ========================================================================= */
 
@@ -1556,7 +1652,8 @@ button { font: inherit; color: inherit; }
 .link-btn,
 .hamburger,
 .pass-shell[role="button"],
-.slots__mask {
+.slots__mask,
+.toast__close {
   transition: transform var(--motion-press-out) var(--ease-out),
               background-color var(--motion-press-out) var(--ease-out);
 }
@@ -1572,7 +1669,8 @@ button { font: inherit; color: inherit; }
 .link-btn[data-pressed],
 .hamburger[data-pressed],
 .pass-shell[data-pressed],
-.slots__mask[data-pressed] {
+.slots__mask[data-pressed],
+.toast__close[data-pressed] {
   transform: scale(var(--motion-press-scale));
   transition-duration: var(--motion-press-in);
 }
@@ -1757,6 +1855,8 @@ button { font: inherit; color: inherit; }
   .overlay__panel,
   .overlay[open] .overlay__panel { transform: none; }
   .passenger--entering { animation: fade-in var(--motion-fast) var(--ease-out) both; }
+  .toast { animation: fade-in var(--motion-fast) var(--ease-out) both; }
+  .toast.is-leaving { animation: fade-out var(--motion-fast) var(--ease-out) both; }
   .result__art--celebrate { animation: fade-in var(--motion-fast) var(--ease-out) both; }
   .is-open .burger__bar--mid,
   .is-open .burger__bar--bot { transform: none; }

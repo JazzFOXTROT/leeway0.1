@@ -24,8 +24,7 @@
   --color-slate-500: #606573;
   --color-slate-400: #808d95;
   --color-slate-300: #8b93a7;
-  --color-gold-500: #b6975b;
-  --color-gold-700: #8d7546;
+  --color-blue-800: #0f3673;
   --color-cream-50: #f2efe9;
   --color-lavender-100: #e6e6ec;
   --color-green-700: #1e6b41;
@@ -179,8 +178,8 @@
   --color-border-base: var(--color-slate-600);
   --color-text-base: var(--color-cream-50);
   --color-text-muted: var(--color-lavender-100);
-  --color-primary-base: var(--color-gold-500);
-  --color-primary-strong: var(--color-gold-700);
+  --color-primary-base: var(--color-blue-700);
+  --color-primary-strong: var(--color-blue-800);
   --color-info-base: var(--color-blueinfo-400);
   --color-danger-base: var(--color-red-400);
   --color-neutral-base: var(--color-slate-300);

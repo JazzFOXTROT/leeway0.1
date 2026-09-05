@@ -50,6 +50,9 @@
       "landing.h1b": "כדי לא לחכות אחר כך",
       "landing.newBooking": "הזמינו חלון זמן חדש",
       "landing.myBooking": "הזמנה שלי",
+      "onboard.title": "הזמינו חלון זמן עכשיו",
+      "onboard.body": "מספר טיסה ושם — וחלון הזמן לביקורת הביטחון שמור לכם מראש.",
+      "onboard.dismiss": "סגירת ההודעה",
       "status.cardTitle": "סטטוס שלי",
       "status.note": "מידע כללי בלבד — ללא רמת עומס חזויה",
       "status.noneStep": "אין הזמנה פעילה",
@@ -197,6 +200,9 @@
       "landing.h1b": "so you never queue later",
       "landing.newBooking": "Book a new time slot",
       "landing.myBooking": "My booking",
+      "onboard.title": "Book a time slot now",
+      "onboard.body": "A flight number and a name — and your security-check slot is held in advance.",
+      "onboard.dismiss": "Dismiss this message",
       "status.cardTitle": "My status",
       "status.note": "General information only — no predicted queue level",
       "status.noneStep": "No active booking",
@@ -344,6 +350,9 @@
       "landing.h1b": "чтобы не стоять в очереди",
       "landing.newBooking": "Забронировать новое окно",
       "landing.myBooking": "Моя бронь",
+      "onboard.title": "Забронируйте окно сейчас",
+      "onboard.body": "Номер рейса и имя — и окно для проверки безопасности закреплено за вами заранее.",
+      "onboard.dismiss": "Закрыть сообщение",
       "status.cardTitle": "Мой статус",
       "status.note": "Только общая информация — без прогноза загруженности",
       "status.noneStep": "Нет активного бронирования",
@@ -491,6 +500,9 @@
       "landing.h1b": "حتى لا تنتظر في الطابور",
       "landing.newBooking": "احجز موعدًا جديدًا",
       "landing.myBooking": "حجزي",
+      "onboard.title": "احجزوا نافذة زمنية الآن",
+      "onboard.body": "رقم الرحلة والاسم — ونافذة الفحص الأمني محجوزة لكم مسبقًا.",
+      "onboard.dismiss": "إغلاق الرسالة",
       "status.cardTitle": "حالتي",
       "status.note": "معلومات عامة فقط — بدون توقّع الازدحام",
       "status.noneStep": "لا يوجد حجز نشط",
@@ -1328,6 +1340,13 @@
   function onScreenArrived(name, el) {
     if (typeof advanceProgress === "function") advanceProgress(el);
     fitTitlesIn(el);
+    /* טוסט ההדרכה שייך למסך הבית בלבד. קיצור דרך בכתובת (?screen=...)
+       חולף דרך הבית בדרך ליעד — שם אין למי להדריך, ולכן הוא לא עולה. */
+    if (name === "landing" && !shortcutScreen) {
+      onboardTimer = window.setTimeout(showOnboard, ONBOARD_DELAY);
+    } else {
+      hideOnboard();
+    }
     /* המסך תמיד נפתח על מצב הבחירה, גם כשחוזרים אליו מ-Success. */
     if (name === "time-choosing") setCardOpen(false, false);
     if (name === "success") {
@@ -1398,6 +1417,7 @@
 
   function openMenu() {
     if (overlay.open) return;
+    hideOnboard();                       /* התפריט מכסה אותו — אין טעם שיישאר */
     overlay.showModal();                 /* <dialog> gives focus-trap + Escape */
     var panel = overlay.querySelector(".overlay__panel");
     if (panel) panel.focus({ preventScroll: true });   /* not the close button */
@@ -1429,6 +1449,7 @@
       applyTheme(theme === "dark" ? "light" : "dark");
       return;
     }
+    if (e.target.closest("[data-onboard-dismiss]")) { hideOnboard(); return; }
     var t = e.target.closest("[data-menu-open]");
     if (t) { openMenu(); return; }
     if (e.target.closest("[data-menu-close]")) { closeMenu(); return; }
@@ -1534,6 +1555,7 @@
                   ".lang, .lang-switch__btn, .avatar-lane__item, .settings__link," +
                   ".overlay__link, .add-passenger, .link-btn, .hamburger," +
                   ".passenger__remove," +
+                  ".toast__close," +
                   '.logo[role="button"], .pass-shell[role="button"], .slots__mask';
 
   document.addEventListener("pointerdown", function (e) {
@@ -1613,6 +1635,67 @@
       if (shortcutScreen) window.setTimeout(function () { go(shortcutScreen); }, 560);
     }, 400);
   }, 200);
+
+
+  /* ---------------------------------------------------------------------
+     ONBOARDING TOAST — כניסה ראשונה בלבד
+
+     מי שנכנס לראשונה לא יודע מה האפליקציה מבקשת ממנו לעשות. הכפתור
+     הראשי אומר "הזמינו חלון זמן חדש", אבל הוא כפתור אחד מתוך שניים
+     ומתחתיו כרטיס סטטוס ריק — אין שום דבר שמסמן מאיפה מתחילים. הטוסט
+     עונה בדיוק על זה: משפט אחד שאומר מה לעשות עכשיו, ושורה שנייה
+     שאומרת כמה זה עולה בזמן (מספר טיסה ושם).
+
+     הוא עולה פעם אחת בחיי המכשיר ולא חוזר:
+
+       · נרשם כ"נראה" ברגע ההצגה, לא בסגירה. משתמש שלא הספיק לקרוא לא
+         יראה אותו שוב — זו התנהגות טוסט, לא התנהגות מודאל. אילו נרשם
+         בסגירה, מי שיוצא מהאפליקציה מיד היה מקבל אותו שוב ושוב.
+       · אם הכתיבה ל-localStorage נכשלת (ספארי בגלישה פרטית זורק), הטוסט
+         פשוט יופיע שוב בכניסה הבאה. זו התנהגות סבירה למי שביקש מהדפדפן
+         לא לזכור אותו כלום.
+       · "מחק את כל מה שנשמר" מוחק גם אותו — מכשיר שנוקה חוזר להיות
+         מכשיר של משתמש חדש, וזה מה שהכפתור מבטיח.
+
+     הוא נדחה ב-ONBOARD_DELAY אחרי שהמסך התיישב, כדי שלא יתחרה במעבר
+     של 500ms מ-loading-2, ונעלם לבד אחרי ONBOARD_MS.
+     --------------------------------------------------------------------- */
+  var ONBOARD_KEY = "leeway.onboarded";
+  var ONBOARD_DELAY = 350;    /* אחרי שהמעבר למסך הבית כבר נגמר */
+  var ONBOARD_MS = 8000;      /* שתי שורות בעברית, בקצב קריאה נינוח */
+  var onboardEl = document.querySelector("[data-onboard-toast]");
+  var onboardTimer = null;
+
+  function onboardSeen() { return readKey(ONBOARD_KEY) === "1"; }
+
+  function hideOnboard() {
+    /* לפני הבדיקה, לא אחריה: אותו handle נושא גם את ההשהיה שלפני ההצגה
+       וגם את ההיעלמות מעצמה, ויציאה מוקדמת הייתה משאירה טיימר תלוי. */
+    window.clearTimeout(onboardTimer);
+    onboardTimer = null;
+    if (!onboardEl || onboardEl.hidden) return;
+    if (reduced) { onboardEl.hidden = true; return; }
+    onboardEl.classList.add("is-leaving");
+    window.setTimeout(function () {
+      onboardEl.classList.remove("is-leaving");
+      onboardEl.hidden = true;
+    }, 140);                  /* = --motion-fast */
+  }
+
+  function showOnboard() {
+    if (!onboardEl || onboardSeen() || current !== "landing") return;
+    writeKey(ONBOARD_KEY, "1");
+    /* מודדים את שורת ההגדרות ומרימים את הטוסט מעליה, כדי שמתג השפה
+       יישאר גלוי (ראו ההערה ליד .toast ב-style.css). */
+    var foot = screens.landing.querySelector(".landing__foot");
+    if (foot) {
+      var clear = app.getBoundingClientRect().bottom - foot.getBoundingClientRect().top;
+      onboardEl.style.setProperty("--toast-clear", Math.max(0, Math.round(clear)) + "px");
+    }
+    onboardEl.classList.remove("is-leaving");
+    onboardEl.hidden = false;
+    onboardTimer = window.setTimeout(hideOnboard, ONBOARD_MS);
+  }
 
   /* ---------------------------------------------------------------------
      Registration — validation. Bad name / passport / flight number sends
@@ -2413,10 +2496,10 @@
   /* =====================================================================
      STORAGE
      Everything this app writes to the device lives under the "leeway."
-     prefix, and STORAGE_KEYS below is the complete list — the same three
-     names that docs/PRIVACY.md lists, and the same three the "מחק את כל מה
+     prefix, and STORAGE_KEYS below is the complete list — the same four
+     names that docs/PRIVACY.md lists, and the same four the "מחק את כל מה
      שנשמר" button removes. If a key is ever added here it has to be added
-     there too; there is no fourth place data can hide.
+     there too; there is no fifth place data can hide.
 
        leeway.remember   "1" while "זכרו אותי" is on. Absent otherwise.
        leeway.passenger  the first passenger's details, so the form comes
@@ -2424,13 +2507,17 @@
                          is "1", removed the moment it is switched off.
        leeway.profile    what the profile screen's save button saves,
                          including the chosen avatar.
+       leeway.onboarded  "1" once the first-visit toast has been shown.
+                         Carries no personal data — it is a single flag,
+                         and its only job is to keep the toast from
+                         appearing a second time.
 
      Every access is wrapped. Safari in private mode does not return null
      from localStorage — it throws, and an unguarded read would take the
      whole app down on the splash screen.
      ===================================================================== */
 
-  var STORAGE_KEYS = ["leeway.remember", "leeway.passenger", "leeway.profile"];
+  var STORAGE_KEYS = ["leeway.remember", "leeway.passenger", "leeway.profile", "leeway.onboarded"];
 
   function readKey(key) {
     try { return window.localStorage.getItem(key); } catch (err) { return null; }
@@ -2579,7 +2666,7 @@
   });
 
   /* ---------------------------------------------------------------------
-     "מחק את כל מה שנשמר" — deletes the three keys and every Cache Storage
+     "מחק את כל מה שנשמר" — deletes the four keys and every Cache Storage
      entry this origin holds, then counts again and reports what is left.
      The recount is the point: the button proves itself instead of claiming.
      --------------------------------------------------------------------- */

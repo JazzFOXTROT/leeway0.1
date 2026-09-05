@@ -33,9 +33,11 @@
    >>>   v4  כרטיס סטטוס ריק, פתיחת/סגירת הכרטיס, נוסעים אמיתיים
    >>>   v5  לוח רשות שדות התעופה: תאריך/שעה/טרמינל, חלונות לפי ההמראה,
    >>>       שורת ההסבר, ושבבים בגודל אחיד
+   >>>   v6  (לא תועד כאן בזמנו)
+   >>>   v7  טוסט הדרכה בכניסה ראשונה במסך הבית, והמפתח leeway.onboarded
    ========================================================================= */
 
-const VERSION = "v6";
+const VERSION = "v7";
 
 const PREFIX = "leeway-" + VERSION;      /* every cache we own starts with this */
 const SHELL_CACHE = PREFIX + "-shell";   /* documents + the offline screen      */

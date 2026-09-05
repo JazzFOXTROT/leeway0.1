@@ -29,8 +29,8 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --primary:      #b6975b; /* --color-gold-500  */
-      --primary-deep: #8d7546;
+      --primary:      #174691; /* --color-blue-700  */
+      --primary-deep: #0f3673; /* --color-blue-800  */
       --surface:      #0a1220; /* --color-navy-950  */
       --surface-alt:  #182a4a; /* --color-navy-800  */
       --text:         #f2efe9; /* --color-cream-50  */
@@ -158,7 +158,7 @@
 
   <h2>1. מה נשמר על המכשיר</h2>
 
-  <p>האפליקציה כותבת <strong>שלושה</strong> מפתחות ב-<code>localStorage</code>
+  <p>האפליקציה כותבת <strong>ארבעה</strong> מפתחות ב-<code>localStorage</code>
   ו<strong>שני</strong> מטמונים. זו הרשימה המלאה — אין יותר.</p>
 
   <h3>שדות שאתם מזינים</h3>
@@ -193,6 +193,24 @@
     הצפנה. זה מקובל לאב-טיפוס, אבל צריך לומר אותו במפורש: מי שיש לו גישה
     פיזית למכשיר לא נעול יכול לקרוא אותו. אם זה מטריד אתכם — אל תפעילו
     "זכרו אותי", ואל תשמרו פרופיל. האפליקציה עובדת מצוין גם בלי.</p>
+  </div>
+
+  <h3>סימון תצוגה אחד</h3>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>שם המפתח</th><th>מה בדיוק נשמר בו</th><th>מתי</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>leeway.onboarded</code></td>
+          <td>המחרוזת <code>"1"</code> בלבד — סימון שהודעת הפתיחה במסך הבית כבר הוצגה,
+          כדי שלא תופיע שוב. אין בו שום פרט עליכם.</td>
+          <td>בכניסה הראשונה למסך הבית</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <h3>קבצי האפליקציה עצמה</h3>
