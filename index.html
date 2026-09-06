@@ -81,7 +81,8 @@
     <!-- ═══ הדרכת כניסה ראשונה (Onboarding) ═══════════════════════════════
          אין לה מסך ב-Figma. שלושה שלבים שמסבירים את המוצר כולו, כשכבה
          מעל מסך הבית: מסך מוחשך ב-25%, האלמנט שמוסבר כרגע נשאר מואר
-         ומסומן, וגיליון נכנס מלמטה עם הדגמה קטנה ומתחלפת של הפעולה.
+         ומסומן, וגיליון נכנס מלמטה. הגיליון מתמקם מעל היעד או מתחתיו,
+         לפי הצד שבו יש מקום — כך שהאלמנט שמוסבר לעולם לא מסתתר מאחוריו.
          שורת ההגדרות (שפה ומצב תצוגה) יושבת מעל הכול ונשארת פעילה —
          מי שלא קורא עברית חייב להיות מסוגל להחליף שפה בזמן ההסבר עצמו.
          שני האלמנטים כאן אחים ולא מקוננים: לכל אחד z-index משלו בתוך
@@ -89,14 +90,10 @@
     <div class="coach-scrim" data-coach-scrim hidden></div>
 
     <section class="coach" id="coach" data-coach hidden tabindex="-1"
-             role="dialog" aria-labelledby="coach-title" aria-describedby="coach-body">
-      <!-- ההדגמה היא קישוט מסביר: היא חוזרת בלולאה על מה שהטקסט אומר,
-           ולכן היא מוסתרת מקורא מסך ולא מתוארת פעמיים. -->
-      <div class="coach__demo mini" data-coach-demo aria-hidden="true"></div>
-
+             role="dialog" aria-modal="true" aria-labelledby="coach-title" aria-describedby="coach-body">
       <p class="coach__step" data-coach-step>שלב 1 מתוך 3</p>
       <h2 class="coach__title" id="coach-title" data-coach-title>מזמינים חלון זמן</h2>
-      <p class="coach__body" id="coach-body" data-coach-body>מספר טיסה ושם, ואתם בוחרים חלון פנוי לביקורת הביטחון — לפני שיצאתם מהבית.</p>
+      <p class="coach__body" id="coach-body" data-coach-body>מספר טיסה, שם ודרכון — ואתם בוחרים חלון פנוי לביקורת הביטחון, לפני שיצאתם מהבית.</p>
 
       <div class="coach__foot">
         <div class="coach__dots" aria-hidden="true">

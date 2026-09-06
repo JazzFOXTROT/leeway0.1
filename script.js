@@ -55,11 +55,11 @@
       "coach.done": "מתחילים",
       "coach.skip": "דילוג",
       "coach.s1.title": "מזמינים חלון זמן",
-      "coach.s1.body": "מספר טיסה ושם, ואתם בוחרים חלון פנוי לביקורת הביטחון — לפני שיצאתם מהבית.",
-      "coach.s2.title": "עוקבים ביום הטיסה",
-      "coach.s2.body": "הכרטיס מתעדכן לבד לאורך היום: צ'ק-אין, ביקורת ביטחון, ושער העלייה.",
-      "coach.s3.title": "מציגים בעמדה",
-      "coach.s3.body": "בכניסה לביקורת פותחים את ההזמנה ומציגים את קוד ה-QR. זהו.",
+      "coach.s1.body": "מספר טיסה, שם ודרכון — ואתם בוחרים חלון פנוי לביקורת הביטחון, לפני שיצאתם מהבית.",
+      "coach.s2.title": "הכרטיס הזה יתמלא לבד",
+      "coach.s2.body": "הוא ריק עד שתזמינו. ביום הטיסה הוא יראה איפה אתם עומדים: זיהוי, ביקורת ביטחון, וצ'ק-אין.",
+      "coach.s3.title": "ובעמדה — פשוט מציגים",
+      "coach.s3.body": "קוד ה-QR נפתח במסך מלא בלחיצה אחת, ועובד גם בלי קליטה. לצד הדרכון וכרטיס העלייה, לא במקומם.",
       "status.cardTitle": "סטטוס שלי",
       "status.note": "מידע כללי בלבד — ללא רמת עומס חזויה",
       "status.noneStep": "אין הזמנה פעילה",
@@ -211,12 +211,12 @@
       "coach.next": "Next",
       "coach.done": "Let's start",
       "coach.skip": "Skip",
-      "coach.s1.title": "Book a time slot",
-      "coach.s1.body": "A flight number and a name, and you pick a free security-check window — before you leave home.",
-      "coach.s2.title": "Track it on the day",
-      "coach.s2.body": "The card updates itself through the day: check-in, security check, and the gate.",
-      "coach.s3.title": "Show it at the desk",
-      "coach.s3.body": "At the security entrance you open the booking and show the QR code. That's it.",
+      "coach.s1.title": "Book a time window",
+      "coach.s1.body": "A flight number, a name and a passport — and you pick a free window for the security check, before you leave home.",
+      "coach.s2.title": "This card fills itself in",
+      "coach.s2.body": "It stays empty until you book. On the day of your flight it shows where you stand: identification, security check, and check-in.",
+      "coach.s3.title": "At the desk, just show it",
+      "coach.s3.body": "The QR code opens full screen in one tap and works with no signal. Alongside your passport and boarding pass, not instead of them.",
       "status.cardTitle": "My status",
       "status.note": "General information only — no predicted queue level",
       "status.noneStep": "No active booking",
@@ -369,11 +369,11 @@
       "coach.done": "Начнём",
       "coach.skip": "Пропустить",
       "coach.s1.title": "Бронируете окно",
-      "coach.s1.body": "Номер рейса и имя — и вы выбираете свободное окно для проверки безопасности, ещё до выхода из дома.",
-      "coach.s2.title": "Следите в день вылета",
-      "coach.s2.body": "Карточка обновляется сама: регистрация, проверка безопасности и выход на посадку.",
-      "coach.s3.title": "Показываете на месте",
-      "coach.s3.body": "На входе в зону досмотра открываете бронь и показываете QR-код. Всё.",
+      "coach.s1.body": "Номер рейса, имя и паспорт — и вы выбираете свободное окно для проверки безопасности, ещё до выхода из дома.",
+      "coach.s2.title": "Эта карточка заполнится сама",
+      "coach.s2.body": "Пока вы не забронировали, она пустая. В день вылета она покажет, на каком вы этапе: идентификация, проверка безопасности и регистрация.",
+      "coach.s3.title": "На месте просто покажите",
+      "coach.s3.body": "QR-код открывается на весь экран одним касанием и работает без связи. Вместе с паспортом и посадочным талоном, а не вместо них.",
       "status.cardTitle": "Мой статус",
       "status.note": "Только общая информация — без прогноза загруженности",
       "status.noneStep": "Нет активного бронирования",
@@ -526,11 +526,11 @@
       "coach.done": "لنبدأ",
       "coach.skip": "تخطٍّ",
       "coach.s1.title": "احجزوا نافذة زمنية",
-      "coach.s1.body": "رقم الرحلة والاسم، وتختارون نافذة فحص أمني متاحة — قبل مغادرة البيت.",
-      "coach.s2.title": "تابعوا يوم الرحلة",
-      "coach.s2.body": "تتحدّث البطاقة وحدها خلال اليوم: تسجيل الوصول، الفحص الأمني، وبوابة الصعود.",
-      "coach.s3.title": "اعرضوها عند النقطة",
-      "coach.s3.body": "عند مدخل الفحص تفتحون الحجز وتعرضون رمز الـ QR. هذا كل شيء.",
+      "coach.s1.body": "رقم الرحلة والاسم وجواز السفر — وتختارون نافذة متاحة للفحص الأمني، قبل مغادرة البيت.",
+      "coach.s2.title": "هذه البطاقة تمتلئ وحدها",
+      "coach.s2.body": "تبقى فارغة حتى تحجزوا. ويوم الرحلة تُظهر أين وصلتم: التحقّق من الهوية، الفحص الأمني، وتسجيل الوصول.",
+      "coach.s3.title": "وعند النقطة، اعرضوها فقط",
+      "coach.s3.body": "يفتح رمز الـ QR على الشاشة كاملة بلمسة واحدة ويعمل بدون تغطية. إلى جانب جواز السفر وبطاقة الصعود، لا بدلاً عنهما.",
       "status.cardTitle": "حالتي",
       "status.note": "معلومات عامة فقط — بدون توقّع الازدحام",
       "status.noneStep": "لا يوجد حجز نشط",
@@ -1672,18 +1672,28 @@
      ONBOARDING — הדרכת כניסה ראשונה
 
      מי שנכנס לראשונה לא יודע מה המוצר הזה עושה. שלושה שלבים מסבירים
-     את כל התהליך, וכל שלב מצביע על אלמנט אמיתי שקיים כאן ועכשיו במסך
-     הבית — אין הסבר על מסך שלא רואים, ואין סיור בין מסכים.
+     את כל התהליך, וכל שלב מדבר על מה שבאמת קיים כאן ועכשיו — אין הסבר
+     על מסך שלא רואים, ואין סיור בין מסכים.
 
        1. הכפתור הראשי   → מזמינים חלון זמן
-       2. כרטיס הסטטוס   → עוקבים ביום הטיסה
-       3. "הזמנה שלי"     → מציגים את הקוד בעמדה
+       2. כרטיס הסטטוס   → מה יקרה בו ביום הטיסה
+       3. בלי יעד         → מה מציגים בעמדה, וסגירה
+
+     שני השלבים הראשונים מצביעים על אלמנט; השלישי לא. זו לא השמטה:
+     "מציגים את הקוד בעמדה" הוא מקום, לא כפתור, ולמשתמש חדש שאין לו
+     עדיין הזמנה — "הזמנה שלי" הוא מצב ריק. טבעת סביב פקד שלא עושה
+     כלום מלמדת את הדבר הלא נכון, ולכן השלב האחרון הוא כרטיס סוגר.
+
+     המיקום: הגיליון עוגן לתחתית, ואם היעד נמצא מתחת לגג שלו הוא
+     מורם מעליו (‎--coach-lift). זה במקום לדחוף את עמודת התוכן למעלה —
+     דחיפה כזאת נבלעה בחלוקה מחדש של ה-flex, הוציאה את הכותרת מהמסך,
+     והשאירה את כרטיס הסטטוס מוסתר מאחורי הגיליון שהסביר עליו.
 
      ההדרכה עולה פעם אחת בחיי המכשיר:
 
-       · נרשמת כ"נראתה" ברגע הפתיחה ולא בסגירה. מי שיצא באמצע לא יקבל
-         אותה שוב — אילו נרשמה בסגירה, יציאה מהאפליקציה הייתה מחזירה
-         אותה בכל כניסה.
+       · נרשמת כ"נראתה" בסגירה — בסיום, בדילוג, או במעבר למסך אחר.
+         רישום ברגע הפתיחה איבד אותה לגמרי אצל מי שרענן את הדף בשלב
+         הראשון, וזה בדיוק מי שהכי צריך אותה.
        · אם הכתיבה ל-localStorage נכשלת (ספארי בגלישה פרטית זורק), היא
          תופיע שוב בכניסה הבאה. זו התנהגות סבירה למי שביקש מהדפדפן לא
          לזכור עליו כלום.
@@ -1692,40 +1702,23 @@
      --------------------------------------------------------------------- */
   var COACH_KEY = "leeway.onboarded";
   var COACH_DELAY = 350;      /* אחרי שהמעבר למסך הבית כבר נגמר */
+  var COACH_GAP = 24;         /* אוויר בין הטבעת לגיליון. הטבעת עצמה
+                                 יוצאת עד 7px מהיעד ועוביה 3px, כך
+                                 ש-16 היו נראים כנגיעה.               */
+  var COACH_FOOT_GAP = 16;    /* אוויר בין הגיליון לשורת השפה         */
+  var COACH_MIN_TOP = 12;     /* הגיליון לא יורם מעבר לקצה העליון     */
 
-  /* ההדגמות. שלושה "פריימים" לכל שלב, שמתחלפים בלולאה בתוך מסגרת אחת
-     ומראים את הפעולה שהטקסט מתאר. הם נבנים כאן ולא יושבים ב-HTML כי
-     רק אחד מהם מוצג בכל רגע, ותשעה בלוקים מתים במסמך היו רעש. */
-  function beat(inner) { return '<span class="mini__beat">' + inner + "</span>"; }
-
-  function demoBook() {
-    return beat('<span class="mini__bar"><span class="mini__ink"></span><i class="mini__caret"></i></span>' +
-                '<span class="mini__bar mini__bar--dim"></span>') +
-           beat('<span class="mini__grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>') +
-           beat('<span class="mini__grid"><i></i><i></i><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>' +
-                '<span class="mini__bar mini__bar--cta"></span>');
-  }
-  function rows(on) {
-    var out = "";
-    for (var i = 0; i < 3; i += 1) out += '<i class="' + (i === on ? "is-on" : "") + '"></i>';
-    return '<span class="mini__rows">' + out + "</span>";
-  }
-  function demoTrack() { return beat(rows(0)) + beat(rows(1)) + beat(rows(2)); }
-  function demoPass() {
-    return beat('<span class="mini__bar mini__bar--cta"></span>') +
-           beat('<span class="mini__code"></span>') +
-           beat('<span class="mini__code"></span><span class="mini__bar mini__bar--cta"></span>');
-  }
-
+  /* יעד null = שלב בלי טבעת. ראו ההערה למעלה. */
   var COACH_STEPS = [
-    { key: "s1", target: '.landing__actions [data-go="registration"]', demo: demoBook },
-    { key: "s2", target: ".status-card",                               demo: demoTrack },
-    { key: "s3", target: '.landing__actions [data-go="status"]',       demo: demoPass }
+    { key: "s1", target: '.landing__actions [data-go="registration"]' },
+    { key: "s2", target: ".status-card" },
+    { key: "s3", target: null }
   ];
 
-  var coachEl = document.querySelector("[data-coach]");
+  /* ‎#coach ולא "[data-coach]": בזמן ההדרכה גם מסך הבית נושא data-coach,
+     והוא מקדים את הגיליון במסמך. */
+  var coachEl = document.getElementById("coach");
   var coachScrim = document.querySelector("[data-coach-scrim]");
-  var coachDemo = coachEl && coachEl.querySelector("[data-coach-demo]");
   var coachStepEl = coachEl && coachEl.querySelector("[data-coach-step]");
   var coachTitle = coachEl && coachEl.querySelector("[data-coach-title]");
   var coachBody = coachEl && coachEl.querySelector("[data-coach-body]");
@@ -1734,52 +1727,76 @@
   var coachIndex = -1;        /* ‎-1 = סגורה */
   var coachTimer = null;
   var coachReturn = null;     /* לאן להחזיר את הפוקוס בסגירה */
-  var coachShift = 0;         /* כמה עמודת התוכן נדחפה למעלה, בפיקסלים */
-  var coachDrawn = -1;        /* השלב שההדגמה שלו כבר בנויה ב-DOM */
-  var COACH_GAP = 16;         /* אוויר בין האלמנט המסומן לגג הגיליון */
-
-  /* המיקום האנכי של כל יעד ביחס לראש המסך, כפי שהוא בלי הדחיפה.
-
-     נמדד מחדש בכל ציור ולא נשמר פעם אחת בפתיחה: הגבהים כאן זזים מתחת
-     לרגליים יותר משנדמה — Heebo נטען אחרי הצבע הראשון ומזיז את הכותרת
-     הגדולה, והחלפת שפה שוברת אותה למספר שורות אחר. כל גרסה ששמרה
-     מדידה אחת מצאה את עצמה מיישרת מול מסך שכבר לא קיים. */
-  function coachMeasure() {
-    var el = screens.landing;
-    var prev = coachShift;
-    /* מודדים על אפס דחיפה, עם המעבר מנוטרל: קריאת מלבן באמצע מעבר
-       מחזירה מיקום בדרך ולא מיקום סופי. אחרי המדידה הערך הקודם חוזר
-       בעודנו מנוטרלים, כדי שהמדידה עצמה לא תיראה כקפיצה. */
-    el.classList.add("is-measuring");
-    el.style.setProperty("--coach-shift", "0px");
-    var screenTop = el.getBoundingClientRect().top;
-    COACH_STEPS.forEach(function (st) {
-      var node = el.querySelector(st.target);
-      st.bottom = node ? (node.getBoundingClientRect().bottom - screenTop) : 0;
-    });
-    el.style.setProperty("--coach-shift", prev + "px");
-    el.getBoundingClientRect();          /* מחייב חישוב לפני שהמעבר חוזר */
-    el.classList.remove("is-measuring");
-  }
-
-  /* offsetTop ולא getBoundingClientRect: בשנייה הראשונה הגיליון עדיין
-     נכנס מלמטה, והמלבן החי שלו היה מחזיר מיקום שאין לו קשר למקום
-     שבו הוא ייעצר. offsetTop מתעלם מההנפשה. */
-  function coachAlign() {
-    var step = COACH_STEPS[coachIndex];
-    if (!step) return;
-    var over = step.bottom + COACH_GAP - coachEl.offsetTop;
-    coachShift = over > 0 ? -Math.ceil(over) : 0;
-    screens.landing.style.setProperty("--coach-shift", coachShift + "px");
-  }
+  var coachLift = 0;          /* בכמה פיקסלים הגיליון מורם, כרגע */
 
   function clearCoachTarget() {
     qsa("[data-coach-target]").forEach(function (el) { el.removeAttribute("data-coach-target"); });
   }
 
+  /* מרימה את הגיליון מעל היעד כשהיעד נמצא מתחתיו, ומשאירה אותו למטה
+     כשיש מקום. נמדד מחדש בכל ציור ולא נשמר פעם אחת בפתיחה: הגבהים
+     כאן זזים מתחת לרגליים יותר משנדמה — Heebo נטען אחרי הצבע הראשון
+     ומזיז את הכותרת הגדולה, והחלפת שפה שוברת אותה למספר שורות אחר.
+
+     snap=true מדלג על ההנפשה: בפתיחה הגיליון כבר נכנס מלמטה, ותנועה
+     שנייה על גביה הייתה נראית כמו תיקון. */
+  function coachPlace(snap) {
+    if (coachIndex < 0 || !coachEl) return;
+    var step = COACH_STEPS[coachIndex];
+    var node = step.target ? screens.landing.querySelector(step.target) : null;
+    var foot = screens.landing.querySelector(".landing__foot");
+
+    coachEl.classList.add("is-anchoring");
+
+    /* מיקום המנוחה — לפני ההרמה ולפני הכניסה מלמטה.
+
+       offsetTop/offsetHeight ולא getBoundingClientRect: המלבן החי כולל
+       גם את ה-transform של coach-in, שעדיין רץ בשנייה הראשונה, וגם את
+       ה-translate של ההרמה עצמה. מדידה כזאת החזירה מיקום נמוך בדיוק
+       בגובה גיליון אחד, וההרמה שחושבה ממנה הקפיצה את הגיליון מעל היעד
+       שהוא היה אמור להשאיר גלוי. תכונות ה-offset מתעלמות משתיהן. */
+    var host = coachEl.offsetParent || screens.landing;
+    var restTop = host.getBoundingClientRect().top + coachEl.offsetTop;
+    var restBottom = restTop + coachEl.offsetHeight;
+
+    /* הגיליון הוא absolute בתוך המסך, ובמסכים נמוכים תיבת המסך גבוהה
+       מחלון התצוגה — עיגון לתחתיתה לבדו מניח אותו מתחת לקצה. לכן הרצפה
+       נמדדת מול אלמנט אמיתי שנמצא בוודאות בתוך החלון: שורת השפה. */
+    var anchor = foot ? foot.getBoundingClientRect().top - COACH_FOOT_GAP
+                      : window.innerHeight - COACH_FOOT_GAP;
+    var lift = Math.ceil(restBottom - anchor);
+    if (lift < 0) lift = 0;
+
+    /* היעד מתחת לגג הגיליון? הגיליון עובר מעליו. */
+    if (node) {
+      var r = node.getBoundingClientRect();
+      if (r.bottom + COACH_GAP > restTop - lift) {
+        lift = Math.ceil(restBottom - r.top + COACH_GAP);
+      }
+    }
+    /* מסך נמוך במיוחד: עדיף גיליון שנוגע בגג מאשר גיליון שיצא ממנו.
+       היעד ייחשף חלקית, וזה עדיין יותר ממה שהיה נראה בלעדיו. */
+    var max = Math.floor(restTop - COACH_MIN_TOP);
+    if (lift > max) lift = max > 0 ? max : 0;
+
+    /* המעבר חוזר לפני הכתיבה, כך שהערך החדש נוסע מהערך הקודם ולא
+       קופץ. ב-snap הוא נשאר מנוטרל עד אחרי שהערך נקלט. */
+    if (!snap) coachEl.classList.remove("is-anchoring");
+    coachEl.style.setProperty("--coach-lift", lift + "px");
+    coachLift = lift;
+    if (snap) {
+      coachEl.getBoundingClientRect();
+      coachEl.classList.remove("is-anchoring");
+    }
+
+    coachEl.dataset.place = lift > 0 ? "above" : "below";
+    clearCoachTarget();
+    if (node) node.setAttribute("data-coach-target", "");
+  }
+
   /* נקראת גם מ-applyLanguage: החלפת שפה באמצע ההדרכה חייבת להחליף גם
      את הטקסט שלה, ולא רק את המסך שמאחוריה. */
-  function paintCoach() {
+  function paintCoach(snap) {
     if (coachIndex < 0 || !coachEl) return;
     var step = COACH_STEPS[coachIndex];
     var last = coachIndex === COACH_STEPS.length - 1;
@@ -1788,48 +1805,24 @@
     coachTitle.textContent = t("coach." + step.key + ".title");
     coachBody.textContent = t("coach." + step.key + ".body");
     coachNextBtn.textContent = t(last ? "coach.done" : "coach.next");
-    /* רק כשהשלב באמת התחלף. ציור חוזר (החלפת שפה, טעינת גופן, סיבוב
-       מסך) לא אמור להתחיל את ההדגמה מהתחלה באמצע הלולאה. */
-    if (coachDrawn !== coachIndex) {
-      coachDemo.innerHTML = step.demo();
-      coachDrawn = coachIndex;
-    }
     coachDots.forEach(function (dot, i) { dot.classList.toggle("is-on", i === coachIndex); });
 
-    clearCoachTarget();
-    var target = screens.landing.querySelector(step.target);
-    if (target) target.setAttribute("data-coach-target", "");
-
     /* אחרי שהתוכן החדש כבר בפנים: גובה הגיליון הוא חצי מהחישוב. */
-    coachMeasure();
-    coachAlign();
+    coachPlace(snap);
   }
 
   function openCoach() {
-    if (!coachEl || current !== "landing" || readKey(COACH_KEY) === "1") return;
-    writeKey(COACH_KEY, "1");
+    if (!coachEl || coachIndex >= 0 || current !== "landing") return;
+    if (readKey(COACH_KEY) === "1") return;
     coachReturn = document.activeElement;
 
-    /* מודדים את שורת ההגדרות ועוצרים את הגיליון מעליה, כדי שמתג השפה
-       יישאר גלוי ולחיץ (ראו ההערה ליד .coach ב-style.css). */
-    var foot = screens.landing.querySelector(".landing__foot");
-    if (foot) {
-      var clear = app.getBoundingClientRect().bottom - foot.getBoundingClientRect().top;
-      coachEl.style.setProperty("--coach-clear", Math.max(0, Math.round(clear)) + "px");
-    }
-
     coachIndex = 0;
-    coachShift = 0;
-    coachDrawn = -1;
-    screens.landing.style.setProperty("--coach-shift", "0px");
-    /* נועלים את גובה האיור על מה שהוא עכשיו (ראו ההערה ב-style.css). */
-    var art = screens.landing.querySelector(".landing__art");
-    if (art) art.style.blockSize = Math.round(art.getBoundingClientRect().height) + "px";
+    coachLift = 0;
     screens.landing.setAttribute("data-coach", "");
     coachEl.classList.remove("is-leaving");
     coachScrim.hidden = false;
     coachEl.hidden = false;
-    paintCoach();
+    paintCoach(true);
     coachNextBtn.focus({ preventScroll: true });
   }
 
@@ -1837,6 +1830,9 @@
     window.clearTimeout(coachTimer);
     coachTimer = null;
     if (coachIndex < 0) return;
+    /* נרשמת כאן ולא בפתיחה — סיום, דילוג ומעבר למסך אחר הם כולם
+       "ראיתי", ורענון באמצע השלב הראשון אינו. */
+    writeKey(COACH_KEY, "1");
     /* האינדקס יורד ראשון: מכאן והלאה הרקע שוב לחיץ, גם בזמן שהשכבות
        עדיין דועכות. */
     coachIndex = -1;
@@ -1846,13 +1842,12 @@
       coachScrim.classList.remove("is-leaving");
       coachEl.hidden = true;
       coachScrim.hidden = true;
+      coachEl.style.removeProperty("--coach-lift");
+      coachEl.removeAttribute("data-place");
       screens.landing.removeAttribute("data-coach");
-      screens.landing.style.removeProperty("--coach-shift");
-      var art = screens.landing.querySelector(".landing__art");
-      if (art) art.style.removeProperty("block-size");
       clearCoachTarget();
     };
-    coachShift = 0;
+    coachLift = 0;
 
     if (reduced) {
       strip();
@@ -1891,13 +1886,15 @@
     if (coachIndex >= 0 && e.key === "Escape") { e.preventDefault(); closeCoach(); }
   });
 
-  window.addEventListener("resize", paintCoach);
+  /* סיבוב מסך ומקלדת שנפתחת משנים גם את גובה הגיליון וגם את מיקום
+     היעד. המיקום נמדד מחדש, בלי הנפשה — זו תגובה לשינוי ולא תנועה. */
+  window.addEventListener("resize", function () { paintCoach(true); });
 
   /* Heebo נטען אחרי הצבע הראשון. עד שהוא מגיע, הכותרת הגדולה נמדדת
      בגופן החלופי — וכשהוא מחליף אותה, כל העמודה מתחתיה זזה. בלי
      המדידה החוזרת הזאת השלב הראשון מסתדר מול מסך שכבר לא קיים. */
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () { paintCoach(); });
+    document.fonts.ready.then(function () { paintCoach(true); });
   }
 
   /* ---------------------------------------------------------------------

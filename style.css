@@ -764,29 +764,6 @@ button { font: inherit; color: inherit; }
   animation: coach-ring 1400ms var(--ease-out) infinite alternate;
 }
 
-/* מביא את האלמנט שמוסבר אל השטח שמעל הגיליון.
-
-   סיור מודרך שמסמן אלמנט שמסתתר מאחורי הגיליון שלו לא מסביר כלום,
-   וכרטיס הסטטוס יושב נמוך במסך. במקום להזיז את הגיליון (הוא נכנס
-   מלמטה, זה התפקיד שלו), נדחפת כל עמודת התוכן למעלה — בדיוק כמו
-   גלילה. מרווח שלילי על הכותרת העליונה ולא transform, כי transform
-   על היעד היה מתנגש עם ה-scale של מצב הלחיצה ומקפיץ אותו חזרה.
-   שורת ההגדרות לא זזה: היא נעוצה לתחתית ב-margin-block-start:auto,
-   והמרווח השלילי רק מגדיל את השטח הפנוי שהיא בולעת. */
-/* האיור הוא האלמנט היחיד במסך שמוותר על גובה. בלי הקפאה נוצר לולאה:
-   הדחיפה למעלה מפנה מקום, האיור גדל בחזרה, והיעד יורד שוב מתחת לגג
-   הגיליון. ה-JS נועל את הגובה שנמדד בפתיחה, וכאן נסגרת גם ההתכווצות. */
-.screen--landing[data-coach] .landing__art { flex-shrink: 0; }
-
-.screen--landing[data-coach] .header {
-  margin-block-start: var(--coach-shift, 0px);
-  transition: margin-block-start var(--motion-move) var(--ease-out);
-}
-.screen--landing.is-measuring .header { transition: none; }
-@media (prefers-reduced-motion: reduce) {
-  .screen--landing[data-coach] .header { transition: none; }
-}
-
 /* שורת ההגדרות מעל הכול. static→relative רק בזמן ההדרכה, כדי שה-z
    לא ישנה סדר ציור בשאר הזמן. */
 .screen--landing[data-coach] .landing__foot { position: relative; z-index: 8; }
@@ -798,9 +775,11 @@ button { font: inherit; color: inherit; }
      את המרווח הצדדי. inset של גוטר אחד מיישר את הגיליון בדיוק לקו של
      הכפתורים ושל כרטיס הסטטוס. */
   inset-inline: var(--canvas-gutter);
-  /* נעצר מעל שורת ההגדרות. --coach-clear הוא גובה השורה, נמדד ב-JS
-     ולא מנוחש — הוא משתנה בין שפות ובין גדלי מסך. */
-  inset-block-end: calc(var(--coach-clear, max(var(--v-4), env(safe-area-inset-bottom))) + var(--v-3));
+  /* עוגן מנוחה בלבד. המיקום בפועל נקבע ב-JS דרך --coach-lift, שנמדד
+     מול שורת השפה כפי שהיא בחלון התצוגה — הגיליון הוא absolute בתוך
+     המסך, ובמסכים נמוכים תיבת המסך גבוהה מהחלון והעיגון לתחתיתה לבדו
+     היה מניח אותו מתחת לקצה. */
+  inset-block-end: calc(max(var(--v-4), env(safe-area-inset-bottom)) + var(--v-3));
   display: flex;
   flex-direction: column;
   gap: var(--v-2);
@@ -810,7 +789,15 @@ button { font: inherit; color: inherit; }
   background: var(--color-surface-base);
   box-shadow: var(--shadow-pass);
   animation: coach-in var(--motion-move) var(--ease-out) both;
+  /* ההרמה מעל היעד. translate ולא transform: ה-transform כאן כבר שייך
+     ל-coach-in, ואנימציה עם fill both מחזיקה בו גם אחרי שנגמרה. שתי
+     התכונות מצטרפות זו לזו, כך שהכניסה מלמטה וההרמה לא נלחמות. */
+  translate: 0 calc(-1 * var(--coach-lift, 0px));
+  transition: translate var(--motion-move) var(--ease-out);
 }
+/* בזמן מדידה, ובשינויים שאינם תנועה (סיבוב מסך, טעינת גופן, החלפת
+   שפה) — המיקום מתעדכן בבת אחת ולא נוסע. */
+.coach.is-anchoring { transition: none; }
 .coach[hidden] { display: none !important; }
 .coach.is-leaving { animation: coach-out var(--motion-fast) var(--ease-in) both; }
 /* הטבעת של המערכת לבנה — היא נועדה לקנבס הכחול ונעלמת על הגיליון. */
@@ -862,114 +849,8 @@ button { font: inherit; color: inherit; }
 }
 .coach__dot.is-on { inline-size: 20px; background: var(--color-primary-base); }
 
-/* -------------------------------------------------------------------------
-   ההדגמה — "הקלטת מסך" קטנה של הפעולה שהטקסט מסביר.
-
-   שלושה פריימים שמתחלפים בלולאה בתוך מסגרת אחת. הם לא צילום מסך אלא
-   שחזור מופשט של אותם רכיבים (שדה, רשת חלונות, שורות סטטוס, קוד) —
-   בגודל הזה צילום אמיתי היה כתם, והמופשט קריא. הכול מטוקנים, כך
-   שההדגמה מתחלפת יחד עם מצב התצוגה בלי קוד נוסף.
-   ------------------------------------------------------------------------- */
-.mini {
-  position: relative;
-  block-size: 64px;
-  border: 1px solid var(--color-border-base);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-raised);
-  overflow: hidden;
-}
-.mini__beat {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  opacity: 0;
-  /* 3 × 1700ms. כל פריים נראה כשנייה וחצי — מספיק לקלוט, קצר מכדי
-     להפוך ללולאה שמושכת את העין מהטקסט. */
-  animation: mini-beat 5100ms var(--ease-out) infinite both;
-}
-.mini__beat:nth-child(2) { animation-delay: 1700ms; }
-.mini__beat:nth-child(3) { animation-delay: 3400ms; }
-
-.mini__bar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  inline-size: 100%;
-  block-size: 15px;
-  padding-inline: var(--space-2);
-  /* border-base כמעט זהה ל-surface-base, ובגודל הזה הצורות נעלמו.
-     muted-surface הוא הקו הנראה של המערכת. */
-  border: 1px solid var(--color-muted-surface-base);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-base);
-}
-.mini__bar--dim { opacity: 0.5; }
-.mini__bar--cta {
-  justify-content: center;
-  block-size: 17px;
-  border-color: var(--color-accent-base);
-  background: var(--color-accent-base);
-}
-.mini__ink {
-  block-size: 5px;
-  border-radius: var(--radius-pill);
-  background: var(--color-neutral-base);
-  animation: mini-type 1100ms var(--ease-linear) both;
-}
-.mini__caret {
-  inline-size: 1.5px;
-  block-size: 8px;
-  background: var(--color-primary-ink);
-  animation: mini-caret 800ms steps(1) infinite;
-}
-
-.mini__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-1);
-  inline-size: 100%;
-}
-.mini__grid i {
-  block-size: 17px;
-  border: 1px solid var(--color-muted-surface-base);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-base);
-}
-.mini__grid i.is-on {
-  border-color: var(--color-accent-base);
-  background: var(--color-accent-base);
-}
-
-.mini__rows { display: flex; flex-direction: column; gap: var(--space-1); inline-size: 100%; }
-.mini__rows i {
-  block-size: 15px;
-  border: 1px solid var(--color-muted-surface-base);
-  /* logical ולא box-shadow: הפס חייב להתהפך לצד השני באנגלית וברוסית */
-  border-inline-start: 3px solid transparent;
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-base);
-  opacity: 0.6;
-}
-.mini__rows i.is-on { opacity: 1; border-inline-start-color: var(--color-accent-base); }
-
-.mini__code {
-  inline-size: 38px;
-  block-size: 38px;
-  border: 1px solid var(--color-muted-surface-base);
-  border-radius: var(--radius-sm);
-  background:
-    repeating-conic-gradient(var(--color-text-base) 0% 25%, var(--color-surface-base) 0% 50%)
-    0 0 / 9px 9px;
-}
-
 /* החלפת שלב: התוכן החדש נכנס בדעיכה קצרה, אחרת הטקסט פשוט מתחלף
    בתוך קופסה שלא זזה וזה נקרא כתקלה ולא כמעבר. */
-.coach.is-swapping .coach__demo,
 .coach.is-swapping .coach__step,
 .coach.is-swapping .coach__title,
 .coach.is-swapping .coach__body {
@@ -980,13 +861,6 @@ button { font: inherit; color: inherit; }
 @keyframes coach-in  { from { opacity: 0; transform: translateY(100%) } to { opacity: 1; transform: none } }
 @keyframes coach-out { from { opacity: 1; transform: none } to { opacity: 0; transform: translateY(var(--space-4)) } }
 @keyframes coach-ring { from { outline-offset: 2px } to { outline-offset: 7px } }
-@keyframes mini-beat {
-  0%       { opacity: 0; transform: translateY(6px) }
-  4%, 28%  { opacity: 1; transform: none }
-  33%,100% { opacity: 0; transform: translateY(-6px) }
-}
-@keyframes mini-type  { from { inline-size: 0 } to { inline-size: 46px } }
-@keyframes mini-caret { 50% { opacity: 0 } }
 
 /* =========================================================================
    Loading / splash (nodes 2072:1219, 2039:614)
@@ -2023,13 +1897,10 @@ button { font: inherit; color: inherit; }
   .passenger--entering { animation: fade-in var(--motion-fast) var(--ease-out) both; }
   /* ההדרכה נכנסת בדעיכה במקום מלמטה, הטבעת מפסיקה לנשום, וההדגמה
      קופאת על הפריים האחרון — זה שמראה את התוצאה. */
-  .coach { animation: fade-in var(--motion-fast) var(--ease-out) both; }
+  /* הגיליון נדלק במקום להיכנס, ומדלג בין מיקומים במקום לנסוע. */
+  .coach { animation: fade-in var(--motion-fast) var(--ease-out) both; transition: none; }
   .coach.is-leaving { animation: fade-out var(--motion-fast) var(--ease-out) both; }
   .screen--landing[data-coach] [data-coach-target] { animation: none; outline-offset: 4px; }
-  .mini__beat { animation: none; opacity: 0; }
-  .mini__beat:last-child { opacity: 1; }
-  .mini__caret { animation: none; }
-  .mini__ink { animation: none; inline-size: 46px; }
   .result__art--celebrate { animation: fade-in var(--motion-fast) var(--ease-out) both; }
   .is-open .burger__bar--mid,
   .is-open .burger__bar--bot { transform: none; }
