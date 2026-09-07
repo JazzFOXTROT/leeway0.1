@@ -1700,6 +1700,17 @@
        · "מחק את כל מה שנשמר" מוחק גם אותה — מכשיר שנוקה חוזר להיות
          מכשיר של משתמש חדש.
      --------------------------------------------------------------------- */
+  /* ═══ מצב הדגמה — זמני ═══════════════════════════════════════════════
+     true  = ההדרכה נפתחת בכל טעינה של האפליקציה, בלי קשר למה שנשמר
+             במכשיר. נועד להצגת הפרויקט, כדי שלא יהיה צורך לנקות את
+             האחסון לפני כל הרצה.
+     false = ההתנהגות האמיתית של המוצר — פעם אחת בחיי המכשיר.
+
+     >>> לכיבוי: להחליף את השורה הבאה ל-false, ולהעלות את VERSION ב-sw.js.
+         זה כל מה שצריך; שום קוד אחר לא תלוי בדגל הזה.
+     ═══════════════════════════════════════════════════════════════════ */
+  var COACH_ALWAYS = true;
+
   var COACH_KEY = "leeway.onboarded";
   var COACH_DELAY = 350;      /* אחרי שהמעבר למסך הבית כבר נגמר */
   var COACH_GAP = 24;         /* אוויר בין הטבעת לגיליון. הטבעת עצמה
@@ -1728,6 +1739,7 @@
   var coachTimer = null;
   var coachReturn = null;     /* לאן להחזיר את הפוקוס בסגירה */
   var coachLift = 0;          /* בכמה פיקסלים הגיליון מורם, כרגע */
+  var coachSeenThisLoad = false;  /* משמש רק את מצב ההדגמה */
 
   function clearCoachTarget() {
     qsa("[data-coach-target]").forEach(function (el) { el.removeAttribute("data-coach-target"); });
@@ -1813,7 +1825,12 @@
 
   function openCoach() {
     if (!coachEl || coachIndex >= 0 || current !== "landing") return;
-    if (readKey(COACH_KEY) === "1") return;
+    /* במצב הדגמה הזיכרון של המכשיר נעקף, אבל לא לגמרי: ההדרכה עדיין
+       עולה פעם אחת לכל טעינה. בלי זה היא הייתה קופצת מחדש בכל חזרה
+       למסך הבית באמצע ההדגמה, וזה לא "בכל כניסה לאפליקציה". */
+    if (COACH_ALWAYS) { if (coachSeenThisLoad) return; }
+    else if (readKey(COACH_KEY) === "1") return;
+    coachSeenThisLoad = true;
     coachReturn = document.activeElement;
 
     coachIndex = 0;

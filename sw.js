@@ -41,9 +41,12 @@
    >>>       הוסרה, השלב האחרון הפך לכרטיס סוגר בלי טבעת, המפתח
    >>>       leeway.onboarded נרשם בסגירה ולא בפתיחה, ותוקן טקסט
    >>>       שהבטיח מעקב עד "שער העלייה" — שלב שמחוץ להיקף המוצר
+   >>>   v9  ‎*** זמני, להצגת הפרויקט ***‎ — COACH_ALWAYS ב-script.js פותח
+   >>>       את ההדרכה בכל טעינה של האפליקציה במקום פעם אחת במכשיר.
+   >>>       לכיבוי: COACH_ALWAYS=false, ובאותו commit להעלות לגרסה v10.
    ========================================================================= */
 
-const VERSION = "v8";
+const VERSION = "v9";
 
 const PREFIX = "leeway-" + VERSION;      /* every cache we own starts with this */
 const SHELL_CACHE = PREFIX + "-shell";   /* documents + the offline screen      */
