@@ -46,7 +46,7 @@
    >>>       לכיבוי: COACH_ALWAYS=false, ובאותו commit להעלות לגרסה v10.
    ========================================================================= */
 
-const VERSION = "v9";
+const VERSION = "v10";
 
 const PREFIX = "leeway-" + VERSION;      /* every cache we own starts with this */
 const SHELL_CACHE = PREFIX + "-shell";   /* documents + the offline screen      */
