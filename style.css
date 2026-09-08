@@ -918,6 +918,20 @@ button { font: inherit; color: inherit; }
 
 /* ‎.form הוא grid עם gap של 10px, שכבר תורם את המרווח מעל הפוטר. מחסירים
    אותו כדי ש"+ הוסף נוסע" ו"אישור" ישבו בדיוק 8px זה מזה, כמו שאר הזוגות. */
+/* הודעת הטופס עצמו — מעל כפתור האישור, במקום מסך שגיאה נפרד.
+   אותה שפה חזותית של שגיאת שדה, ברוחב מלא. */
+.form__alert {
+  margin-block-start: var(--space-3);
+  padding-inline: var(--space-3);
+  padding-block: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-surface);
+  color: var(--color-red-700);
+  font-size: var(--typography-size-sm);
+  line-height: var(--typography-line-sm);
+  text-align: start;
+}
+
 .form__foot {
   margin-block-start: calc(var(--space-2) - 10px);
   display: grid;

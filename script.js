@@ -94,15 +94,18 @@
       "ph.flight": "מס׳ טיסה",
       "err.first": "יש להזין שם פרטי באותיות בלבד",
       "err.last": "יש להזין שם משפחה באותיות בלבד",
-      "err.passport": "מספר דרכון הוא 8 ספרות",
+      "err.passport": "מספר דרכון: אותיות וספרות בלבד (5–15 תווים)",
       "err.flight": "מספר טיסה לדוגמה: LY 315",
+      "err.required": "יש למלא שדה זה",
+      "err.formEmpty": "יש למלא את השדות המסומנים.",
+      "err.formInvalid": "יש לתקן את השדות המסומנים.",
       "err.label.name": "שם",
       "err.label.passport": "מספר דרכון",
       "err.label.flight": "מספר טיסה",
       "fail.h1a": "אופס...משהו",
       "fail.h1b": "השתבש",
       "fail.badDetails": "הפרטים לא תואמים לרישומי הטיסה. בדקו: ",
-      "fail.noSlot": "לא נבחר חלון זמן לביקורת הביטחון.",
+      "err.pickSlot": "יש לבחור חלון זמן לביקורת הביטחון.",
       "fail.slotFull": "חלון הזמן {slot} התמלא. בחרו חלון זמן אחר.",
       "success.h1a": "הזמנה בוצע",
       "success.h1b": "בהצלחה",
@@ -154,7 +157,7 @@
       "alt.qrFull": "קוד QR של אישור הזימון להצגה בעמדת הביקורת",
       "alt.avatar": "תמונת פרופיל",
       "profile.title": "פרופיל שלי",
-      "profile.name": "דניאל כהן",
+      "profile.name": "השם שלך",
       "profile.editPhoto": "ערוך תמונת פרופיל",
       "profile.save": "שמור פרטים שלי",
       "reg.rememberOn": "זוכרים אותך",
@@ -251,15 +254,18 @@
       "ph.flight": "Flight no.",
       "err.first": "First name must be letters only",
       "err.last": "Last name must be letters only",
-      "err.passport": "Passport number is 8 digits",
+      "err.passport": "Passport number: letters and digits only (5–15 characters)",
       "err.flight": "Flight number example: LY 315",
+      "err.required": "This field is required",
+      "err.formEmpty": "Please fill in the highlighted fields.",
+      "err.formInvalid": "Please correct the highlighted fields.",
       "err.label.name": "name",
       "err.label.passport": "passport number",
       "err.label.flight": "flight number",
       "fail.h1a": "Oops… something",
       "fail.h1b": "went wrong",
       "fail.badDetails": "The details do not match the flight record. Check: ",
-      "fail.noSlot": "No security-check time slot was selected.",
+      "err.pickSlot": "Please choose a time slot for the security check.",
       "fail.slotFull": "The {slot} slot is now full. Please choose another.",
       "success.h1a": "Booking completed",
       "success.h1b": "successfully",
@@ -311,7 +317,7 @@
       "alt.qrFull": "QR code of the booking confirmation, to show at the checkpoint",
       "alt.avatar": "Profile picture",
       "profile.title": "My profile",
-      "profile.name": "Daniel Cohen",
+      "profile.name": "Your name",
       "profile.editPhoto": "Edit profile picture",
       "profile.save": "Save my details",
       "reg.rememberOn": "We'll remember you",
@@ -408,15 +414,18 @@
       "ph.flight": "Номер рейса",
       "err.first": "Имя — только буквы",
       "err.last": "Фамилия — только буквы",
-      "err.passport": "Номер паспорта — 8 цифр",
+      "err.passport": "Номер паспорта: только буквы и цифры (5–15 символов)",
       "err.flight": "Пример номера рейса: LY 315",
+      "err.required": "Заполните это поле",
+      "err.formEmpty": "Заполните отмеченные поля.",
+      "err.formInvalid": "Исправьте отмеченные поля.",
       "err.label.name": "имя",
       "err.label.passport": "номер паспорта",
       "err.label.flight": "номер рейса",
       "fail.h1a": "Ой… что-то",
       "fail.h1b": "пошло не так",
       "fail.badDetails": "Данные не совпадают с записью о рейсе. Проверьте: ",
-      "fail.noSlot": "Окно для досмотра не выбрано.",
+      "err.pickSlot": "Выберите окно для досмотра.",
       "fail.slotFull": "Окно {slot} заполнено. Выберите другое.",
       "success.h1a": "Бронь оформлена",
       "success.h1b": "успешно",
@@ -468,7 +477,7 @@
       "alt.qrFull": "QR-код подтверждения брони для предъявления на досмотре",
       "alt.avatar": "Фото профиля",
       "profile.title": "Мой профиль",
-      "profile.name": "Даниэль Коэн",
+      "profile.name": "Ваше имя",
       "profile.editPhoto": "Изменить фото профиля",
       "profile.save": "Сохранить мои данные",
       "reg.rememberOn": "Мы вас запомним",
@@ -565,15 +574,18 @@
       "ph.flight": "رقم الرحلة",
       "err.first": "يجب إدخال الاسم الأول بأحرف فقط",
       "err.last": "يجب إدخال اسم العائلة بأحرف فقط",
-      "err.passport": "رقم الجواز مكوّن من 8 أرقام",
+      "err.passport": "رقم الجواز: أحرف وأرقام فقط (5–15 حرفًا)",
       "err.flight": "مثال على رقم الرحلة: LY 315",
+      "err.required": "هذا الحقل مطلوب",
+      "err.formEmpty": "يرجى تعبئة الحقول المميّزة.",
+      "err.formInvalid": "يرجى تصحيح الحقول المميّزة.",
       "err.label.name": "الاسم",
       "err.label.passport": "رقم الجواز",
       "err.label.flight": "رقم الرحلة",
       "fail.h1a": "عذرًا… حدث",
       "fail.h1b": "خطأ ما",
       "fail.badDetails": "البيانات لا تطابق سجل الرحلة. تحقّق من: ",
-      "fail.noSlot": "لم يتم اختيار موعد للفحص الأمني.",
+      "err.pickSlot": "يرجى اختيار موعد للفحص الأمني.",
       "fail.slotFull": "الموعد {slot} ممتلئ. الرجاء اختيار موعد آخر.",
       "success.h1a": "تم الحجز",
       "success.h1b": "بنجاح",
@@ -625,7 +637,7 @@
       "alt.qrFull": "رمز QR لتأكيد الحجز لعرضه عند نقطة الفحص",
       "alt.avatar": "صورة الملف الشخصي",
       "profile.title": "ملفي الشخصي",
-      "profile.name": "دانيال كوهين",
+      "profile.name": "اسمك",
       "profile.editPhoto": "تعديل صورة الملف الشخصي",
       "profile.save": "حفظ بياناتي",
       "reg.rememberOn": "سنتذكّرك",
@@ -1915,12 +1927,19 @@
   }
 
   /* ---------------------------------------------------------------------
-     Registration — validation. Bad name / passport / flight number sends
-     the traveller to the Fail screen, with the offending fields marked.
+     Registration — validation. Everything the traveller can still fix is
+     said IN the form, next to the field that is wrong. The Fail screen is
+     kept for what the form cannot fix — a slot that filled up, a booking
+     the airport rejected — which is the only thing an error screen is for.
      --------------------------------------------------------------------- */
   var RULES = {
     name:     { test: /^[\u0590-\u05FF\u0600-\u06FF\u0400-\u04FFA-Za-z][\u0590-\u05FF\u0600-\u06FF\u0400-\u04FFA-Za-z'\- ]{1,}$/, labelKey: "err.label.name" },
-    passport: { test: /^\d{8}$/, labelKey: "err.label.passport" },
+    /* Passport numbers are not eight digits. Israel issues 8, the US 9, the
+       UK 9 with letters, Italy two letters and five digits — the old
+       /^\d{8}$/ rejected most of the travellers who fly out of here. What
+       every issuer does share is letters and digits with no separators, so
+       that — and a sane length — is all this checks. */
+    passport: { test: /^[A-Za-z0-9]{5,15}$/, labelKey: "err.label.passport" },
     /* An IATA airline designator is two characters and only ONE of them has
        to be a letter: 6H is Israir, A3 is Aegean, W6 is Wizz Air — all of
        which fly out of Ben Gurion. The old [A-Za-z]{2} rejected every one of
@@ -1953,7 +1972,7 @@
         '<input class="input" type="text" data-rule="name" name="last-' + n + f("ph.last") + '>' + e("err.last") + '</label>' +
       '</div>' +
       '<label class="field">' + sr("ph.passport") +
-      '<input class="input" type="text" inputmode="numeric" data-rule="passport" name="passport-' + n + f("ph.passport") + '>' + e("err.passport") + '</label>' +
+      '<input class="input" type="text" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="15" data-rule="passport" name="passport-' + n + f("ph.passport") + '>' + e("err.passport") + '</label>' +
       '<label class="field">' + sr("ph.flight") +
       '<input class="input" type="text" data-rule="flight" name="flight-' + n + f("ph.flight") + '>' + e("err.flight") + '</label>';
   }
@@ -2033,28 +2052,84 @@
     });
   }
 
+  /* Nothing is marked red before the first press of "אישור". A field the
+     traveller has not reached yet is not a mistake, and colouring it while
+     they are still typing accuses them of an error they are in the middle
+     of not making. After that first attempt the form is allowed to keep
+     up: every field re-checks itself on blur and un-marks itself as soon
+     as it becomes valid. */
+  var attempted = false;
+  var formAlert = document.querySelector("[data-form-alert]");
+
+  function showFormAlert(key) {
+    if (!formAlert) return;
+    formAlert.dataset.i18n = key;      /* survives a language switch */
+    formAlert.textContent = t(key);
+    formAlert.hidden = false;
+  }
+
+  function clearFormAlert() {
+    if (!formAlert) return;
+    formAlert.hidden = true;
+    formAlert.textContent = "";
+    formAlert.removeAttribute("data-i18n");
+  }
+
+  /* An empty field and a malformed one are two different mistakes, so they
+     get two different sentences. The field's own message (err.first,
+     err.passport ...) is its markup default; "err.required" borrows the
+     slot while the field is blank and hands it back afterwards. */
+  function setFieldMessage(field, state) {
+    var err = field.querySelector(".field__error");
+    if (!err) return;
+    if (err.dataset.i18nDefault === undefined) err.dataset.i18nDefault = err.dataset.i18n || "";
+    var key = state === "empty" ? "err.required" : err.dataset.i18nDefault;
+    if (!key) return;
+    err.dataset.i18n = key;
+    err.textContent = t(key);
+  }
+
+  /* "empty" | "invalid" | "ok" */
+  function checkField(input) {
+    var rule = RULES[input.dataset.rule];
+    var val = input.value.trim();
+    var state = !val ? "empty" : (rule.test.test(val) ? "ok" : "invalid");
+    var field = input.closest(".field");
+    if (state !== "ok") setFieldMessage(field, state);
+    field.classList.toggle("has-error", state !== "ok");
+    input.setAttribute("aria-invalid", state === "ok" ? "false" : "true");
+    return state;
+  }
+
   function validate() {
-    var bad = [];
+    var res = { empty: 0, invalid: 0, first: null };
     Array.prototype.forEach.call(form.querySelectorAll("[data-rule]"), function (input) {
-      var rule = RULES[input.dataset.rule];
-      var ok = rule.test.test(input.value.trim());
-      var field = input.closest(".field");
-      field.classList.toggle("has-error", !ok);
-      input.setAttribute("aria-invalid", ok ? "false" : "true");
-      var lbl = t(rule.labelKey);
-      if (!ok && bad.indexOf(lbl) === -1) bad.push(lbl);
+      var state = checkField(input);
+      if (state === "ok") return;
+      if (state === "empty") res.empty += 1; else res.invalid += 1;
+      if (!res.first) res.first = input;
     });
-    return bad;
+    return res;
   }
 
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var bad = validate();
-      if (bad.length) {
-        failWith(t("fail.badDetails") + bad.join(", ") + ".");
+      attempted = true;
+      var res = validate();
+      if (res.empty || res.invalid) {
+        /* No trip to the Fail screen and no journey back: the sentence and
+           the fields it refers to are on the same screen, already in view. */
+        showFormAlert(res.empty ? "err.formEmpty" : "err.formInvalid");
+        if (res.first) {
+          if (res.first.scrollIntoView) {
+            res.first.scrollIntoView({ block: "center", behavior: reduced ? "auto" : "smooth" });
+          }
+          res.first.focus({ preventScroll: true });
+        }
         return;
       }
+      clearFormAlert();
       passengers = readPassengers();   /* the card and the pass follow the form */
       renderPassengers();
       withLoading(e.submitter || form.querySelector("button[type=submit]"), 450, function () {
@@ -2065,13 +2140,21 @@
     form.addEventListener("input", function (e) {
       var input = e.target.closest("[data-rule]");
       if (!input) return;
+      if (!attempted) return;          /* silence until the first attempt */
       var field = input.closest(".field");
+      /* While typing, only ever REMOVE a mark — never add one mid-word. */
       if (field.classList.contains("has-error")) {
-        var ok = RULES[input.dataset.rule].test.test(input.value.trim());
-        field.classList.toggle("has-error", !ok);
-        input.setAttribute("aria-invalid", ok ? "false" : "true");
+        if (checkField(input) === "ok" && !form.querySelector(".field.has-error")) clearFormAlert();
       }
     });
+
+    /* Leaving a field is a finished thought, so it may be marked. */
+    form.addEventListener("blur", function (e) {
+      var input = e.target.closest && e.target.closest("[data-rule]");
+      if (!input || !attempted) return;
+      checkField(input);
+      if (!form.querySelector(".field.has-error")) clearFormAlert();
+    }, true);
   }
 
   /* ---------------------------------------------------------------------
@@ -2089,6 +2172,25 @@
       })
     : [];
 
+  /* Same idea as the registration form: what this screen can fix, this
+     screen says. Not choosing a window is not an error worth a screen —
+     it is a sentence next to the windows. */
+  var slotAlert = document.querySelector("[data-slot-alert]");
+
+  function showSlotAlert(key) {
+    if (!slotAlert) return;
+    slotAlert.dataset.i18n = key;      /* survives a language switch */
+    slotAlert.textContent = t(key);
+    slotAlert.hidden = false;
+  }
+
+  function clearSlotAlert() {
+    if (!slotAlert) return;
+    slotAlert.hidden = true;
+    slotAlert.textContent = "";
+    slotAlert.removeAttribute("data-i18n");
+  }
+
   if (slotsWrap) {
     slotsWrap.addEventListener("click", function (e) {
       var btn = e.target.closest(".slot");
@@ -2097,6 +2199,7 @@
         s.setAttribute("aria-pressed", String(s === btn));
       });
       chosenSlot = btn;
+      clearSlotAlert();               /* the complaint is answered */
     });
   }
 
@@ -2493,13 +2596,26 @@
   Array.prototype.forEach.call(document.querySelectorAll("[data-confirm-slot]"), function (btn) {
     btn.addEventListener("click", function () {
       if (!chosenSlot) {
-        failWith(t("fail.noSlot"));
+        showSlotAlert("err.pickSlot");
+        /* Land them on the first window they can actually take, so the fix
+           is one press away and not a hunt back up the screen. */
+        var firstFree = slotsWrap && slotsWrap.querySelector('.slot:not([data-full="true"])');
+        if (firstFree) {
+          if (firstFree.scrollIntoView) {
+            firstFree.scrollIntoView({ block: "center", behavior: reduced ? "auto" : "smooth" });
+          }
+          firstFree.focus({ preventScroll: true });
+        }
         return;
       }
       if (chosenSlot.dataset.full === "true") {
+        /* This one stays on the Fail screen on purpose: the window was open
+           when it was offered and is not any more, which is a change in the
+           world rather than a mistake the traveller made. */
         failWith(t("fail.slotFull").replace("{slot}", chosenSlot.dataset.slot));
         return;
       }
+      clearSlotAlert();
       applySlot(chosenSlot.dataset.slot);
       hasBooking = true;              /* the landing card has something to show now */
       paintStatusCard();
@@ -2934,6 +3050,25 @@
       });
     });
   });
+
+  /* עד עכשיו מסך הפרופיל נשלח עם "Daniel Cohen / 12345678" כתובים בשדות,
+     ולחיצה אחת על "שמור" הפכה את ההדגמה לזהות שמורה שדולפת אל טופס
+     ההרשמה. השדות ריקים מעכשיו, אבל מי שכבר לחץ נשאר עם העותק ההוא
+     במכשיר — אז מוחקים אותו פעם אחת, ורק אם הוא בדיוק ההדגמה. */
+  (function dropSeededDemoProfile() {
+    var saved = readJSON("leeway.profile");
+    if (!saved) return;
+    if (saved.first !== "Daniel" || saved.last !== "Cohen" || saved.passport !== "12345678") return;
+    if (saved.avatar) {
+      writeJSON("leeway.profile", { first: "", last: "", passport: "", avatar: saved.avatar });
+    } else {
+      dropKey("leeway.profile");
+    }
+    var pax = readJSON("leeway.passenger");
+    if (pax && pax["first-1"] === "Daniel" && pax["last-1"] === "Cohen" && pax["passport-1"] === "12345678") {
+      writeJSON("leeway.passenger", { "first-1": "", "last-1": "", "passport-1": "", "flight-1": pax["flight-1"] || "" });
+    }
+  })();
 
   restoreProfile();
   restorePassenger();

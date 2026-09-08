@@ -147,8 +147,8 @@
         </div>
         <label class="field">
           <span class="visually-hidden" data-i18n="ph.passport">מספר דרכון</span>
-          <input class="input" type="text" inputmode="numeric" name="passport-1" data-i18n-ph="ph.passport" placeholder="מס׳ דרכון" data-rule="passport">
-          <span class="field__error" data-i18n="err.passport">מספר דרכון הוא 8 ספרות</span>
+          <input class="input" type="text" name="passport-1" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="15" data-i18n-ph="ph.passport" placeholder="מס׳ דרכון" data-rule="passport">
+          <span class="field__error" data-i18n="err.passport">מספר דרכון: אותיות וספרות בלבד (5–15 תווים)</span>
         </label>
         <label class="field">
           <span class="visually-hidden" data-i18n="ph.flight">מספר טיסה</span>
@@ -165,6 +165,10 @@
       <div id="extra-passengers"></div>
 
       <button type="button" class="add-passenger" id="add-passenger" data-i18n="reg.addPassenger">+ הוסף נוסע</button>
+
+      <!-- הודעת הטופס עצמו: מה חסר או מה שגוי, במקום שבו אפשר לתקן את זה.
+           מסך השגיאה נשמר למקרים שאי אפשר לתקן כאן. -->
+      <p class="form__alert" data-form-alert role="alert" hidden></p>
 
       <div class="form__foot">
         <button type="submit" class="btn btn--primary" data-i18n="common.confirm">אישור</button>
@@ -254,6 +258,10 @@
       <button type="button" class="slots__mask" hidden
               data-i18n-aria="aria.backToSlots" aria-label="חזרה לבחירת חלון זמן"></button>
     </fieldset>
+
+    <!-- "לא בחרת חלון" נאמר כאן, ליד החלונות עצמם. מסך השגיאה נשאר למה
+         שהמסך הזה לא יכול לתקן — חלון שהתמלא אחרי שנבחר. -->
+    <p class="form__alert" data-slot-alert role="alert" hidden></p>
 
     <div class="btn-row">
       <button type="button" class="btn btn--primary" data-confirm-slot data-i18n="common.continue">המשך</button>
@@ -497,15 +505,16 @@
     <form class="settings__form" id="profile-form" novalidate>
       <div class="name-row">
         <label class="field"><span class="visually-hidden" data-i18n="ph.first">שם פרטי</span>
-          <input class="input input--filled" type="text" name="profile-first" value="Daniel"
-                 data-i18n-ph="ph.first" placeholder="שם פרטי"></label>
+          <input class="input input--filled" type="text" name="profile-first"
+                 autocomplete="given-name" data-i18n-ph="ph.first" placeholder="שם פרטי"></label>
         <label class="field"><span class="visually-hidden" data-i18n="ph.last">שם משפחה</span>
-          <input class="input input--filled" type="text" name="profile-last" value="Cohen"
-                 data-i18n-ph="ph.last" placeholder="שם משפחה"></label>
+          <input class="input input--filled" type="text" name="profile-last"
+                 autocomplete="family-name" data-i18n-ph="ph.last" placeholder="שם משפחה"></label>
       </div>
       <label class="field"><span class="visually-hidden" data-i18n="ph.passport">מס׳ דרכון</span>
-        <input class="input input--filled" type="text" inputmode="numeric" name="profile-passport"
-               value="12345678" data-i18n-ph="ph.passport" placeholder="מס׳ דרכון"></label>
+        <input class="input input--filled" type="text" name="profile-passport"
+               autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="15"
+               data-i18n-ph="ph.passport" placeholder="מס׳ דרכון"></label>
       <button type="submit" class="btn btn--primary" data-i18n="profile.save">שמור פרטים שלי</button>
     </form>
 
