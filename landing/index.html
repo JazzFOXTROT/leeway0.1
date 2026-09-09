@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Leeway · די לנחש מתי להגיע לנתב״ג</title>
+<meta name="description" content="Leeway מזמן לכם חלון זמן לביקורת הביטחון בנתב״ג, וביום הטיסה מראה איפה אתם עומדים בשני השלבים שמעכבים: ביטחון, ואחריו צ׳ק-אין.">
+<meta name="theme-color" content="#0a3a89">
+<link rel="icon" href="assets/images/logo-leeway-blue.webp">
+<meta property="og:title" content="Leeway · די לנחש מתי להגיע לנתב״ג">
+<meta property="og:description" content="זימון חלון זמן לביקורת הביטחון בנתב״ג, ומעקב אחרי שני צווארי הבקבוק ביום הטיסה.">
+<meta property="og:image" content="assets/art/sky-wide.webp">
+<meta property="og:locale" content="he_IL">
+<meta name="twitter:card" content="summary_large_image">
+
+<!--
+  ═══════════════════════════════════════════════════════════════════════
+  המסג׳ינג, שלב 1. מקור האמת של הדף.
+  1. למי      נוסע שטס פעם או פעמיים בשנה ומגיע שלוש שעות מראש.
+  2. הכאב     לא יודע איזה משני השלבים יעכב אותו היום.
+  3. מה עושה  מזמן חלון לביטחון, מחזיר QR בלי קליטה, ומראה את שני השלבים.
+  4. למה אנחנו  בנתב״ג הביטחון קודם לצ׳ק-אין והוא שיחתי.
+  5. הפעולה   לפתוח את האפליקציה החיה.
+  כותרת : די לנחש מתי להגיע לנתב״ג
+  כפתור : תדעו מתי להגיע   ← מחרוזת אחת, בכל הדף, אותו יעד
+  ═══════════════════════════════════════════════════════════════════════
+-->
+
+<style>
+/* ═════════ 1. פונטים מקומיים. לטינית Inter, עברית נופלת ל-Heebo ═════════ */
+@font-face{font-family:"Inter";src:url(assets/fonts/inter-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Inter";src:url(assets/fonts/inter-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Inter";src:url(assets/fonts/inter-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Inter";src:url(assets/fonts/inter-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Inter";src:url(assets/fonts/inter-latin-800-normal.woff2) format("woff2");font-weight:800;font-display:swap}
+@font-face{font-family:"Heebo";src:url(assets/fonts/heebo-hebrew-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Heebo";src:url(assets/fonts/heebo-hebrew-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Heebo";src:url(assets/fonts/heebo-hebrew-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Heebo";src:url(assets/fonts/heebo-hebrew-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Heebo";src:url(assets/fonts/heebo-hebrew-800-normal.woff2) format("woff2");font-weight:800;font-display:swap}
+
+/* ═════════════════════════════════════════════════════════════════════
+   2. טוקנים.
+      המצב הבהיר יושב על הכחול של האפליקציה עצמה, #1e5aba, שהוא 52%
+      מהפיקסלים במסך הבית שלה. לכן יש כאן שתי רמות: מה שיושב על הקרקע
+      הכחולה, ומה שיושב בתוך כרטיס. בלי ההפרדה הזו טקסט אפור של כרטיס
+      נופל על כחול והופך לבלתי קריא. הזוג הנמוך ביותר כאן הוא 4.75.
+   ═════════════════════════════════════════════════════════════════════ */
+:root{
+  /* ═══════════════════════════════════════════════════════════════════
+     סולם הירידה. הדף הוא טיסה אחת: A0 הוא הגובה, A9 הוא הקרקע.
+     כל מקטע צובע את עצמו מהעוגן שלו לעוגן הבא, ולכן אין תפר בין
+     מקטעים ואין פסים מתחלפים. A0–A6 הם התחום שבו טקסט לבן עדיין
+     עובר 4.5 (A6 הוא בדיוק 4.50), ולכן שם הדיו מתהפך לכהה.
+     A9 הוא הפיקסל הראשון של איור הטרמינל, לא ערך שנבחר בעין.
+     ═══════════════════════════════════════════════════════════════════ */
+  --a0:#0a3a89; --a1:#0f4495; --a2:#154ea1; --a3:#1a59ae;
+  --a4:#1f63ba; --a5:#256dc6; --a6:#2a77d2;
+  --hinge:#5aa8ea;            /* נקודת המעבר, יושבת בתוך ריפוד ריק */
+  --a7:#6bb5ef; --a8:#8ccbf7; --a9:#a7d8fd;
+
+  --surface:#0a3a89;        /* ראש השמיים. הכותרת הנעוצה נשארת בגובה */
+  --surface-alt:#174691;    /* color/primary/strong */
+  --band:#001b2a;           /* navy/900, נשאר כטוקן, כבר לא בשימוש כפס */
+  --band-text:#f2efe9;
+  --band-accent:#63b3ed;
+
+  --text:#ffffff;           /* על הקרקע */
+  --text-2:#dbe9fb;         /* הועלה: הקרקע מתבהרת לאורך הירידה */
+  --accent:#daedff;
+
+  --card:#ffffff;           /* בתוך כרטיס */
+  --card-2:#e9f2ff;
+  --card-text:#001b2a;
+  --card-text-2:#606573;    /* slate/500. slate/400 נכשל בניגודיות */
+  --card-border:#dbe4ee;
+  --card-accent:#1e5aba;
+
+  /* הזוג הזה לא מתפצל ולא מתהפך. על עמוד כחול הכפתור חייב להיות לבן */
+  --emph:#ffffff;
+  --on-emph:#0f3673;
+
+  --hairline:rgb(255 255 255 / .18);
+  --scrim:rgb(0 20 50 / .55);
+  --shadow-1:0 1px 2px rgb(0 20 50 / .12), 0 6px 16px rgb(0 20 50 / .10);
+  --shadow-2:0 2px 8px rgb(0 20 50 / .14), 0 22px 50px -16px rgb(0 20 50 / .34);
+
+  --font-body:"Inter","Heebo",system-ui,-apple-system,sans-serif;
+  --measure:34rem; --wide:71rem; --max:80rem; --tap:48px; --r:20px;
+
+  /* תנועה. ease-in לא מופיע כאן בכוונה: הוא מתחיל לאט, וזה בדיוק הרגע
+     שבו המשתמש מסתכל.                                                */
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --ease-drawer:cubic-bezier(0.32,0.72,0,1);
+  --press-in:100ms; --press-out:160ms; --t-fast:140ms; --t-ui:200ms; --t-reveal:460ms;
+  --press-scale:0.97;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  /* אותה ירידה, בלילה. כאן אין היפוך דיו: כל הסולם כהה. הגובה הוא
+     החלל השחור, ומעל הקרקע יש זוהר קל של השדה, ואז האיור עצמו
+     שמתחיל ב-#05162e ולכן A9 הוא בדיוק הערך הזה.                  */
+  --a0:#04101f; --a1:#061527; --a2:#07192f; --a3:#081d37;
+  --a4:#09213e; --a5:#0a2545; --a6:#0b284b;
+  --hinge:#0b294d;
+  --a7:#0c2b50; --a8:#0a2444; --a9:#05162e;
+
+  --surface:#04101f; --surface-alt:#001b2a;
+  --band:#0f3673;           /* גוון אחר, לא גוון כהה יותר של אותו כחול */
+  --band-text:#f2efe9; --band-accent:#63b3ed;
+  --text:#f2efe9; --text-2:#c9cede; --accent:#63b3ed;
+  --card:#182a4a; --card-2:#0f1d33; --card-text:#f2efe9; --card-text-2:#c9cede;
+  --card-border:#2b3d5c; --card-accent:#63b3ed;
+  --emph:#63b3ed; --on-emph:#001b2a;
+  --hairline:rgb(242 239 233 / .12); --scrim:rgb(0 0 0 / .62);
+  --shadow-1:0 1px 2px rgb(0 0 0 / .40), 0 6px 16px rgb(0 0 0 / .32);
+  --shadow-2:0 2px 8px rgb(0 0 0 / .45), 0 22px 50px -16px rgb(0 0 0 / .55);
+  color-scheme:dark;
+}
+@media (prefers-reduced-motion:reduce){
+  :root{--press-scale:1;--t-reveal:200ms}
+  html{scroll-behavior:auto}
+}
+@media (prefers-reduced-transparency:reduce){
+  .top,.sticky-cta{backdrop-filter:none;background-color:var(--surface)}
+  .stats li{backdrop-filter:none}
+}
+
+/* ═════════ 3. איפוס ═════════ */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-block-start:5.5rem}
+/* ═══════════════════════════════════════════════════════════════════
+   הרקע של הדף הוא ירידה אחת רצופה, מהשמיים העמוקים למעלה ועד הקרקע
+   של הטרמינל למטה. אין פסים מתחלפים ואין קצוות.
+   הירידה לא יושבת על ה-body אלא על כל מקטע בנפרד, מהעוגן שלו לעוגן
+   הבא. הסיבה מעשית: אחוזים על ה-body היו זזים בכל רוחב מסך, וכאן
+   כל מקטע נגמר בדיוק בצבע שבו הבא מתחיל, בכל רוחב. ה-body מחזיק
+   את אותה ירידה כגיבוי, למקרה של גלילת יתר.
+   הקצוות נמדדו מהאיורים: הטרמינל הבהיר מתחיל ב-#a7d8fd והכהה
+   ב-#05162e, ולכן אלה A9 ולא ערכים שנבחרו בעין.
+   ═══════════════════════════════════════════════════════════════════ */
+body{margin:0;color:var(--text);
+  background-color:var(--a4);
+  background-image:linear-gradient(to bottom,
+    var(--a0) 0%,var(--a2) 20%,var(--a4) 40%,var(--a6) 60%,
+    var(--a7) 76%,var(--a8) 88%,var(--a9) 100%);
+  background-repeat:no-repeat;background-size:100% 100%;
+  font-family:var(--font-body);font-size:17px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{background-color:var(--a0)}
+/* הסולם עצמו. סדר המקטעים בדף הוא סדר הירידה. */
+.hero{background-image:linear-gradient(to bottom,var(--a0),var(--a1))}
+#problem{background-image:linear-gradient(to bottom,var(--a1),var(--a2))}
+#solution{background-image:linear-gradient(to bottom,var(--a2),var(--a3))}
+#proof{background-image:linear-gradient(to bottom,var(--a3),var(--a4))}
+#how{background-image:linear-gradient(to bottom,var(--a4),var(--a5))}
+#decisions{background-image:linear-gradient(to bottom,var(--a5),var(--a6))}
+/* המקטע היחיד עם שיפוע מהיר, והוא רץ כולו בתוך הריפוד העליון הריק.
+   שם, ורק שם, הרקע חוצה את הסף שבו טקסט לבן מפסיק לעבוד, ולכן
+   ההיפוך של הדיו קורה במקום שאין בו טקסט.                         */
+#limits{--break:clamp(6rem,10vw,9rem);
+  padding-block-start:calc(var(--break) + 1.5rem);
+  background-image:linear-gradient(to bottom,
+    var(--a6) 0,var(--hinge) var(--break),var(--a7) 100%)}
+#privacy{background-image:linear-gradient(to bottom,var(--a7),var(--a8))}
+.close{background-image:linear-gradient(to bottom,var(--a8),var(--a9))}
+img,video,svg{max-inline-size:100%;height:auto}
+img{display:block}
+p{margin:0 0 1rem;max-inline-size:var(--measure)}
+ul,ol{margin:0;padding:0;list-style:none}
+a{color:inherit}
+h1,h2,h3{margin:0;text-wrap:balance}
+h1{font-size:clamp(2.1rem,6vw,3.5rem);line-height:1.06;letter-spacing:-.028em;font-weight:800}
+h2{font-size:clamp(1.6rem,3.6vw,2.4rem);line-height:1.16;letter-spacing:-.02em;font-weight:800}
+h3{font-size:1.1rem;line-height:1.3;letter-spacing:-.012em;font-weight:700}
+.wrap{width:min(100% - 2.5rem,var(--wide));margin-inline:auto}
+.col{width:min(100%,var(--measure))}
+section{padding-block:clamp(3.5rem,7vw,5.5rem);position:relative}
+section > .wrap{position:relative;z-index:1}
+/* הפסים המתחלפים ירדו. מה שמפריד בין מקטע למקטע הוא הירידה עצמה,
+   ושטיפה בהירה כל מקטע שני הייתה מחזירה בדיוק את הקו האופקי שהיא
+   באה למנוע. המחלקה נשארת ב-HTML כי היא מסמנת ריתמוס, אבל היא כבר
+   לא צובעת.                                                       */
+.section--alt{background-image:none}
+.kicker{font-size:.78rem;font-weight:700;letter-spacing:.1em;color:var(--accent);margin:0 0 .7rem;text-transform:uppercase}
+.lede{font-size:1.08rem;color:var(--text);max-inline-size:38rem}
+.dim{color:var(--text-2)}
+:where(a,button,summary,[tabindex]):focus-visible{outline:3px solid var(--emph);outline-offset:3px;border-radius:10px}
+.skip{position:absolute;inset-block-start:-100%;inset-inline-start:1rem;z-index:70;
+  background-color:var(--emph);color:var(--on-emph);padding:.6rem 1rem;
+  border-radius:0 0 12px 12px;text-decoration:none;font-weight:700}
+.skip:focus{inset-block-start:0}
+
+/* ═════════ 4. חשיפה בגלילה. שום דבר לא נכנס מ-scale(0) ═════════ */
+.reveal{opacity:0;transform:translateY(12px);
+  transition:opacity var(--t-reveal) var(--ease-out) var(--d,0ms),
+             transform var(--t-reveal) var(--ease-out) var(--d,0ms)}
+.reveal.is-in{opacity:1;transform:none}
+.no-js .reveal{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{transform:none}}
+
+/* ═════════ 4ב. החלפת שפה. כל הטקסט בדף מוחלף בפריים אחד, והכיוון
+   מתהפך מימין-לשמאל לשמאל-לימין. בלי גשר זה הפריים האלים ביותר בדף.
+   מטשטשים רק את מכלי הטקסט, אף פעם לא את body: הרקע הוא הדבר היחיד
+   שחייב להישאר יציב בזמן שהכל מתחלף. שקיפות בלבד, בלי transform,
+   כי transform היה נלחם בהיפוך הכיוון עצמו.                        */
+#main,.top__inner{transition:opacity 120ms var(--ease-out)}
+:root.is-swapping #main,:root.is-swapping .top__inner{opacity:0}
+@media (prefers-reduced-motion:reduce){#main,.top__inner{transition:none}}
+
+/* ═════════ 5. כפתורים. transform ו-filter בלבד, אף פעם all ═════════ */
+.ctas{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  min-height:var(--tap);padding-inline:1.6rem;border-radius:999px;border:1px solid transparent;
+  font:inherit;font-weight:700;font-size:1rem;text-decoration:none;cursor:pointer;
+  transition:transform var(--press-out) var(--ease-out),filter var(--t-fast) ease,
+             background-color var(--t-fast) ease}
+.btn:active{transform:scale(var(--press-scale));transition-duration:var(--press-in)}
+.btn--primary{background-color:var(--emph);color:var(--on-emph);box-shadow:var(--shadow-1)}
+@media (hover:hover) and (pointer:fine){.btn--primary:hover{filter:brightness(1.06)}}
+.micro{font-size:.85rem;color:var(--text-2);margin:.7rem 0 0;max-inline-size:26rem}
+
+/* ═════════ 6. כותרת עליונה, חומר שקוף למחצה ═════════ */
+/* הכותרת נשארת בצבע ראש השמיים גם כשהדף מתבהר מתחתיה. זו לא פשרה:
+   היא הגובה שממנו יצאנו. 86% במקום 76% כי מתחתיה עכשיו יכול לעבור
+   רקע בהיר, ובשקיפות הישנה הטקסט הלבן עליה היה נחלש.              */
+.top{position:sticky;inset-block-start:0;z-index:60;
+  background-color:color-mix(in srgb,var(--surface) 86%,transparent);
+  backdrop-filter:blur(14px) saturate(180%);border-block-end:1px solid transparent;
+  transition:border-color var(--t-ui) ease,background-color var(--t-ui) ease}
+.top.is-stuck{border-block-end-color:var(--hairline)}
+.top__inner{display:flex;align-items:center;gap:.6rem;min-height:60px}
+.top__brand img{width:112px;height:37px}
+.nav{display:none;gap:.25rem;margin-inline-start:auto;font-size:.9rem}
+.nav a{padding:.45rem .8rem;border-radius:999px;text-decoration:none;color:var(--text-2);
+  transition:color var(--t-fast) ease,background-color var(--t-fast) ease}
+.nav a[aria-current="true"]{color:var(--text);background-color:rgb(255 255 255 / .16)}
+:root[data-theme="dark"] .nav a[aria-current="true"]{background-color:rgb(242 239 233 / .10)}
+@media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
+@media (min-width:64rem){.nav{display:flex}}
+.tools{display:flex;align-items:center;gap:.4rem;margin-inline-start:auto}
+@media (min-width:64rem){.tools{margin-inline-start:0}}
+/* מתג השפה, באותה צורה שיש באפליקציה עצמה */
+.lang{display:inline-flex;border:1px solid var(--hairline);border-radius:999px;overflow:hidden;
+  background-color:rgb(255 255 255 / .08)}
+.lang button{appearance:none;border:0;background:none;color:var(--text-2);font:inherit;
+  font-size:.8rem;font-weight:700;min-height:36px;padding-inline:.7rem;cursor:pointer;
+  transition:background-color var(--t-fast) ease,color var(--t-fast) ease,
+             transform var(--press-out) var(--ease-out)}
+.lang button[aria-pressed="true"]{background-color:var(--emph);color:var(--on-emph)}
+.lang button:active{transform:scale(var(--press-scale));transition-duration:var(--press-in)}
+.theme-toggle{display:inline-flex;align-items:center;gap:.4rem;min-height:36px;padding-inline:.75rem;
+  border-radius:999px;background:none;border:1px solid var(--hairline);color:var(--text-2);
+  font:inherit;font-size:.8rem;font-weight:600;cursor:pointer;
+  transition:color var(--t-fast) ease,transform var(--press-out) var(--ease-out)}
+.theme-toggle:active{transform:scale(var(--press-scale));transition-duration:var(--press-in)}
+:root[data-theme="dark"] .theme-toggle .t-dark{display:none}
+:root:not([data-theme="dark"]) .theme-toggle .t-light{display:none}
+.theme-toggle .lbl{display:none}
+@media (min-width:34rem){.theme-toggle .lbl{display:inline}}
+.ico{width:26px;height:26px;flex:none;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* ═════════════════════════════════════════════════════════════════════
+   7. הבנטו. שש עמודות למעלה, שתיים בטאבלט, אחת בטלפון. הכרטיסים לא
+      באותו גודל בכוונה, זה מה שהופך רשת לבנטו ולא לטבלה. התוכן זהה
+      בכל רוחב, רק מסודר אחרת.
+   ═════════════════════════════════════════════════════════════════════ */
+.bento{display:grid;gap:.9rem;grid-template-columns:1fr;margin-block-start:2rem}
+@media (min-width:40rem){.bento{grid-template-columns:repeat(2,1fr);gap:1rem}}
+@media (min-width:64rem){
+  .bento{grid-template-columns:repeat(6,1fr);gap:1.1rem}
+  .b2{grid-column:span 2}.b3{grid-column:span 3}.b4{grid-column:span 4}.b6{grid-column:span 6}
+}
+.card{background-color:var(--card);color:var(--card-text);border:1px solid var(--card-border);
+  border-radius:var(--r);padding:1.5rem 1.4rem;box-shadow:var(--shadow-1);
+  display:flex;flex-direction:column;gap:.5rem;transition:box-shadow var(--t-ui) ease}
+.card h3{color:var(--card-text)}
+.card p{margin:0;font-size:.97rem;color:var(--card-text-2);max-inline-size:32rem}
+.card .ico{stroke:var(--card-accent);margin-block-end:.3rem}
+.card--flat{background-color:var(--card-2);box-shadow:none}
+.card--center{align-items:center;text-align:center}
+.quote{margin:.6rem 0 0;padding-block-start:.8rem;border-block-start:1px solid var(--card-border);
+  font-size:.96rem;color:var(--card-text)}
+.quote cite{display:block;font-style:normal;font-size:.78rem;color:var(--card-text-2);margin-block-start:.35rem}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+
+/* ═════════════════════════════════════════════════════════════════════
+   8. שכבת האיור. שתי משפחות מלאות, אף אחת לא נצבעה בקוד. התמונה שלא
+      מוצגת היא display:none עם lazy, ולכן גם לא נטענת.
+   ═════════════════════════════════════════════════════════════════════ */
+:root[data-theme="dark"] .a-light,:root[data-theme="dark"] .s-light{display:none}
+:root:not([data-theme="dark"]) .a-dark,:root:not([data-theme="dark"]) .s-dark{display:none}
+
+.hero{position:relative;isolation:isolate;overflow:hidden;
+  padding-block:clamp(3rem,7vw,5rem) clamp(2.5rem,5vw,4rem)}
+.hero__art{position:absolute;inset:0;z-index:-2}
+.hero__art img{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);
+  -webkit-mask-image:linear-gradient(to bottom,#000 58%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 58%,transparent 100%)}
+/* במקור המטוס יושב מימין למעלה, ושם מתחיל הטקסט בעברית. באנגלית
+   הטקסט עובר שמאלה, ולכן השיקוף מתבטל וגם הגרדיאנט מתהפך.        */
+:root[dir="ltr"] .hero__art img{transform:none}
+/* הסקרים של הירו נדעך גם כלפי מטה, לא רק לצדדים. בלי זה הוא נגמר
+   בקו אופקי חד בתחתית הירו, ובדיוק הקו הזה נראה בצילום כפס בהיר
+   מתחת לרצועת המספרים. כאן הוא נגמר לפני שהמקטע נגמר.             */
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;
+  -webkit-mask-image:linear-gradient(to bottom,#000 52%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 52%,transparent 100%);
+  background:linear-gradient(to left,rgb(6 44 104 / .93) 0%,rgb(6 44 104 / .82) 34%,
+             rgb(6 44 104 / .45) 66%,rgb(6 44 104 / .10) 92%)}
+:root[dir="ltr"] .hero::before{background:linear-gradient(to right,rgb(6 44 104 / .93) 0%,
+             rgb(6 44 104 / .82) 34%,rgb(6 44 104 / .45) 66%,rgb(6 44 104 / .10) 92%)}
+:root[data-theme="dark"] .hero::before{background:linear-gradient(to left,rgb(4 12 24 / .90) 0%,
+             rgb(4 12 24 / .72) 40%,rgb(4 12 24 / .28) 74%,rgb(4 12 24 / 0) 100%)}
+:root[data-theme="dark"][dir="ltr"] .hero::before{background:linear-gradient(to right,rgb(4 12 24 / .90) 0%,
+             rgb(4 12 24 / .72) 40%,rgb(4 12 24 / .28) 74%,rgb(4 12 24 / 0) 100%)}
+.hero__grid{display:grid;gap:2.2rem;grid-template-columns:1fr;align-items:center}
+@media (min-width:64rem){.hero__grid{grid-template-columns:1.1fr .9fr;gap:3rem}}
+.hero h1{margin-block-end:1rem;color:#fff;text-shadow:0 1px 20px rgb(0 20 50 / .25)}
+.hero .lede{margin-block-end:.8rem;color:#eaf3ff}
+.hero__who{font-size:.95rem;color:#c4dcf5;max-inline-size:32rem;margin-block-end:1.4rem}
+.hero .kicker{color:#bfe0ff}
+.hero .micro{color:#c4dcf5}
+.hero .btn--primary{background-color:#fff;color:#0f3673;
+  box-shadow:0 2px 4px rgb(0 20 50 / .18),0 14px 34px -12px rgb(0 20 50 / .5)}
+.hero__phone{justify-self:center;width:min(100%,17rem)}
+.hero__phone img{width:100%;border-radius:22px;border:1px solid rgb(255 255 255 / .35);
+  box-shadow:0 30px 70px -20px rgb(0 20 50 / .6)}
+@media (min-width:64rem){.hero__phone{width:min(100%,19rem)}}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-block-start:clamp(2.2rem,5vw,3.2rem)}
+.stats li{background-color:rgb(6 44 104 / .78);border:1px solid rgb(255 255 255 / .30);
+  border-radius:16px;padding:.9rem 1rem;backdrop-filter:blur(10px)}
+:root[data-theme="dark"] .stats li{background-color:rgb(4 12 24 / .66);
+  border-color:rgb(242 239 233 / .20)}
+.stats b{display:block;font-size:1.6rem;font-weight:800;letter-spacing:-.02em;line-height:1.1;color:#fff}
+.stats span{font-size:.82rem;color:#dbe9fb;display:block;margin-block-start:.15rem}
+@media (min-width:48rem){.stats{grid-template-columns:repeat(4,1fr)}}
+
+/* אלמנטים צפים, רק בסקשנים עם רקע שטוח, אף פעם לא מעל טקסט.
+   ═══════════════════════════════════════════════════════════════════
+   ההיסט האנכי חיובי תמיד, וזה תיקון של באג ולא טעם: קודם הענן ישב
+   ב-2.5rem שלילי, כלומר בלט מעל המקטע, וה-overflow חתך אותו בקו
+   אופקי חד. במצב הבהיר הענן חיוור והחתך לא נראה, במצב הכהה יש לו
+   מתאר בהיר והחתך הפך לקו. עכשיו הענן יושב כולו בתוך המקטע, ובגלל
+   שההיסט 2.75rem גדול מטווח הריחוף (22 פיקסלים) הוא לא יכול לצאת
+   ממנו גם בשיא התנועה. אופקית הוא כן בולט, אבל שם החיתוך נופל על
+   קצה החלון עצמו, ולכן הוא בלתי נראה.
+   ═══════════════════════════════════════════════════════════════════ */
+.deco{position:absolute;z-index:0;pointer-events:none;opacity:.5;inline-size:min(30vw,17rem)}
+.deco--a{inset-block-start:2.75rem;inset-inline-start:-3rem}
+.deco--b{inset-block-end:2.75rem;inset-inline-end:-4rem;inline-size:min(34vw,20rem)}
+.deco--c{inset-block-start:3.25rem;inset-inline-end:-3.5rem;inline-size:min(26vw,15rem)}
+.deco--d{inset-block-end:3.25rem;inset-inline-start:-4rem;inline-size:min(30vw,18rem)}
+/* ככל שיורדים הרקע מתבהר, ואיור שנבנה לשמיים כהים מתחיל לצעוק
+   עליו. לכן העוצמה יורדת עם הגובה, ולא נשארת קבועה.               */
+#limits .deco,#privacy .deco{opacity:.34}
+/* רק הסקשנים עם אלמנט צף נחתכים. overflow על כל סקשן היה שובר את
+   ה-sticky של הבמה.                                                */
+#problem,#solution,#proof,#decisions,#limits,#privacy{overflow:hidden}
+/* clip חותך בדיוק כמו hidden, אבל hidden יוצר מיכל גלילה, ומיכל
+   גלילה הוא מה ש-view() מודד מולו. עם hidden הענן היה קופא, כי
+   הסקשן שהוא יושב בו לא נגלל אף פעם. עם clip המדידה עולה עד לדף
+   עצמו. מי שלא מכיר clip מקבל hidden, כלומר חיתוך בלי היסט.        */
+@supports (overflow:clip){#problem,#solution,#proof,#decisions,#limits,#privacy{overflow:clip}}
+/* היסט קל בגלילה, שני כיוונים הפוכים כדי שייווצר עומק. הציר הוא
+   הגלילה עצמה, לא שעון: העננה עוצרת כשהמשתמש עוצר, ולכן זו לא
+   תנודה מתמדת ברקע. keyframes נכונים כאן דווקא, כי מי שמניע אותם
+   הוא ה-timeline ולא שינוי מצב. הסקשנים כבר חתוכים, ולכן 22
+   פיקסלים לא יכולים ליצור גלילה אופקית או אנכית מיותרת.            */
+@supports (animation-timeline: view()){
+  @media (prefers-reduced-motion:no-preference) and (min-width:48rem){
+    .deco--a,.deco--c{animation:driftA linear both;animation-timeline:view();animation-range:cover}
+    .deco--b,.deco--d{animation:driftB linear both;animation-timeline:view();animation-range:cover}
+  }
+}
+@keyframes driftA{from{transform:translateY(-18px)}to{transform:translateY(18px)}}
+@keyframes driftB{from{transform:translateY(22px)}to{transform:translateY(-22px)}}
+@media (max-width:47.99rem){.deco{display:none}}
+.tile__art{inline-size:76px;block-size:auto;filter:drop-shadow(0 8px 16px rgb(30 90 186 / .28))}
+:root[data-theme="dark"] .tile__art{filter:drop-shadow(0 8px 18px rgb(201 159 92 / .22))}
+.tile__n{margin-block-start:.4rem;inline-size:2rem;block-size:2rem;border-radius:999px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background-color:var(--card-accent);color:#fff;font-weight:700;font-size:.85rem}
+:root[data-theme="dark"] .tile__n{color:#001b2a}
+
+/* ═════════ 9. גלריית המסכים, נגללת בתוך עצמה ═════════ */
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:min(62vw,13rem);gap:1rem;
+  overflow-x:auto;overscroll-behavior-inline:contain;padding-block:.5rem 1rem;
+  scroll-snap-type:inline mandatory;margin-block-start:2rem}
+.rail::-webkit-scrollbar{height:8px}
+.rail::-webkit-scrollbar-thumb{background-color:rgb(255 255 255 / .3);border-radius:999px}
+@media (min-width:64rem){.rail{grid-auto-columns:1fr;overflow:visible}}
+.shot{scroll-snap-align:start;margin:0}
+.shot__btn{display:block;width:100%;padding:6px;border:1px solid var(--card-border);border-radius:18px;
+  background-color:var(--card);cursor:zoom-in;position:relative;overflow:hidden;
+  transition:transform var(--press-out) var(--ease-out),box-shadow var(--t-ui) ease}
+.shot__btn img{width:100%;border-radius:13px}
+.shot__btn::after{content:"";position:absolute;inset-inline:6px;inset-block-end:6px;height:20%;
+  border-radius:0 0 13px 13px;pointer-events:none;background:linear-gradient(to top,var(--card),transparent)}
+.shot__btn:active{transform:scale(var(--press-scale));transition-duration:var(--press-in)}
+@media (hover:hover) and (pointer:fine){.shot__btn:hover{box-shadow:var(--shadow-2)}}
+.shot figcaption{margin-block-start:.6rem;font-size:.85rem;color:var(--text-2)}
+/* מעברים, לא keyframes. keyframes מתחילים מהתחלה בכל הפעלה, ולכן
+   פתיחה וסגירה מהירות קפצו. מעבר מתקן את עצמו לעבר היעד החדש מאיפה
+   שהוא נמצא. allow-discrete על display ו-overlay הוא מה שמאפשר
+   לאנימציית היציאה לרוץ לפני שהדיאלוג נעלם. דפדפן שלא מכיר את זה
+   פשוט סוגר מיד, בדיוק כמו קודם.                                   */
+dialog.sheet{border:0;padding:0;background:transparent;max-width:min(92vw,26rem);max-height:88svh;
+  overflow:visible;color:var(--card-text);
+  opacity:0;transform:scale(.97);
+  transition:opacity var(--t-ui) var(--ease-out),
+             transform var(--t-ui) var(--ease-out),
+             overlay var(--t-ui) allow-discrete,
+             display var(--t-ui) allow-discrete}
+dialog.sheet[open]{opacity:1;transform:none}
+@starting-style{dialog.sheet[open]{opacity:0;transform:scale(.97)}}
+dialog.sheet::backdrop{background-color:var(--scrim);backdrop-filter:blur(3px);opacity:0;
+  transition:opacity var(--t-ui) var(--ease-out),
+             overlay var(--t-ui) allow-discrete,
+             display var(--t-ui) allow-discrete}
+dialog.sheet[open]::backdrop{opacity:1}
+@starting-style{dialog.sheet[open]::backdrop{opacity:0}}
+/* הזוג שמתחבר: התמונה הקטנה שנלחצה והתמונה בדיאלוג נושאות את אותו
+   שם, ולכן הדפדפן מזיז אחת אל השנייה במקום להחליף ביניהן. השם על
+   תמונת הדיאלוג פעיל רק כשהוא פתוח, אחרת שני אלמנטים נושאים אותו
+   שם באותו רגע והדפדפן מבטל את המעבר.                              */
+dialog.sheet[open] #sheet-img{view-transition-name:shot}
+::view-transition-group(shot){animation-duration:260ms;animation-timing-function:var(--ease-out)}
+@media (prefers-reduced-motion:reduce){::view-transition-group(shot){animation:none}}
+/* בתנועה מופחתת נשארת ההנמכה של השקיפות בלבד, בלי שינוי גודל */
+@media (prefers-reduced-motion:reduce){
+  dialog.sheet{transform:none}
+  dialog.sheet[open]{transform:none}
+  @starting-style{dialog.sheet[open]{transform:none}}}
+.sheet__inner{background-color:var(--card);border:1px solid var(--card-border);border-radius:20px;
+  padding:10px;box-shadow:var(--shadow-2);max-height:88svh;overflow-y:auto}
+.sheet__inner img{width:100%;border-radius:14px}
+.sheet__bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.5rem .4rem .7rem}
+.sheet__bar p{margin:0;font-size:.9rem;color:var(--card-text-2)}
+.sheet__close{min-height:40px;min-width:40px;border-radius:999px;border:1px solid var(--card-border);
+  background:none;color:var(--card-text);font:inherit;font-size:1.2rem;line-height:1;cursor:pointer;
+  transition:transform var(--press-out) var(--ease-out)}
+.sheet__close:active{transform:scale(var(--press-scale));transition-duration:var(--press-in)}
+
+/* ══════════════════════════════════════════════════════
+   10. הסרט. מקצה לקצה, ובלי לעצור את הגלילה.
+       פס אחד שרץ ברקע בזמן שהעין עוברת עליו. אין כותרת
+       מעליו, אין מחוון, ואין sticky: הדף ממשיך לרדת כרגיל
+       והסרט הוא רק תוספת נעימה בדרך. הקצה העליון והתחתון
+       נמסים לתוך השמיים, כדי שהוא לא יהיה בלוק תקוע.
+   ══════════════════════════════════════════════════════ */
+.scrub{padding-block:clamp(.75rem,2.5vw,2rem)}
+.scrub__media{position:relative;inline-size:100%;overflow:hidden;
+  block-size:min(56.25vw,78svh);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 9%,#000 91%,transparent 100%);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 9%,#000 91%,transparent 100%)}
+.scrub__media video,.scrub__still{position:absolute;inset:0;display:block;
+  inline-size:100%;block-size:100%;max-inline-size:none;max-block-size:none;
+  object-fit:cover;object-position:40% 45%;border:0;border-radius:0}
+.scrub__still{display:none}
+/* בנייד החיתוך הוא בצדדים, סביב הדמות ומה שמאחוריה. */
+@media (max-width:39.999rem){
+  .scrub__media{block-size:clamp(16rem,50svh,23rem)}
+  .scrub__media video,.scrub__still{object-position:34% 50%}
+}
+/* תנועה מופחתת או חיבור חסכוני: פריים אחד, בלי וידאו. */
+.scrub.is-static .scrub__media video{display:none}
+.scrub.is-static .scrub__still{display:block}
+
+/* ═════════ 11. מה לא מובטח, פרטיות, סגירה, פוטר ═════════ */
+/* הפס ההפוך נמס לתוך הירידה. הוא היה בלוק נייבי אטום באמצע הדף,
+   כלומר בדיוק הקטיעה שהירידה באה למנוע. מה שנשאר ממנו הוא הכותרת
+   הגדולה יותר, שהיא זו שעשתה את העבודה מלכתחילה, והכרטיסים חוזרים
+   להיות כרטיסים רגילים כמו בכל שאר הדף.                           */
+.band{background-color:transparent;color:inherit}
+.band h2{font-size:clamp(1.9rem,5vw,3rem)}
+.checks{display:grid;gap:.55rem}
+.checks li{display:flex;align-items:center;gap:.6rem;font-size:.95rem;color:var(--card-text-2)}
+.checks .ico{width:20px;height:20px;stroke:var(--card-accent);stroke-width:1.7}
+/* הנחיתה. שלושת המקטעים האחרונים הם הגישה לקרקע: הרקע כבר מעבר לסף
+   שבו טקסט לבן עובד, ולכן הדיו מתהפך לכהה. זה לא חוק לכל מקטע אלא
+   החלפה של ארבעה טוקנים, ולכן כל מה שמשתמש בהם — כותרת משנה, לִיד,
+   כפתור, מסגרת פוקוס — מתהפך יחד ובלי חריגים.
+   במצב הכהה אין היפוך: שם כל הסולם כהה מלמעלה עד למטה.            */
+:root:not([data-theme="dark"]) :is(#limits,#privacy,.close){
+  --text:#072d57; --text-2:#0e3d6d; --accent:#0b3f7d;
+  --emph:#0f3673; --on-emph:#ffffff}
+:root:not([data-theme="dark"]) :is(#limits,#privacy,.close) h2{color:#06294f;text-shadow:none}
+:root:not([data-theme="dark"]) :is(#limits,#privacy,.close) .btn--primary{box-shadow:var(--shadow-1)}
+.close{text-align:center;padding-block:clamp(4rem,9vw,7rem) clamp(2rem,4vw,3rem)}
+.close .ctas{justify-content:center}
+.close .micro{margin-inline:auto}
+/* ═══════════════════════════════════════════════════════════════════
+   הפוטר יושב על האיור עצמו, לא מתחתיו. האיור הוא הקרקע של הפוטר,
+   ומעליו סקרים בצבע הכביש שבתמונה, כדי שהטקסט יישאר קריא גם מעל
+   השיחים הכהים שבפינות התחתונות.
+   ═══════════════════════════════════════════════════════════════════ */
+/* האיור נשאר ביחס המקורי שלו. אין object-fit, אין חיתוך, ולכן השורה
+   הראשונה שלו היא תמיד השמיים שבראש הקובץ, בדיוק הצבע שאליו הגיע
+   .close. מתחת לזה הפוטר צבוע באותו צבע, כך שאם המסך צר והאיור נמוך
+   מהמינימום, השטח שמעליו ממשיך את אותה שמיים במקום לחשוף את רקע הדף.
+   כאן היה התפר: מסכה בראש האיור חשפה את גרדיאנט הדף הכהה כפס.       */
+.bottom{position:relative;display:grid;overflow:hidden;
+  background-color:var(--a9);
+  min-block-size:15rem;
+  border-block-start:0;padding:0;
+  font-size:.85rem;color:#092444}
+.bottom__art{grid-area:1/1;align-self:end;
+  display:block;width:100%;height:auto}
+/* הסקרים הועמק והוגבה. בפינות התחתונות של האיור יש שיחים כהים
+   ובמצב הכהה יש שם חלונות מוארים, ומעליהם שורת הפוטר בגודל 0.85rem
+   הייתה יורדת מתחת ל-4.5. עכשיו היא יושבת על שטח אחיד.            */
+.bottom::after{content:"";position:absolute;inset-inline:0;inset-block-end:0;
+  block-size:38%;
+  background:linear-gradient(to top,rgb(228 239 251 / .985) 0%,rgb(228 239 251 / .90) 42%,
+             rgb(228 239 251 / .52) 72%,rgb(228 239 251 / 0) 100%)}
+:root[data-theme="dark"] .bottom{background-color:#05162e;color:#e4eaf5}
+:root[data-theme="dark"] .bottom::after{
+  background:linear-gradient(to top,rgb(4 14 28 / .985) 0%,rgb(4 14 28 / .90) 42%,
+             rgb(4 14 28 / .55) 72%,rgb(4 14 28 / 0) 100%)}
+/* הפוטר ממשיך את צבע הקרקע של האיור, ולכן הדף נגמר ולא נחתך */
+
+.bottom__inner{grid-area:1/1;align-self:end;position:relative;z-index:1;
+  padding-block:1rem 1.4rem;
+  display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:center;justify-content:space-between}
+.bottom a{text-decoration:underline;text-underline-offset:3px;color:inherit}
+.bottom p{max-inline-size:none}
+/* מקום ל-CTA הדביק, בלי לדחוף את הטקסט מעל האיור */
+/* בנייד הטקסט עולה גבוה יותר בגלל ה-CTA הדביק, ולכן הסקרים גבוה יותר */
+@media (max-width:39.99rem){.bottom__inner{padding-block-end:5.5rem}.bottom::after{block-size:56%}}
+
+/* ═════════ 12. CTA דביק בנייד. שני כפתורים גלויים הם שני כפתורים ═════════ */
+.sticky-cta{position:fixed;inset-inline:0;inset-block-end:0;z-index:50;
+  padding:.65rem 1rem calc(.65rem + env(safe-area-inset-bottom));
+  background-color:color-mix(in srgb,var(--surface) 92%,transparent);
+  backdrop-filter:blur(12px);border-block-start:1px solid var(--hairline);
+  transform:translateY(110%);transition:transform 260ms var(--ease-drawer)}
+.sticky-cta.is-on{transform:none}
+.sticky-cta .btn{width:100%}
+@media (min-width:40rem){.sticky-cta{display:none}}
+@media (prefers-reduced-motion:reduce){.sticky-cta{transition:opacity var(--t-ui) linear}}
+@media (min-width:90rem){.wrap{width:min(100% - 4rem,var(--max))}}
+</style>
+</head>
+
+<body class="no-js">
+<a class="skip" href="#main" data-i18n="skip">דילוג לתוכן הראשי</a>
+
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.3-2.9 7.9-7 9.5-4.1-1.6-7-5.2-7-9.5V6z"/><path d="M9 12.2l2 2 4-4.2"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/><path d="M6.5 9v4a4 4 0 004 4h4.5"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><path d="M3.8 12h16.4M12 3.8c2.2 2.3 3.3 5.2 3.3 8.2s-1.1 5.9-3.3 8.2c-2.2-2.3-3.3-5.2-3.3-8.2S9.8 6.1 12 3.8z"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.2 8.2 0 019.8 4 8.4 8.4 0 1020 14.2z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></symbol>
+  <symbol id="i-a11y" viewBox="0 0 24 24"><circle cx="12" cy="5.4" r="1.8"/><path d="M4.8 9h14.4M12 9v5m0 0l-3 6m3-6l3 6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.8" y="10.2" width="14.4" height="9.6" rx="2.4"/><path d="M8.2 10.2V7.6a3.8 3.8 0 017.6 0v2.6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.6l4.2 4.2L19 7"/></symbol>
+</svg>
+
+<header class="top" id="top">
+  <div class="wrap top__inner">
+    <div class="top__brand">
+      <img src="assets/images/logo-leeway-white.webp" alt="Leeway" width="112" height="37">
+    </div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#problem" data-i18n="nav.problem">הבעיה</a>
+      <a href="#solution" data-i18n="nav.solution">מה עושים</a>
+      <!-- קישור ״איך זה עובד״ הוסר זמנית: הוא הצביע על מקטע הסרט,
+           והמקטע ריק. הוא חוזר יחד עם הווידאו. -->
+      <a href="#proof" data-i18n="nav.proof">המסכים</a>
+      <a href="#limits" data-i18n="nav.limits">מה לא מובטח</a>
+    </nav>
+    <div class="tools">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="he" aria-pressed="true">HE</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false">
+        <span class="t-dark"><svg class="ico" style="width:16px;height:16px;stroke:currentColor" aria-hidden="true"><use href="#i-moon"/></svg> <span class="lbl" data-i18n="theme.dark">מצב כהה</span></span>
+        <span class="t-light"><svg class="ico" style="width:16px;height:16px;stroke:currentColor" aria-hidden="true"><use href="#i-sun"/></svg> <span class="lbl" data-i18n="theme.light">מצב בהיר</span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ═══ 01 · הירו ═══ -->
+  <section class="hero">
+    <div class="hero__art">
+      <img class="a-light" src="assets/art/sky-wide.webp" width="1672" height="941" alt="" fetchpriority="high" decoding="async">
+      <img class="a-dark" src="assets/art/sky-wide-dark.webp" width="1672" height="941" alt="" loading="lazy" decoding="async">
+    </div>
+    <div class="wrap">
+      <div class="hero__grid">
+        <div>
+          <p class="kicker reveal" data-i18n="hero.kicker">נתב״ג · ביקורת ביטחון</p>
+          <!-- השבירה ידנית ובעברית בלבד. באנגלית המילון מחליף את כל
+               ה-innerHTML, ולכן ה-br לא עובר לשם והכותרת האנגלית
+               ממשיכה להישבר לבד. -->
+          <h1 class="reveal" style="--d:60ms" data-i18n="hero.h1">די לנחש<br>מתי להגיע לנתב״ג</h1>
+          <p class="lede reveal" style="--d:110ms" data-i18n="hero.lede">Leeway מזמן לכם חלון זמן לביקורת הביטחון, וביום הטיסה מראה איפה אתם עומדים בשני השלבים שמעכבים: ביטחון, ואחריו צ׳ק-אין.</p>
+          <p class="hero__who reveal" style="--d:150ms" data-i18n="hero.who">למי שמגיע שלוש שעות מראש, כי אף אחד לא אומר לו מה יעכב אותו דווקא היום.</p>
+          <div class="ctas reveal" style="--d:190ms">
+            <a class="btn btn--primary" href="../" data-i18n="cta">תדעו מתי להגיע</a>
+          </div>
+          <p class="micro reveal" style="--d:230ms" data-i18n="cta.micro">הזרימה המלאה, בדפדפן, בלי הרשמה.</p>
+        </div>
+        <div class="hero__phone reveal" style="--d:140ms">
+          <img class="s-light" src="assets/screens/01-landing.webp" width="620" height="1378" fetchpriority="high" decoding="async" alt="" data-i18n-alt="alt.home">
+          <img class="s-dark" src="assets/screens/01-landing-dark.webp" width="620" height="1378" loading="lazy" decoding="async" alt="" data-i18n-alt="alt.homeDark">
+        </div>
+      </div>
+      <ul class="stats">
+        <li class="reveal"><b>4</b><span data-i18n="stat.1">ראיונות עומק אמיתיים</span></li>
+        <li class="reveal" style="--d:55ms"><b>6/8</b><span data-i18n="stat.2">מגיעים במרווח קבוע, בלי קשר לעומס</span></li>
+        <li class="reveal" style="--d:110ms"><b>2</b><span data-i18n="stat.3">צווארי בקבוק שזזים ביניהם</span></li>
+        <li class="reveal" style="--d:165ms"><b>4</b><span data-i18n="stat.4">שפות, כולל שני כיווני כתיבה</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ 02 · הבעיה ═══ -->
+  <section class="section--alt" id="problem" aria-labelledby="problem-t">
+    <img class="deco deco--a a-light" src="assets/art/cloud-2.webp" alt="" aria-hidden="true" loading="lazy" width="760" height="483">
+    <img class="deco deco--a a-dark" src="assets/art/cloud-2-dark.webp" alt="" aria-hidden="true" loading="lazy" width="760" height="221">
+    <div class="wrap">
+      <p class="kicker reveal" data-i18n="problem.kicker">הבעיה</p>
+      <h2 class="reveal" style="--d:60ms" id="problem-t" data-i18n="problem.h2">הצוואר בקבוק זז בין שני שלבים, ואף אחד לא אומר לך לאן</h2>
+      <p class="lede dim reveal" style="--d:100ms" data-i18n="problem.lede">ברוב שדות התעופה הבידוק מגיע אחרי הצ׳ק-אין. בנתב״ג הוא לפניו, והוא שיחתי, כלומר בלתי צפוי בזמן. הראיונות הראו שהעיכוב מחליף מקום בין השניים, לפעמים אצל אותו אדם בין טיסה לטיסה.</p>
+      <div class="bento">
+        <article class="card b3 reveal" style="--d:120ms">
+          <svg class="ico" aria-hidden="true"><use href="#i-shield"/></svg>
+          <h3 data-i18n="problem.c1.h">ביקורת ביטחון</h3>
+          <p data-i18n="problem.c1.p">השלב שאפשר לזמן מראש. בוחרים חלון, ומקבלים אישור עם QR.</p>
+          <blockquote class="quote"><span data-i18n="problem.c1.q">״התור הכי ארוך היה דווקא בבידוק הביטחוני, אבל בדרך כלל אצלי זה קורה בצ׳ק-אין״</span><cite data-i18n="interview3">ריאיון אמיתי 3</cite></blockquote>
+        </article>
+        <article class="card b3 reveal" style="--d:175ms">
+          <svg class="ico" aria-hidden="true"><use href="#i-route"/></svg>
+          <h3 data-i18n="problem.c2.h">צ׳ק-אין</h3>
+          <p data-i18n="problem.c2.p">השלב שאי אפשר לזמן. מוצג כהערכה שמתעדכנת ביום הטיסה, אחרי שהביטחון הסתיים בפועל.</p>
+          <blockquote class="quote"><span data-i18n="problem.c2.q">״זה גרם לצעקות וריבים בין הנוסעים, ולקח לי יותר משעה לעבור את הצ׳ק-אין״</span><cite data-i18n="interview3">ריאיון אמיתי 3</cite></blockquote>
+        </article>
+        <article class="card card--flat b6 reveal" style="--d:220ms">
+          <p data-i18n="problem.foot">לכן הנוסע מתמחר את שני השלבים ומגיע שלוש שעות מראש, כל פעם מחדש.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 03 · מה עושים ═══ -->
+  <section id="solution" aria-labelledby="solution-t">
+    <img class="deco deco--b a-light" src="assets/art/plane-3.webp" alt="" aria-hidden="true" loading="lazy" width="900" height="588">
+    <img class="deco deco--b a-dark" src="assets/art/plane-3-dark.webp" alt="" aria-hidden="true" loading="lazy" width="900" height="588">
+    <div class="wrap">
+      <p class="kicker reveal" data-i18n="solution.kicker">מה עושים</p>
+      <h2 class="reveal" style="--d:60ms" id="solution-t" data-i18n="solution.h2">שלושה דברים, ואף אחד מהם לא מבטיח שהתור יזרום</h2>
+      <div class="bento">
+        <article class="card card--center b2 reveal" style="--d:100ms">
+          <img class="tile__art a-light" src="assets/art/icon-clock.webp" width="260" height="255" loading="lazy" decoding="async" alt="">
+          <img class="tile__art a-dark" src="assets/art/icon-clock-dark.webp" width="260" height="255" loading="lazy" decoding="async" alt="">
+          <h3 data-i18n="solution.t1.h">מזמנים חלון</h3>
+          <p data-i18n="solution.t1.p">בחירה אמיתית אחת: חלון זמן לביקורת הביטחון בלבד. הצ׳ק-אין לא מוצג כבחירה, כי הוא לא באמת בשליטתכם.</p>
+          <span class="tile__n">01</span>
+        </article>
+        <article class="card card--center b2 reveal" style="--d:155ms">
+          <img class="tile__art a-light" src="assets/art/icon-calendar.webp" width="260" height="255" loading="lazy" decoding="async" alt="">
+          <img class="tile__art a-dark" src="assets/art/icon-calendar-dark.webp" width="260" height="255" loading="lazy" decoding="async" alt="">
+          <h3 data-i18n="solution.t2.h">מקבלים אישור</h3>
+          <p data-i18n="solution.t2.p">קוד QR שנפתח במסך מלא, בבהירות מלאה, וגם כשאין קליטה בטרמינל.</p>
+          <span class="tile__n">02</span>
+        </article>
+        <article class="card card--center b2 reveal" style="--d:210ms">
+          <img class="tile__art a-light" src="assets/art/icon-pin.webp" width="260" height="255" loading="lazy" decoding="async" alt="">
+          <img class="tile__art a-dark" src="assets/art/icon-pin-dark.webp" width="260" height="255" loading="lazy" decoding="async" alt="">
+          <h3 data-i18n="solution.t3.h">עוקבים ביום הטיסה</h3>
+          <p data-i18n="solution.t3.p">איפה אתם על הציר בשני השלבים. אין נתון עדכני? מוצג האחרון הידוע, עם חותמת זמן.</p>
+          <span class="tile__n">03</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 04 · הוכחה ═══ -->
+  <section class="section--alt" id="proof" aria-labelledby="proof-t">
+    <img class="deco deco--c a-light" src="assets/art/cloud-1.webp" alt="" aria-hidden="true" loading="lazy" width="760" height="570">
+    <img class="deco deco--c a-dark" src="assets/art/cloud-1-dark.webp" alt="" aria-hidden="true" loading="lazy" width="760" height="561">
+    <div class="wrap">
+      <p class="kicker reveal" data-i18n="proof.kicker">המסכים</p>
+      <h2 class="reveal" style="--d:60ms" id="proof-t" data-i18n="proof.h2">שבעה מסכים, נלכדו מהאפליקציה שרצה</h2>
+      <p class="lede dim reveal" style="--d:100ms" data-i18n="proof.lede">לא ייצוא מ-Figma ולא מוקאפ. צילומים מדפדפן אמיתי מול המוצר. לחיצה על מסך פותחת אותו בגודל מלא.</p>
+      <div class="rail reveal" style="--d:140ms" role="region" aria-label="Screens" tabindex="0">
+        <figure class="shot"><button type="button" class="shot__btn" aria-haspopup="dialog"><img class="s-light" src="assets/screens/01-landing.webp" width="440" height="978" loading="lazy" decoding="async" alt=""><img class="s-dark" src="assets/screens/01-landing-dark.webp" width="440" height="978" loading="lazy" decoding="async" alt=""></button><figcaption data-i18n="shot.1">דף הבית</figcaption></figure>
+        <figure class="shot"><button type="button" class="shot__btn" aria-haspopup="dialog"><img class="s-light" src="assets/screens/02-registration.webp" width="440" height="978" loading="lazy" decoding="async" alt=""><img class="s-dark" src="assets/screens/02-registration-dark.webp" width="440" height="978" loading="lazy" decoding="async" alt=""></button><figcaption data-i18n="shot.2">פרטי נוסע</figcaption></figure>
+        <figure class="shot"><button type="button" class="shot__btn" aria-haspopup="dialog"><img class="s-light" src="assets/screens/03-time-choosing.webp" width="440" height="978" loading="lazy" decoding="async" alt=""><img class="s-dark" src="assets/screens/03-time-choosing-dark.webp" width="440" height="978" loading="lazy" decoding="async" alt=""></button><figcaption data-i18n="shot.3">בחירת חלון זמן</figcaption></figure>
+        <figure class="shot"><button type="button" class="shot__btn" aria-haspopup="dialog"><img class="s-light" src="assets/screens/04-success.webp" width="440" height="978" loading="lazy" decoding="async" alt=""><img class="s-dark" src="assets/screens/04-success-dark.webp" width="440" height="978" loading="lazy" decoding="async" alt=""></button><figcaption data-i18n="shot.4">אישור הזמנה</figcaption></figure>
+        <figure class="shot"><button type="button" class="shot__btn" aria-haspopup="dialog"><img class="s-light" src="assets/screens/05-status.webp" width="440" height="978" loading="lazy" decoding="async" alt=""><img class="s-dark" src="assets/screens/05-status-dark.webp" width="440" height="978" loading="lazy" decoding="async" alt=""></button><figcaption data-i18n="shot.5">סטטוס הטיסה</figcaption></figure>
+        <figure class="shot"><button type="button" class="shot__btn" aria-haspopup="dialog"><img class="s-light" src="assets/screens/06-boarding-pass.webp" width="440" height="978" loading="lazy" decoding="async" alt=""><img class="s-dark" src="assets/screens/06-boarding-pass-dark.webp" width="440" height="978" loading="lazy" decoding="async" alt=""></button><figcaption data-i18n="shot.6">כרטיס QR מלא</figcaption></figure>
+        <figure class="shot"><button type="button" class="shot__btn" aria-haspopup="dialog"><img class="s-light" src="assets/screens/07-profile.webp" width="440" height="978" loading="lazy" decoding="async" alt=""><img class="s-dark" src="assets/screens/07-profile-dark.webp" width="440" height="978" loading="lazy" decoding="async" alt=""></button><figcaption data-i18n="shot.7">הפרופיל שלי</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 05 · הסרט ═══
+       דקורטיבי בלבד: אין בו טקסט ואין בו מידע שלא נמצא
+       במקום אחר בדף, ולכן aria-hidden. ה-src נקבע ב-JS.  -->
+  <section class="scrub" id="how" aria-hidden="true">
+    <div class="scrub__media">
+      <video id="scrub-video" muted loop playsinline preload="none" disablepictureinpicture></video>
+      <img class="scrub__still" id="scrub-still" alt="" width="1600" height="900" decoding="async">
+    </div>
+  </section>
+
+  <!-- ═══ 06 · החלטות ═══ -->
+  <section id="decisions" aria-labelledby="decisions-t">
+    <img class="deco deco--d a-light" src="assets/art/plane-1.webp" alt="" aria-hidden="true" loading="lazy" width="900" height="522">
+    <img class="deco deco--d a-dark" src="assets/art/plane-1-dark.webp" alt="" aria-hidden="true" loading="lazy" width="900" height="518">
+    <div class="wrap">
+      <p class="kicker reveal" data-i18n="dec.kicker">החלטות</p>
+      <h2 class="reveal" style="--d:60ms" id="decisions-t" data-i18n="dec.h2">ארבע החלטות שאפשר להתווכח איתן</h2>
+      <div class="bento">
+        <article class="card b4 reveal" style="--d:100ms">
+          <svg class="ico" aria-hidden="true"><use href="#i-shield"/></svg>
+          <h3 data-i18n="dec.1.h">גיבוי, לא תחליף</h3>
+          <p data-i18n="dec.1.p">בעמדה בודקים דרכון וכרטיס עלייה פיזיים. המסך יודע את מקומו ולא מתנהג כאילו הוא הסמכות שנבדקת.</p>
+        </article>
+        <article class="card b2 reveal" style="--d:155ms">
+          <svg class="ico" aria-hidden="true"><use href="#i-globe"/></svg>
+          <h3 data-i18n="dec.2.h">ארבע שפות, שני כיוונים</h3>
+          <p data-i18n="dec.2.p">עברית, ערבית, אנגלית ורוסית, בלי לאבד מה שכבר מולא.</p>
+        </article>
+        <article class="card b2 reveal" style="--d:210ms">
+          <svg class="ico" aria-hidden="true"><use href="#i-moon"/></svg>
+          <h3 data-i18n="dec.3.h">מצב כהה שנפתח נכון</h3>
+          <p data-i18n="dec.3.p">לפי הגדרת הטלפון, עם החלפה ידנית. טרמינל בחמש בבוקר.</p>
+        </article>
+        <article class="card b4 reveal" style="--d:265ms">
+          <svg class="ico" aria-hidden="true"><use href="#i-a11y"/></svg>
+          <h3 data-i18n="dec.4.h">נגישות שנבדקה</h3>
+          <p data-i18n="dec.4.p">שטחי מגע 48 פיקסלים, ניווט מלא במקלדת, תמיכה בתנועה מופחתת, וטקסט שמתאים גודל.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 07 · הפס ההפוך ═══ -->
+  <section class="band" id="limits" aria-labelledby="limits-t">
+    <img class="deco deco--c a-light" src="assets/art/cloud-3.webp" alt="" aria-hidden="true" loading="lazy" width="760" height="582">
+    <img class="deco deco--c a-dark" src="assets/art/cloud-3-dark.webp" alt="" aria-hidden="true" loading="lazy" width="760" height="499">
+    <div class="wrap">
+      <div class="col">
+        <p class="kicker reveal" data-i18n="lim.kicker">מה לא מובטח</p>
+        <h2 class="reveal" style="--d:60ms" id="limits-t" data-i18n="lim.h2">ארבעה דברים ש-Leeway לא עושה</h2>
+        <p class="lede reveal" style="--d:100ms" data-i18n="lim.lede">אם זימון תור היה מקום, הוא היה עמדת מידע קטנה בכניסה לתור. כזו שתמיד אומרת לך איפה אתה עומד עכשיו, ולעולם לא מתיימרת להיות השומר עצמו.</p>
+      </div>
+      <div class="bento">
+        <article class="card b3 reveal" style="--d:140ms"><h3 data-i18n="lim.1.h">לא מבטיח שהתור יזרום</h3><p data-i18n="lim.1.p">מסך שמבטיח ״הכול יהיה חלק״ נשבר בפעם הראשונה שמשהו משתבש.</p></article>
+        <article class="card b3 reveal" style="--d:195ms"><h3 data-i18n="lim.2.h">לא חוזה עומס בצ׳ק-אין</h3><p data-i18n="lim.2.p">מסך הסטטוס מציג מידע כללי בלבד. זהו חור פתוח ומתועד במוצר, לא פיצ׳ר שהוסתר.</p></article>
+        <article class="card b3 reveal" style="--d:250ms"><h3 data-i18n="lim.3.h">לא קליל ברגעי השפל</h3><p data-i18n="lim.3.p">העצימות הרגשית בביקורת יורדת ל-1.5 מתוך 5. טון משועשע שם לא מתאים לחומרת הרגע.</p></article>
+        <article class="card b3 reveal" style="--d:305ms"><h3 data-i18n="lim.4.h">לא מחובר לרשות שדות התעופה</h3><p data-i18n="lim.4.p">זהו פרויקט גמר שמדגים זרימה מלאה מקצה לקצה.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 08 · פרטיות ═══ -->
+  <section class="section--alt" id="privacy" aria-labelledby="privacy-t">
+    <img class="deco deco--d a-light" src="assets/art/plane-2.webp" alt="" aria-hidden="true" loading="lazy" width="900" height="523">
+    <img class="deco deco--d a-dark" src="assets/art/plane-2-dark.webp" alt="" aria-hidden="true" loading="lazy" width="900" height="522">
+    <div class="wrap">
+      <p class="kicker reveal" data-i18n="priv.kicker">פרטיות</p>
+      <h2 class="reveal" style="--d:60ms" id="privacy-t" data-i18n="priv.h2">אין שרת. אין חשבון. אין אנליטיקה.</h2>
+      <div class="bento">
+        <article class="card b4 reveal" style="--d:100ms">
+          <p data-i18n="priv.p">הפרטים שאתם מקלידים נשמרים על המכשיר בלבד, ורק אם ביקשתם זאת ב״זכרו אותי״. במסך הפרופיל יש כפתור אחד שמוחק את הכול, והוא בודק את עצמו אחרי המחיקה ומראה לכם מה נשאר.</p>
+        </article>
+        <article class="card b2 reveal" style="--d:150ms">
+          <ul class="checks">
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg> <span data-i18n="priv.1">אין מזהי פרסום</span></li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg> <span data-i18n="priv.2">אין כלי מעקב</span></li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg> <span data-i18n="priv.3">אין העלאה לשרת</span></li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg> <span data-i18n="priv.4">מחיקה מאומתת</span></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 09 · סגירה ═══ -->
+  <section class="close" id="close">
+    <div class="wrap col" style="margin-inline:auto">
+      <h2 class="reveal" data-i18n="close.h2">תזמינו עכשיו כדי לא לחכות אחר כך</h2>
+      <div class="ctas reveal" style="--d:80ms;margin-block-start:1.5rem">
+        <a class="btn btn--primary" href="../" data-i18n="cta">תדעו מתי להגיע</a>
+      </div>
+      <p class="micro reveal" style="--d:120ms" data-i18n="cta.micro">הזרימה המלאה, בדפדפן, בלי הרשמה.</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="sticky-cta" id="sticky-cta" aria-hidden="true">
+  <a class="btn btn--primary" href="../" tabindex="-1" data-i18n="cta">תדעו מתי להגיע</a>
+</div>
+
+<footer class="bottom">
+  <img class="bottom__art a-light" src="assets/art/terminal-wide.webp" width="1672" height="941" loading="lazy" decoding="async" alt="" data-i18n-alt="alt.terminal">
+  <img class="bottom__art a-dark" src="assets/art/terminal-wide-dark.webp" width="1672" height="941" loading="lazy" decoding="async" alt="" data-i18n-alt="alt.terminalDark">
+  <div class="wrap bottom__inner">
+    <p style="margin:0" data-i18n="footer">Leeway · פרויקט גמר בעיצוב חוויית משתמש, John Bryce. אינו מחובר למערכות רשות שדות התעופה.</p>
+    <p style="margin:0"><a href="../case/" data-i18n="footer.case">הקייס סטאדי שמאחורי המוצר</a> · <a href="../privacy.html" data-i18n="footer.privacy">מדיניות פרטיות</a></p>
+  </div>
+</footer>
+
+<dialog class="sheet" id="sheet" aria-label="Screen">
+  <div class="sheet__inner">
+    <div class="sheet__bar">
+      <p id="sheet-cap"></p>
+      <button type="button" class="sheet__close" data-close aria-label="Close">&#215;</button>
+    </div>
+    <img id="sheet-img" alt="" width="440" height="978">
+  </div>
+</dialog>
+
+<script>
+(function(){
+  "use strict";
+  var root = document.documentElement;
+  document.body.classList.remove("no-js");
+
+  /* ── 1. שפה ────────────────────────────────────────────────────────
+     העברית יושבת ב-HTML, ולכן בלי JS הדף עברי ותקין. האנגלית היא
+     מילון שמחליף טקסטים ומסובב את כיוון הדף. אין קובץ שני, ואין
+     כתובת שנייה שצריך לתחזק.                                       */
+  var EN = {
+    "skip":"Skip to main content",
+    "nav.problem":"The problem","nav.solution":"What it does","nav.how":"How it works","nav.proof":"The screens","nav.limits":"What it does not promise",
+    "theme.dark":"Dark mode","theme.light":"Light mode",
+    "hero.kicker":"Ben Gurion · security check",
+    "hero.h1":"Stop guessing when to get to Ben Gurion",
+    "hero.lede":"Leeway books you a time window for the security check, and on flight day shows where you stand in the two stages that hold people up: security, then check-in.",
+    "hero.who":"For anyone who shows up three hours early, because nobody tells them what will hold them up on this particular day.",
+    "cta":"Know when to arrive",
+    "cta.micro":"The full flow, in your browser, no signup.",
+    "stat.1":"real in-depth interviews","stat.2":"arrive with a fixed margin, whatever the load",
+    "stat.3":"bottlenecks that trade places","stat.4":"languages, both writing directions",
+    "problem.kicker":"The problem",
+    "problem.h2":"The bottleneck moves between two stages, and nobody tells you where",
+    "problem.lede":"In most airports the security check comes after check-in. At Ben Gurion it comes first, and it is conversational, which makes its length unpredictable. The interviews showed the delay trading places between the two, sometimes for the same person from one flight to the next.",
+    "problem.c1.h":"Security check","problem.c1.p":"The stage you can book ahead. Pick a window, get a confirmation with a QR code.",
+    "problem.c1.q":"&#8220;The longest queue was actually at the security check, but usually for me it happens at check-in&#8221;",
+    "problem.c2.h":"Check-in","problem.c2.p":"The stage you cannot book. Shown as an estimate that updates on flight day, after security is actually done.",
+    "problem.c2.q":"&#8220;It caused shouting and arguments between passengers, and it took me more than an hour to get through check-in&#8221;",
+    "interview3":"Real interview 3, translated from Hebrew",
+    "problem.foot":"So the passenger prices in both stages and arrives three hours early, every time.",
+    "solution.kicker":"What it does",
+    "solution.h2":"Three things, and none of them promises the queue will flow",
+    "solution.t1.h":"Book a window","solution.t1.p":"One real choice: a time window for the security check only. Check-in is not offered as a choice, because it is not actually under your control.",
+    "solution.t2.h":"Get your pass","solution.t2.p":"A QR code that opens full screen, at full brightness, and works with no signal in the terminal.",
+    "solution.t3.h":"Track it on flight day","solution.t3.p":"Where you stand in both stages. No fresh data? The last known value is shown, with a timestamp.",
+    "proof.kicker":"The screens","proof.h2":"Seven screens, captured from the running app",
+    "proof.lede":"No Figma export and no mockup. Screenshots from a real browser against the product. Click a screen to open it full size.",
+    "shot.1":"Home","shot.2":"Passenger details","shot.3":"Choosing a window","shot.4":"Confirmation",
+    "shot.5":"Flight day status","shot.6":"QR pass","shot.7":"My profile",
+    "how.alt":"An illustrated passenger walking through the terminal",
+    "dec.kicker":"Decisions","dec.h2":"Four decisions you can argue with",
+    "dec.1.h":"Backup, not replacement","dec.1.p":"At the desk they check a physical passport and boarding pass. The screen knows its place and does not act like the authority being checked.",
+    "dec.2.h":"Four languages, two directions","dec.2.p":"Hebrew, Arabic, English and Russian, without losing what you already typed.",
+    "dec.3.h":"Dark mode that opens right","dec.3.p":"Follows the phone setting, with a manual switch. A terminal at five in the morning.",
+    "dec.4.h":"Accessibility that was tested","dec.4.p":"48 pixel touch targets, full keyboard navigation, reduced motion support, and text that scales.",
+    "lim.kicker":"What it does not promise","lim.h2":"Four things Leeway does not do",
+    "lim.lede":"If booking a queue slot were a place, it would be a small information desk at the entrance to the queue. One that always tells you where you stand right now, and never pretends to be the guard.",
+    "lim.1.h":"It does not promise the queue will flow","lim.1.p":"A screen that promises everything will be smooth breaks the first time something goes wrong.",
+    "lim.2.h":"It does not predict the check-in load","lim.2.p":"The status screen shows general information only. That is an open, documented hole in the product, not a feature quietly hidden.",
+    "lim.3.h":"It is not playful in the low moments","lim.3.p":"Emotional intensity at the security check drops to 1.5 out of 5. An amused tone there does not fit the weight of the moment.",
+    "lim.4.h":"It is not connected to the Airports Authority","lim.4.p":"This is a final project that demonstrates a complete end to end flow.",
+    "priv.kicker":"Privacy","priv.h2":"No server. No account. No analytics.",
+    "priv.p":"What you type stays on the device, and only if you asked for it with Remember me. The profile screen has one button that erases everything, and it checks itself after the deletion and shows you what is left.",
+    "priv.1":"No advertising identifiers","priv.2":"No tracking tools","priv.3":"Nothing uploaded to a server","priv.4":"Verified deletion",
+    "close.h2":"Book now so you do not wait later",
+    "footer":"Leeway · UX design final project, John Bryce. Not connected to Israel Airports Authority systems.",
+    "footer.case":"The case study behind the product","footer.privacy":"Privacy policy",
+    "alt.home":"The Leeway home screen: a button to book a new time window and a status card.",
+    "alt.homeDark":"The same home screen in dark mode.",
+    "alt.still":"The Leeway flight day screen: a QR pass and a timeline with identification, security check and check-in.",
+    "alt.terminal":"Ben Gurion airport, illustrated: the terminal, the control tower and a plane taking off.",
+    "alt.terminalDark":"The same airport at night, lit windows and a plane taking off.",
+    "title":"Leeway · Stop guessing when to get to Ben Gurion",
+    "desc":"Leeway books you a time window for the security check at Ben Gurion, and on flight day shows where you stand in the two stages that hold people up."
+  };
+  var HE = {};
+  document.querySelectorAll("[data-i18n]").forEach(function(el){ HE[el.dataset.i18n] = el.innerHTML; });
+  document.querySelectorAll("[data-i18n-alt]").forEach(function(el){ HE[el.dataset.i18nAlt] = el.alt; });
+  HE["title"] = document.title;
+  HE["desc"]  = document.querySelector('meta[name="description"]').content;
+  HE["alt.home"] = "מסך הבית של Leeway: כפתור להזמנת חלון זמן חדש וכרטיס סטטוס.";
+  HE["alt.homeDark"] = "אותו מסך בית, במצב כהה.";
+  HE["alt.still"] = "מסך יום הטיסה: כרטיס QR וציר עם זיהוי, ביקורת ביטחון וצ׳ק-אין.";
+  HE["alt.terminal"] = "נמל התעופה בן גוריון, איור: הטרמינל, מגדל הפיקוח ומטוס ממריא.";
+  HE["alt.terminalDark"] = "אותו נמל תעופה בלילה, חלונות מוארים ומטוס ממריא.";
+
+  var LKEY = "leeway-lp-lang";
+  var langBtns = [].slice.call(document.querySelectorAll(".lang button"));
+  function readLang(){ try { return localStorage.getItem(LKEY); } catch(e){ return null; } }
+  function saveLang(v){ try { localStorage.setItem(LKEY, v); } catch(e){} }
+  function applyLang(lang){
+    var dict = lang === "en" ? EN : HE;
+    root.setAttribute("lang", lang === "en" ? "en" : "he");
+    root.setAttribute("dir",  lang === "en" ? "ltr" : "rtl");
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      var v = dict[el.dataset.i18n]; if (v != null) el.innerHTML = v;
+    });
+    document.querySelectorAll("[data-i18n-alt]").forEach(function(el){
+      var v = dict[el.dataset.i18nAlt]; if (v != null) el.alt = v;
+    });
+    document.title = dict["title"] || HE["title"];
+    var d = document.querySelector('meta[name="description"]'); if (d) d.content = dict["desc"] || HE["desc"];
+    langBtns.forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false"); });
+  }
+  applyLang(readLang() === "en" ? "en" : "he");
+  /* טעינה ראשונה בלי הצללה, ההחלפה בלחיצה עם גשר של 120 מיליושניות
+     החוצה ו-120 חזרה. סך הכל 240, בתוך התקציב. בתנועה מופחתת מחליפים
+     מיד. השמירה קורית תמיד, גם אם המשתמש עוזב באמצע.               */
+  var calmSwap = matchMedia("(prefers-reduced-motion: reduce)");
+  var swapping = false;
+  function switchLang(lang){
+    saveLang(lang);
+    if (calmSwap.matches || swapping){ applyLang(lang); return; }
+    swapping = true;
+    root.classList.add("is-swapping");
+    setTimeout(function(){
+      applyLang(lang);
+      root.classList.remove("is-swapping");
+      swapping = false;
+    }, 120);
+  }
+  langBtns.forEach(function(b){
+    b.addEventListener("click", function(){ switchLang(b.dataset.lang); });
+  });
+
+  /* ── 2. מצב תצוגה. אחסון עטוף ב-try/catch בשני הכיוונים ─────────── */
+  var TKEY = "leeway-lp-theme";
+  var tbtn = document.getElementById("theme-toggle");
+  function readT(){ try { return localStorage.getItem(TKEY); } catch(e){ return null; } }
+  function saveT(v){ try { localStorage.setItem(TKEY, v); } catch(e){} }
+  function applyT(v){
+    if (v === "dark") root.setAttribute("data-theme","dark"); else root.removeAttribute("data-theme");
+    if (tbtn) tbtn.setAttribute("aria-pressed", v === "dark" ? "true" : "false");
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.setAttribute("content", v === "dark" ? "#04101f" : "#0a3a89");
+  }
+  var storedT = readT();
+  applyT(storedT ? storedT : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  if (tbtn) tbtn.addEventListener("click", function(){
+    applyT(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+    saveT(root.getAttribute("data-theme") === "dark" ? "dark" : "light");
+  });
+
+  /* ── 3. חשיפה בגלילה, once.
+     גלילה מהירה או קפיצה לעוגן עלולות להעיף אלמנט מעל הקיפול בין שני
+     פריימים. top שלילי אומר שהוא כבר עבר, ולכן חייב להיות גלוי.     */
+  var revealables = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var passed = e.boundingClientRect.top < 0;
+        if (!e.isIntersecting && !passed) return;
+        e.target.classList.add("is-in");
+        io.unobserve(e.target);
+      });
+    }, { rootMargin:"0px 0px -10% 0px", threshold:0.08 });
+    revealables.forEach(function(el){ io.observe(el); });
+  } else { revealables.forEach(function(el){ el.classList.add("is-in"); }); }
+
+  /* ── 4. כותרת נעוצה, סנטינל בגובה פיקסל ─────────────────────────── */
+  var top = document.getElementById("top");
+  if (top && "IntersectionObserver" in window){
+    var s = document.createElement("div");
+    s.setAttribute("aria-hidden","true");
+    s.style.cssText = "position:absolute;inset-block-start:0;height:1px;width:1px;";
+    document.body.prepend(s);
+    new IntersectionObserver(function(e){ top.classList.toggle("is-stuck", !e[0].isIntersecting); }).observe(s);
+  }
+
+  /* ── 5. ניווט, מסמן את הסקשן שעל המסך ───────────────────────────── */
+  var links = [].slice.call(document.querySelectorAll(".nav a"));
+  var map = {};
+  links.forEach(function(a){ var el = document.querySelector(a.getAttribute("href")); if (el) map[el.id] = a; });
+  if ("IntersectionObserver" in window && links.length){
+    var nio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (!e.isIntersecting) return;
+        links.forEach(function(a){ a.removeAttribute("aria-current"); });
+        if (map[e.target.id]) map[e.target.id].setAttribute("aria-current","true");
+      });
+    }, { rootMargin:"-45% 0px -50% 0px" });
+    Object.keys(map).forEach(function(id){ nio.observe(document.getElementById(id)); });
+  }
+
+  /* ── 6. ה-CTA הדביק ─────────────────────────────────────────────── */
+  (function(){
+    var bar  = document.getElementById("sticky-cta");
+    var hero = document.querySelector(".hero .ctas");
+    var end  = document.querySelector(".close .ctas");
+    if (!bar || !hero || !end || !("IntersectionObserver" in window)) return;
+    var heroOut = false, endIn = false;
+    function refresh(){
+      var on = heroOut && !endIn;
+      bar.classList.toggle("is-on", on);
+      bar.setAttribute("aria-hidden", on ? "false" : "true");
+      var a = bar.querySelector("a"); if (a) a.tabIndex = on ? 0 : -1;
+    }
+    new IntersectionObserver(function(e){ heroOut = !e[0].isIntersecting; refresh(); },{threshold:0}).observe(hero);
+    new IntersectionObserver(function(e){ endIn  =  e[0].isIntersecting; refresh(); },{threshold:0}).observe(end);
+  })();
+
+  /* ── 7. דיאלוג המסכים ───────────────────────────────────────────── */
+  (function(){
+    var dlg = document.getElementById("sheet");
+    var img = document.getElementById("sheet-img");
+    var cap = document.getElementById("sheet-cap");
+    if (!dlg || !img) return;
+    var opener = null;
+    var calmShot = matchMedia("(prefers-reduced-motion: reduce)");
+
+    function fill(b){
+      var dark = root.getAttribute("data-theme") === "dark";
+      var src = b.querySelector(dark ? "img.s-dark" : "img.s-light") || b.querySelector("img");
+      if (!src) return false;
+      opener = b;
+      img.src = src.getAttribute("src");
+      var fc = b.parentElement.querySelector("figcaption");
+      cap.textContent = fc ? fc.textContent : "";
+      img.alt = cap.textContent;
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open","");
+      return true;
+    }
+
+    /* התמונה הקטנה גדלה לתמונה הגדולה במקום שדיאלוג יופיע משום מקום.
+       השם חייב להיות ייחודי בזמן נתון, ולכן הוא מוצמד ללחצן שנלחץ
+       ומוסר מיד אחרי. דפדפן בלי View Transitions נופל למעבר הרגיל
+       של הדיאלוג, בלי שום שגיאה.                                    */
+    function reveal(b){
+      if (!document.startViewTransition || calmShot.matches){ fill(b); return; }
+      b.style.viewTransitionName = "shot";
+      var vt = document.startViewTransition(function(){
+        /* משחררים את השם בתוך העדכון, בין צילום המצב הישן לחדש, כדי
+           שברגע נתון רק אלמנט אחד יחזיק אותו.                       */
+        b.style.viewTransitionName = "";
+        fill(b);
+      });
+      vt.finished.catch(function(){}).then(function(){ b.style.viewTransitionName = ""; });
+    }
+
+    document.querySelectorAll(".shot__btn").forEach(function(b){
+      b.addEventListener("click", function(){ reveal(b); });
+    });
+    dlg.querySelectorAll("[data-close]").forEach(function(x){ x.addEventListener("click", function(){ dlg.close(); }); });
+    /* לחיצה בתוך התוכן מדווחת על אלמנט פנימי, רק לחיצה על הרקע מדווחת
+       על הדיאלוג עצמו.                                              */
+    dlg.addEventListener("click", function(e){ if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener("close", function(){ if (opener){ opener.focus(); opener = null; } });
+  })();
+
+  /* ── 8. הסרט ────────────────────────────────────────────
+     לולאה שקטה שרצה רק כשהיא על המסך. בלי seek, בלי sticky
+     ובלי להחזיק את הגלילה: הסרט הוא רקע, לא תחנה. ניסינו
+     גם סקראבינג לפי גלילה, והתנועה יצאה קופצנית — מקור
+     הווידאו קצר מדי מכדי שהגלילה תוביל אותו ברכות.        */
+  (function(){
+    var sec   = document.getElementById("how");
+    var video = document.getElementById("scrub-video");
+    var still = document.getElementById("scrub-still");
+    if (!sec || !video) return;
+    if (still) still.setAttribute("src", "assets/video/leeway-flow-still.jpg");
+    video.setAttribute("poster", "assets/video/leeway-flow-poster.jpg");
+
+    var calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var conn = navigator.connection || {};
+    var thin = conn.saveData === true || /2g/.test(conn.effectiveType || "");
+    /* שתי סיבות שבהן הווידאו לא מתבקש כלל, לא רק מוסתר. */
+    if (calm || thin){ sec.classList.add("is-static"); return; }
+
+    var wide = matchMedia("(min-width: 40rem)").matches;
+    video.muted = true;
+    video.setAttribute("src", wide ? "assets/video/leeway-flow.mp4"
+                                   : "assets/video/leeway-flow-mobile.mp4");
+    video.addEventListener("error", function(){ sec.classList.add("is-static"); });
+
+    function run(on){
+      if (on){ var pr = video.play(); if (pr && pr.catch) pr.catch(function(){}); }
+      else { try { video.pause(); } catch(e){} }
+    }
+    if ("IntersectionObserver" in window){
+      new IntersectionObserver(function(e){ run(e[0].isIntersecting); },
+        { threshold:0.12 }).observe(sec);
+    } else { run(true); }
+  })();
+})();
+</script>
+</body>
+</html>
