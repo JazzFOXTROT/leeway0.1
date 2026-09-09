@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leeway · קייס סטאדי · גרסה 2</title>
+<meta name="description" content="איך בניתי אפליקציה שנותנת לנוסע בנתב\"ג חלון זמן ידוע לביקורת הביטחון, במקום מרווח ביטחון מנוחש של שלוש שעות.">
+<meta name="theme-color" content="#FFFFFF">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#FFFFFF; --bg-soft:#E9F2FF; --card:#FFFFFF;
+  --fg:#001B2A; --fg-soft:#525F77; --fg-faint:#606573;
+  --line:#C9C8C8; --accent:#1E5ABA; --accent-fg:#FFFFFF; --accent-soft:#E9F2FF;
+  --low:#BB0307;
+  --font-display:"Heebo", system-ui, sans-serif;
+  --font-body:"Heebo", system-ui, sans-serif;
+  --w-display:700;
+  --t-hero:clamp(2.3rem,5.2vw,4rem);
+  --t-h2:clamp(1.6rem,3.1vw,2.3rem);
+  --t-h3:clamp(1.05rem,1.9vw,1.28rem);
+  --t-body:clamp(1rem,1.3vw,1.07rem);
+  --t-small:.875rem;
+  --r:12px; --r-lg:16px; --r-pill:999px;
+  --shadow:0 1px 2px rgba(0,27,42,.05), 0 12px 30px rgba(0,27,42,.07);
+  --line-w:1px;
+  --lh:1.7; --pad-sec:clamp(2.8rem,6.5vw,4.8rem); --gap:1rem;
+  --wrap:1240px; --measure:60ch;
+  --img-filter:none;
+}
+:root[data-theme="dark"]{
+    --bg:#07192F; --bg-soft:#0B284B; --card:#182A4A;
+    --fg:#F2EFE9; --fg-soft:#C9CEDE; --fg-faint:#AEB6C6;
+    --line:#2B3D5C; --accent:#63B3ED; --accent-fg:#001B2A; --accent-soft:#0F3673;
+    --low:#EE7B75;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px rgba(0,0,0,.45);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:5.5rem; overflow-x:clip}
+body{margin:0; background:var(--bg); color:var(--fg); font-family:var(--font-body);
+  font-size:var(--t-body); line-height:var(--lh); -webkit-font-smoothing:antialiased; overflow-x:clip}
+img{max-width:100%; height:auto; display:block; filter:var(--img-filter)}
+a{color:var(--accent)}
+h1,h2,h3,h4{font-family:var(--font-display); line-height:1.25; margin:0 0 .55em; letter-spacing:-.01em}
+h1,h2{font-weight:var(--w-display)}
+h3{font-weight:700; font-size:var(--t-h3)}
+h2{font-size:var(--t-h2)}
+p{margin:0 0 1em; max-width:var(--measure)}
+ul{padding-inline-start:1.2em; max-width:var(--measure)}
+li{margin-bottom:.4em}
+
+.wrap{width:min(100% - 2.5rem, var(--wrap)); margin-inline:auto}
+section{padding-block:var(--pad-sec); border-top:var(--line-w) solid var(--line)}
+section:first-of-type{border-top:0}
+.soft{background:var(--bg-soft)}
+
+.eyebrow{font-size:var(--t-small); font-weight:700; letter-spacing:.09em; color:var(--accent); margin:0 0 .7rem}
+.lead{font-size:calc(var(--t-body)*1.18); color:var(--fg-soft)}
+.tiny{font-size:var(--t-small); color:var(--fg-faint)}
+
+.bar-track{position:fixed; inset-block-start:0; inset-inline:0; height:3px; z-index:60}
+.bar{height:100%; width:0; background:var(--accent); transition:width .12s linear}
+
+.nav{position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter:blur(12px); border-bottom:var(--line-w) solid var(--line)}
+.nav-in{width:min(100% - 2.5rem, var(--wrap)); margin-inline:auto; display:flex; align-items:center; gap:1rem; height:3.8rem}
+.nav-name{display:inline-flex; align-items:center; gap:.6rem; margin-inline-end:auto; white-space:nowrap}
+.nav-logo{height:26px; width:auto; display:block}
+.nav-logo--dark{display:none}
+:root[data-theme="dark"] .nav-logo--light{display:none}
+:root[data-theme="dark"] .nav-logo--dark{display:block}
+.theme-btn{min-height:40px; min-width:40px; display:inline-grid; place-items:center; cursor:pointer;
+  border-radius:var(--r-pill); border:var(--line-w) solid var(--line); background:var(--card);
+  color:var(--fg-soft); font:inherit; flex:0 0 auto; margin-inline-start:.6rem;
+  transition:border-color .15s ease, color .15s ease}
+.theme-btn:hover{border-color:var(--accent); color:var(--fg)}
+.theme-btn .ico{width:1.15rem; height:1.15rem}
+.theme-btn .i-sun{display:none}
+:root[data-theme="dark"] .theme-btn .i-sun{display:block}
+:root[data-theme="dark"] .theme-btn .i-moon{display:none}
+.nav-name span{font-size:var(--t-small); font-weight:600; color:var(--fg-faint); letter-spacing:.05em;
+  padding-inline-start:.6rem; border-inline-start:var(--line-w) solid var(--line);
+  align-self:stretch; display:inline-flex; align-items:center}
+@media (max-width:480px){.nav-name span{display:none}}
+.nav-links{display:flex; gap:1.15rem; overflow-x:auto; scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:var(--fg-soft); text-decoration:none; font-size:var(--t-small); white-space:nowrap; padding-block:.4rem; border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--fg)}
+.nav-links a.on{color:var(--fg); border-bottom-color:var(--accent)}
+@media (max-width:1100px){.nav-links{display:none}}
+
+.btn{display:inline-flex; align-items:center; gap:.5rem; min-height:44px; padding:.7rem 1.4rem; border-radius:var(--r-pill); text-decoration:none; font-weight:600; border:var(--line-w) solid transparent; transition:transform .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-1{background:var(--accent); color:var(--accent-fg)}
+.btn-2{background:transparent; color:var(--fg); border-color:var(--line)}
+.btn-row{display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1.8rem}
+
+/* תגיות, לא כפתורים: בלי קו מתאר, רקע רך בלבד */
+.chips{display:flex; flex-wrap:wrap; gap:.45rem; margin:0; padding:0; list-style:none}
+.chip{font-size:var(--t-small); font-weight:500; padding:.32rem .8rem; border-radius:var(--r-pill);
+  background:var(--accent-soft); color:var(--accent); border:0}
+
+.grid{display:grid; gap:var(--gap)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(19rem,100%),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(15rem,100%),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(12rem,100%),1fr))}
+.card{background:var(--card); border:var(--line-w) solid var(--line); border-radius:var(--r-lg); padding:1.4rem; box-shadow:var(--shadow)}
+.card h3{margin-bottom:.35rem}
+.card p{max-width:none}
+.card p:last-child{margin-bottom:0}
+.card-num{font-family:var(--font-display); font-size:2.1rem; font-weight:var(--w-display); color:var(--accent); line-height:1; margin-bottom:.3rem}
+
+.quote{border-inline-start:4px solid var(--accent); padding-inline-start:1.3rem; font-size:calc(var(--t-body)*1.12); margin:1.5rem 0; max-width:var(--measure); color:var(--fg-soft)}
+.quote cite{display:block; font-size:var(--t-small); color:var(--fg-faint); font-style:normal; margin-top:.5rem}
+
+.claim{font-family:var(--font-display); font-weight:700; font-size:calc(var(--t-body)*1.3); line-height:1.45;
+  max-width:var(--measure); margin:0 0 1rem; padding-inline-start:1.1rem; border-inline-start:4px solid var(--accent)}
+
+.gallery{display:grid; gap:1rem; margin-block-start:1.4rem;
+  grid-template-columns:repeat(auto-fit,minmax(min(var(--col,20rem),100%),1fr))}
+.gallery--one{grid-template-columns:minmax(0,min(56rem,100%)); justify-content:start}
+.gallery button{
+  display:flex; flex-direction:column; width:100%; padding:0; text-align:start; font:inherit; color:inherit;
+  background:var(--card); border:var(--line-w) solid var(--line); border-radius:var(--r-lg);
+  overflow:hidden; cursor:zoom-in; box-shadow:var(--shadow); position:relative;
+  transition:border-color .15s ease, transform .15s ease}
+.gallery button:hover,.gallery button:focus-visible{border-color:var(--accent); transform:translateY(-2px)}
+.gallery button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.shot{aspect-ratio:var(--ar,16/10); display:grid; place-items:center; overflow:hidden; background:var(--bg-soft)}
+.shot img{max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain}
+.zoom{position:absolute; inset-block-start:.6rem; inset-inline-end:.6rem; width:34px; height:34px;
+  display:grid; place-items:center; border-radius:var(--r-pill); background:var(--card);
+  border:var(--line-w) solid var(--line); color:var(--fg-soft);
+  opacity:0; transform:scale(.9); transition:opacity .15s ease, transform .15s ease; pointer-events:none}
+.gallery button:hover .zoom,.gallery button:focus-visible .zoom{opacity:1; transform:none}
+.cap{display:block; padding:.7rem .85rem .85rem; font-size:var(--t-small); color:var(--fg-faint)}
+.cap b{display:block; color:var(--fg); font-weight:600; margin-block-end:.15rem}
+
+/* ══ יציאה מהקופסה ══
+   לוח שנבנה כדי להיקרא לרוחב לא נכנס לעמודת טקסט.
+   הוא יוצא מהעטיפה ותופס את כל רוחב המסך. */
+.bleed{width:100vw; max-width:100vw; margin-inline:calc(50% - 50vw)}
+.board{margin-block:1.6rem 0; background:var(--card);
+  border-block:var(--line-w) solid var(--line)}
+.board button{display:block; width:100%; padding:0; margin:0; border:0; background:none;
+  font:inherit; color:inherit; cursor:zoom-in; position:relative}
+.board button:focus-visible{outline:2px solid var(--accent); outline-offset:-3px}
+/* הלוח נבנה כדי להיקרא לרוחב, ולכן הוא נפרס מקצה לקצה בלי תקרת גובה.
+   זו הסיבה שהוא יצא מהכרטיס מלכתחילה. */
+.board img{width:100%; height:auto}
+.board .board-cap{width:min(100% - 2.5rem, var(--wrap)); margin-inline:auto;
+  padding-block:.75rem .95rem; font-size:var(--t-small); color:var(--fg-faint); text-align:start}
+.board .board-cap b{color:var(--fg); font-weight:600; margin-inline-end:.4rem}
+.board .zoom{opacity:1; transform:none; inset-block-start:.8rem; inset-inline-end:1.25rem}
+
+dialog.lightbox{border:0; padding:0; background:none; width:100%; height:100%; max-width:100vw; max-height:100vh; margin:0}
+dialog.lightbox::backdrop{background:rgb(11 13 20 / .88)}
+.lb-in{display:flex; flex-direction:column; height:100%; padding:1rem; gap:.75rem}
+.lb-in img{flex:1 1 auto; min-height:0; width:100%; object-fit:contain; border-radius:var(--r); background:#0f1219}
+.lb-bar{display:flex; align-items:center; justify-content:space-between; gap:1rem; color:#ECE7DD}
+.lb-bar p{margin:0; color:#B9B1A2; font-size:var(--t-small); max-width:none}
+.lb-close{min-height:44px; min-width:44px; border-radius:var(--r-pill); cursor:pointer;
+  border:1px solid rgb(236 231 221 / .35); background:none; color:#ECE7DD; font:inherit; font-size:1.1rem}
+
+.more{border:var(--line-w) solid var(--line); border-radius:var(--r-lg); background:var(--card);
+  padding:0 1.4rem; box-shadow:var(--shadow); margin-block-start:1.2rem}
+.more+.more{margin-block-start:.8rem}
+.more>summary{cursor:pointer; list-style:none; padding:1.05rem 0; font-family:var(--font-display);
+  font-weight:700; position:relative; padding-inline-start:2.4rem}
+.more>summary::-webkit-details-marker{display:none}
+.more>summary::before{content:"+"; position:absolute; inset-inline-start:0; inset-block-start:1.05rem;
+  width:1.6rem; height:1.6rem; display:grid; place-items:center;
+  border-radius:var(--r-pill); background:var(--accent-soft); color:var(--accent); font-size:1.05rem; line-height:1}
+.more[open]>summary::before{content:"–"}
+.more>summary span{font-family:var(--font-body); font-weight:400; font-size:var(--t-small); color:var(--fg-faint)}
+.more>div{padding-block:.2rem 1.3rem}
+.more p:last-child{margin-bottom:0}
+
+.scroll-x{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:1.4rem 0;
+  border:var(--line-w) solid var(--line); border-radius:var(--r-lg); background:var(--card)}
+table{border-collapse:collapse; width:100%; min-width:620px; font-size:var(--t-small)}
+th,td{text-align:start; padding:.8rem 1rem; border-bottom:var(--line-w) solid var(--line); vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-weight:700; background:var(--bg-soft); white-space:nowrap}
+.pill{font-size:.75rem; padding:.2rem .7rem; border-radius:var(--r-pill); white-space:nowrap; display:inline-block}
+.pill.done{background:var(--accent-soft); color:var(--accent)}
+:root[data-theme="dark"] .pill.done{color:#DCEBFB}
+.pill.next{background:var(--bg-soft); color:var(--fg-soft); border:var(--line-w) solid var(--line)}
+
+.jmaps{display:grid; gap:1.1rem; margin-block-start:1.2rem;
+  grid-template-columns:repeat(auto-fit,minmax(min(26rem,100%),1fr))}
+.jmap{border:var(--line-w) solid var(--line); border-radius:var(--r-lg); background:var(--card);
+  padding:1.1rem 1.2rem 1.2rem; box-shadow:var(--shadow)}
+.jmap h4{margin:0 0 .5rem; font-size:1.02rem}
+.jscale{display:flex; gap:1.1rem; margin:0 0 .7rem; max-width:none; font-size:.8rem; color:var(--fg-faint)}
+.jscale span{display:inline-flex; align-items:center; gap:.35rem}
+.jchart{display:block; width:100%; height:auto; overflow:visible; min-height:170px}
+.jg{stroke:var(--line); stroke-width:1}
+.ja{fill:var(--accent); opacity:.10}
+.jl{fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linejoin:round; stroke-linecap:round}
+.jd{fill:var(--accent)}
+.jd--low{fill:var(--low)}
+.jt,.jn{fill:var(--fg-faint); font-size:11px; font-family:var(--font-body); text-anchor:middle}
+.jv{fill:var(--fg-soft); font-size:12px; font-weight:600; font-family:var(--font-body); text-anchor:middle}
+.jv--low{fill:var(--low)}
+.jlegend{list-style:none; margin:.8rem 0 0; padding:0; display:grid; gap:.3rem; max-width:none}
+.jlegend li{display:grid; grid-template-columns:1.2rem 1.15rem 1fr; gap:.5rem; align-items:start; margin:0}
+.jn-num{font-size:.75rem; font-weight:600; color:var(--fg-faint); text-align:center; line-height:1.5}
+.jn-body b{font-size:.86rem; color:var(--fg); font-weight:600; display:block}
+.jn-body span{display:block; font-size:.79rem; color:var(--fg-soft)}
+.jnote{margin:.8rem 0 0; padding-block-start:.7rem; border-block-start:var(--line-w) solid var(--line);
+  font-size:var(--t-small); color:var(--fg-soft); max-width:none}
+.ico{width:1.15rem; height:1.15rem; flex:0 0 auto; stroke:currentColor; fill:none; stroke-width:1.6;
+  stroke-linecap:round; stroke-linejoin:round}
+.ico--hi{color:var(--accent)}
+.ico--mid{color:var(--fg-faint)}
+.ico--lo{color:var(--low)}
+
+.phone-stage{width:100%; overflow:hidden; display:flex; justify-content:center; padding:6px 1rem 3.25rem}
+.phone{--pw:340px; width:var(--pw); position:relative; flex-shrink:0;
+  border-radius:42px; padding:10px; background:#001B2A;
+  box-shadow:0 22px 60px rgb(0 27 42 / .26), 0 0 0 1px #182A4A inset;
+  transform:scale(var(--s,1)); transform-origin:top center; margin-block-end:var(--gap-fix,0px)}
+.phone__screen{position:relative; width:100%; aspect-ratio:390/844; border-radius:33px; overflow:hidden; background:#FFFFFF}
+.phone__screen>iframe,.phone__poster{position:absolute; inset:0; width:100%; height:100%; border:0}
+.phone__poster{display:block; object-fit:cover}
+.phone__notch{position:absolute; inset-block-start:14px; inset-inline-start:calc(50% - 41px);
+  width:82px; height:20px; border-radius:var(--r-pill); background:#001B2A; z-index:3}
+.phone__start{position:absolute; inset:0; z-index:2; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:.5rem; padding:2rem 1.4rem; cursor:pointer;
+  border:0; font:inherit; color:#F2EFE9; text-align:center; background:rgb(0 27 42 / .66); backdrop-filter:blur(1.5px)}
+.phone__start b{font-size:1rem; font-weight:600}
+.phone__start span{font-size:.82rem; color:#D6DCE6; max-width:17rem}
+.phone__start .play{display:grid; place-items:center; width:54px; height:54px; border-radius:var(--r-pill);
+  background:#F2EFE9; color:#001B2A; margin-block-end:.3rem}
+.demo__note{text-align:center; color:var(--fg-faint); font-size:var(--t-small); margin-block-start:.9rem; max-width:none}
+
+.hero{display:grid; gap:clamp(1.5rem,4vw,3.5rem); align-items:center;
+  grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr)}
+@media (max-width:900px){ .hero{grid-template-columns:1fr} }
+
+footer{padding-block:var(--pad-sec) 3rem; border-top:var(--line-w) solid var(--line); text-align:center}
+footer p{margin-inline:auto}
+footer .btn-row{justify-content:center}
+
+#top, footer{color:#FFFFFF; border:0}
+#top{background:linear-gradient(180deg,#0F4495 0%,#1F63BA 100%)}
+footer{background:linear-gradient(180deg,#1F63BA 0%,#0F4495 100%)}
+:root[data-theme="dark"] #top{background:linear-gradient(180deg,#061527 0%,#0B284B 100%)}
+:root[data-theme="dark"] footer{background:linear-gradient(180deg,#0B284B 0%,#061527 100%)}
+#top h1, #top h2, footer h2{color:#FFFFFF}
+#top .eyebrow{color:#E4EEFC}
+#top .lead, footer .lead{color:#E4EEFC}
+#top .tiny, footer .tiny{color:#E4EEFC}
+#top .chip{background:rgb(255 255 255 / .16); color:#FFFFFF; border:0}
+#top .btn-1, footer .btn-1{background:#FFFFFF; color:#0F4495}
+#top .btn-2, footer .btn-2{color:#FFFFFF; border-color:rgb(255 255 255 / .5)}
+footer a{color:#FFFFFF}
+#top .phone{box-shadow:0 26px 70px rgb(0 20 50 / .45)}
+
+.reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease}
+.reveal.in{opacity:1; transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1; transform:none; transition:none}
+  .btn:hover,.gallery button:hover{transform:none}
+  *,*::before,*::after{transition-duration:.001ms !important; animation-duration:.001ms !important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="f-hi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.2c.9 1.1 2.1 1.7 3.5 1.7s2.6-.6 3.5-1.7"/><path d="M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="f-mid" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 15h7"/><path d="M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="f-lo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 16.2c.9-1.1 2.1-1.7 3.5-1.7s2.6.6 3.5 1.7"/><path d="M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="i-zoom" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8 21 21"/><path d="M8.5 11h5M11 8.5v5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></symbol>
+</svg>
+
+<div class="bar-track"><div class="bar" id="bar"></div></div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <span class="nav-name">
+      <img class="nav-logo nav-logo--light" src="assets/logo-leeway-blue.webp" alt="Leeway" width="240" height="80">
+      <img class="nav-logo nav-logo--dark" src="assets/logo-leeway-white.webp" alt="Leeway" width="240" height="80">
+      <span>קייס סטאדי</span>
+    </span>
+    <div class="nav-links">
+      <a href="#challenge">האתגר</a>
+      <a href="#users">ניתוח משתמשים</a>
+      <a href="#journey">מפות המסע</a>
+      <a href="#sitemap">Sitemap</a>
+      <a href="#language">שפה עיצובית</a>
+      <a href="#screens">המסכים</a>
+      <a href="#ai">מעיצוב לקוד</a>
+      <a href="#beforeafter">לפני ואחרי</a>
+      <a href="#impact">סיכום</a>
+    </div>
+    <button type="button" class="theme-btn" id="theme-btn" aria-label="החלפת מצב תצוגה" title="מצב תצוגה">
+      <svg class="ico i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+      <svg class="ico i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+    </button>
+  </div>
+</nav>
+
+<section id="top">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <p class="eyebrow">קייס סטאדי · אפליקציית מובייל</p>
+        <h1 style="font-size:var(--t-hero)">Leeway</h1>
+        <p class="lead">זימון חלון זמן לביקורת הביטחון בנתב"ג, וליווי הנוסע עד סוף הצ'ק-אין.</p>
+
+        <ul class="chips" style="margin-top:1.5rem">
+          <li class="chip">מחקר, עיצוב וקוד</li>
+          <li class="chip">12 מסכים</li>
+          <li class="chip">4 שפות</li>
+          <li class="chip">מוצר חי</li>
+        </ul>
+
+        <div class="btn-row">
+          <a class="btn btn-1" href="../">לפתוח את המוצר</a>
+          <a class="btn btn-2" href="../landing/">דף הנחיתה</a>
+        </div>
+      </div>
+
+      <div class="phone-stage">
+        <div class="phone">
+          <span class="phone__notch"></span>
+          <div class="phone__screen">
+            <img class="phone__poster" src="assets/app-poster.png" alt="מסך הבית של Leeway: כפתור הזמנה חדשה, וסיכום סטטוס מתחתיו">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="challenge" class="soft">
+  <div class="wrap">
+    <p class="eyebrow">01 · האתגר</p>
+    <h2>הבעיה היא לא התור. הבעיה היא שאי אפשר לדעת מתי יוצאים ממנו</h2>
+    <p class="lead">שישה מתוך שמונה המרואיינים מגיעים לנתב"ג שלוש שעות מראש. המרווח הזה לא נגזר מהעומס, אלא מזה שאין דרך לדעת מה יהיה העומס.</p>
+
+    <div class="grid g3" style="margin-top:1.8rem">
+      <div class="card"><h3>מה קורה היום</h3><p>אין כלי שמראה עומס צפוי בנתב"ג. אפליקציית רשות שדות התעופה נותנת לוח טיסות ומידע חניה בלבד.</p></div>
+      <div class="card"><h3>מה המחקר הפיל</h3><p>הנחתי שהתור הוא צוואר הבקבוק. מרואיינת אמרה שהתור נעשה מהיר יותר מעצמו. ובכל זאת מגיעים שלוש שעות מראש.</p></div>
+      <div class="card"><h3>הרעיון</h3><p>להחליף מרווח מנוחש במרווח ידוע: לזמן מראש חלון זמן לביקורת הביטחון, ולתת לו מספר שאפשר לתכנן סביבו.</p></div>
+    </div>
+
+    <blockquote class="quote" style="margin-top:1.8rem">אני תמיד מגיעה לשדה כשלוש שעות לפני הטיסה.<cite>ריאיון אמיתי 4</cite></blockquote>
+  </div>
+</section>
+
+<section id="users">
+  <div class="wrap">
+    <p class="eyebrow">02 · ניתוח משתמשים</p>
+    <h2>שתי קבוצות, ורק לאחת מהן באמת כואב</h2>
+    <p>קיבצתי את המרואיינים לא לפי תדירות טיסה אלא לפי איכות החוויה עד היום. מי שחווה שיבוש מתכנן מתוך מניעת סיכון, ומי שהתהליך אצלו עבר חלק מתמקד ביעילות.</p>
+
+    <div class="grid g2" style="margin-top:1.6rem">
+      <div class="card">
+        <h3>עידו כרמלי · פרסונה ראשית</h3>
+        <p class="tiny">"לקח לי יותר משעה לעבור את הצ'ק אין"</p>
+        <p>חווה תור שהתפוצץ. מגיע שלוש שעות מראש בכל פעם. הכאב שלו הוא לא ההמתנה אלא חוסר השליטה על מה יקרה באותו יום.</p>
+      </div>
+      <div class="card">
+        <h3>מיכל אברהמי · פרסונה משנית</h3>
+        <p class="tiny">"בשנה האחרונה התור התחיל להיות מסודר יותר"</p>
+        <p>מנהלת את התזמון בכלי חיצוני, וחוותה עד היום תהליך חלק. בנתונים שלי לא עלה אצלה כאב מובהק. סימנתי את זה ולא המצאתי לה תסכול שני.</p>
+      </div>
+    </div>
+
+    <div class="gallery" style="--col:24rem;--ar:16/11">
+      <button type="button" data-full="assets/persona-ido.png" data-cap="כרטיס הפרסונה של עידו כרמלי. מטרות, תסכולים, התנהגויות מפתח וכאב קריטי, כל שדה מעוגן בריאיון">
+        <span class="shot"><img src="assets/persona-ido-thumb.png" alt="כרטיס הפרסונה של עידו כרמלי, עם מטרות, תסכולים, התנהגויות וכאב קריטי" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>עידו כרמלי</b>כל שדה בכרטיס מעוגן בציטוט מריאיון.</span>
+      </button>
+      <button type="button" data-full="assets/persona-michal.png" data-cap="כרטיס הפרסונה של מיכל אברהמי. שדה הכאב הקריטי מסומן במפורש כהשערה לתיקוף">
+        <span class="shot"><img src="assets/persona-michal-thumb.png" alt="כרטיס הפרסונה של מיכל אברהמי, ובו תסכול אחד וכאב קריטי מסומן כהשערה" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>מיכל אברהמי</b>הכאב הקריטי מסומן בכרטיס עצמו כהשערה לתיקוף.</span>
+      </button>
+    </div>
+
+    <p class="claim" style="margin-top:2.2rem">הפרסונה עבדה אצלי כשהיא סירבה לי, לא כשהיא הסכימה</p>
+    <p>סקיל אונבורדינג מוכן הציע לי שלד של שמונה מסכים, ובתוכו טבלת השוואה מול המתחרים. רציתי אותה. ואז חשבתי על עידו: הוא לא פותח את האפליקציה כדי לבחור בין מוצרים, אלא עם שאלה אחת, באיזו שעה להיות בשדה. טבלת השוואה עונה על שאלה שהוא לא שאל, אז היא ירדה.</p>
+  </div>
+</section>
+
+<section id="journey" class="soft">
+  <div class="wrap">
+    <p class="eyebrow">03 · מפות המסע</p>
+    <h2>ארבע מפות מסע, ואחת מהן קו ישר</h2>
+    <p>מפה לכל פרסונה בשני תרחישים, ניסיון ראשוני ושימוש חוזר. הסולם הוא עצימות רגשית: 5 מוטיבציה, 1 תסכול, והנקודה האדומה היא השפל.</p>
+
+    <h3 style="margin-top:2rem">עידו</h3>
+    <div class="jmaps">
+<article class="jmap"><h4>מהזימון ועד סוף הצ'ק-אין</h4><p class="jscale"><span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg> 5 מוטיבציה</span><span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg> 1 תסכול</span></p><svg viewBox="0 0 560 265" class="jchart" role="img" aria-label="עידו · מהזימון ועד סוף הצ'ק-אין"><line x1="34.0" y1="211.0" x2="526.0" y2="211.0" class="jg"/><text x="534" y="215.0" class="jt">1</text><line x1="34.0" y1="120.5" x2="526.0" y2="120.5" class="jg"/><text x="534" y="124.5" class="jt">3</text><line x1="34.0" y1="30.0" x2="526.0" y2="30.0" class="jg"/><text x="534" y="34.0" class="jt">5</text><path d="M526.0,120.5 L427.6,97.9 L329.2,120.5 L230.8,97.9 L132.4,188.4 L34.0,75.2 L34.0,211.0 L526.0,211.0 Z" class="ja"/><path d="M526.0,120.5 L427.6,97.9 L329.2,120.5 L230.8,97.9 L132.4,188.4 L34.0,75.2" class="jl"/><circle cx="526.0" cy="120.5" r="5" class="jd"/><text x="526.0" y="107.5" class="jv">3</text><text x="526.0" y="237" class="jn">1</text><circle cx="427.6" cy="97.9" r="5" class="jd"/><text x="427.6" y="84.9" class="jv">3.5</text><text x="427.6" y="237" class="jn">2</text><circle cx="329.2" cy="120.5" r="5" class="jd"/><text x="329.2" y="107.5" class="jv">3</text><text x="329.2" y="237" class="jn">3</text><circle cx="230.8" cy="97.9" r="5" class="jd"/><text x="230.8" y="84.9" class="jv">3.5</text><text x="230.8" y="237" class="jn">4</text><circle cx="132.4" cy="188.4" r="6" class="jd jd--low"/><text x="132.4" y="175.4" class="jv jv--low">1.5</text><text x="132.4" y="237" class="jn">5</text><circle cx="34.0" cy="75.2" r="5" class="jd"/><text x="34.0" y="62.2" class="jv">4</text><text x="34.0" y="237" class="jn">6</text></svg><ol class="jlegend"><li><span class="jn-num">1</span><svg class="ico ico--mid" aria-hidden="true"><use href="#f-mid"/></svg><span class="jn-body"><b>החלטה להירשם מראש</b><span>חשש עדין וצורך בוודאות · 3</span></span></li><li><span class="jn-num">2</span><svg class="ico ico--mid" aria-hidden="true"><use href="#f-mid"/></svg><span class="jn-body"><b>זיהוי נוסע</b><span>ביטחון קל · 3.5</span></span></li><li><span class="jn-num">3</span><svg class="ico ico--mid" aria-hidden="true"><use href="#f-mid"/></svg><span class="jn-body"><b>בחירת חלון זמן</b><span>תקווה מהוססת · 3</span></span></li><li><span class="jn-num">4</span><svg class="ico ico--mid" aria-hidden="true"><use href="#f-mid"/></svg><span class="jn-body"><b>אישור הרשמה</b><span>הקלה זמנית · 3.5</span></span></li><li><span class="jn-num">5</span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg><span class="jn-body"><b>בידוק ביטחוני ראשוני</b><span>תסכול ומתח · 1.5</span></span></li><li><span class="jn-num">6</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>צ'ק אין</b><span>הקלה מסיום התהליך · 4</span></span></li></ol><p class="jnote">השפל הוא הבידוק עצמו, 1.5. בנקודה הזו הזימון כבר נעשה, והנוסע לא יכול לעשות דבר נוסף.</p></article>
+<article class="jmap"><h4>שימוש חוזר, מטיסה 2 ועד הרגל</h4><p class="jscale"><span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg> 5 מוטיבציה</span><span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg> 1 תסכול</span></p><svg viewBox="0 0 560 265" class="jchart" role="img" aria-label="עידו · שימוש חוזר, מטיסה 2 ועד הרגל"><line x1="34.0" y1="211.0" x2="526.0" y2="211.0" class="jg"/><text x="534" y="215.0" class="jt">1</text><line x1="34.0" y1="120.5" x2="526.0" y2="120.5" class="jg"/><text x="534" y="124.5" class="jt">3</text><line x1="34.0" y1="30.0" x2="526.0" y2="30.0" class="jg"/><text x="534" y="34.0" class="jt">5</text><path d="M526.0,120.5 L362.0,75.2 L198.0,165.8 L34.0,75.2 L34.0,211.0 L526.0,211.0 Z" class="ja"/><path d="M526.0,120.5 L362.0,75.2 L198.0,165.8 L34.0,75.2" class="jl"/><circle cx="526.0" cy="120.5" r="5" class="jd"/><text x="526.0" y="107.5" class="jv">3</text><text x="526.0" y="237" class="jn">1</text><circle cx="362.0" cy="75.2" r="5" class="jd"/><text x="362.0" y="62.2" class="jv">4</text><text x="362.0" y="237" class="jn">2</text><circle cx="198.0" cy="165.8" r="6" class="jd jd--low"/><text x="198.0" y="152.8" class="jv jv--low">2</text><text x="198.0" y="237" class="jn">3</text><circle cx="34.0" cy="75.2" r="5" class="jd"/><text x="34.0" y="62.2" class="jv">4</text><text x="34.0" y="237" class="jn">4</text></svg><ol class="jlegend"><li><span class="jn-num">1</span><svg class="ico ico--mid" aria-hidden="true"><use href="#f-mid"/></svg><span class="jn-body"><b>לפני טיסה 2</b><span>ספקנות מהוססת · 3</span></span></li><li><span class="jn-num">2</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>שימוש חוזר, טיסה 2</b><span>ביטחון גובר · 4</span></span></li><li><span class="jn-num">3</span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg><span class="jn-body"><b>בשדה, טיסה 2</b><span>תקלה חוזרת ואובדן אמון · 2</span></span></li><li><span class="jn-num">4</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>גיבוש הרגל</b><span>אמון הולך ונבנה · 4</span></span></li></ol><p class="jnote">השפל זז. בשימוש חוזר הוא כבר לא בבידוק אלא בתקלה בשטח, כי אמון שנבנה לאורך טיסה שלמה נשבר בתקלה אחת.</p></article>
+</div>
+
+    <div class="board bleed">
+      <button type="button" data-full="assets/jmap-ido.png" data-cap="הלוח המקורי. שתי מפות המסע של עידו, עם נקודות המגע, הכאבים וההזדמנויות שמאחורי הגרפים">
+        <img src="assets/jmap-ido.png" alt="שתי מפות המסע של עידו כרמלי, ניסיון ראשוני ושימוש חוזר" loading="lazy">
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="board-cap"><b>הלוח המקורי של עידו</b>נקודות המגע, הכאבים וההזדמנויות שמאחורי שני הגרפים.</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h3 style="margin-top:2.6rem">מיכל</h3>
+    <div class="jmaps">
+<article class="jmap"><h4>מהזימון ועד סוף הצ'ק-אין</h4><p class="jscale"><span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg> 5 מוטיבציה</span><span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg> 1 תסכול</span></p><svg viewBox="0 0 560 265" class="jchart" role="img" aria-label="מיכל · מהזימון ועד סוף הצ'ק-אין"><line x1="34.0" y1="211.0" x2="526.0" y2="211.0" class="jg"/><text x="534" y="215.0" class="jt">1</text><line x1="34.0" y1="120.5" x2="526.0" y2="120.5" class="jg"/><text x="534" y="124.5" class="jt">3</text><line x1="34.0" y1="30.0" x2="526.0" y2="30.0" class="jg"/><text x="534" y="34.0" class="jt">5</text><path d="M526.0,75.2 L427.6,75.2 L329.2,75.2 L230.8,75.2 L132.4,75.2 L34.0,52.6 L34.0,211.0 L526.0,211.0 Z" class="ja"/><path d="M526.0,75.2 L427.6,75.2 L329.2,75.2 L230.8,75.2 L132.4,75.2 L34.0,52.6" class="jl"/><circle cx="526.0" cy="75.2" r="6" class="jd"/><text x="526.0" y="62.2" class="jv">4</text><text x="526.0" y="237" class="jn">1</text><circle cx="427.6" cy="75.2" r="5" class="jd"/><text x="427.6" y="62.2" class="jv">4</text><text x="427.6" y="237" class="jn">2</text><circle cx="329.2" cy="75.2" r="5" class="jd"/><text x="329.2" y="62.2" class="jv">4</text><text x="329.2" y="237" class="jn">3</text><circle cx="230.8" cy="75.2" r="5" class="jd"/><text x="230.8" y="62.2" class="jv">4</text><text x="230.8" y="237" class="jn">4</text><circle cx="132.4" cy="75.2" r="5" class="jd"/><text x="132.4" y="62.2" class="jv">4</text><text x="132.4" y="237" class="jn">5</text><circle cx="34.0" cy="52.6" r="5" class="jd"/><text x="34.0" y="39.6" class="jv">4.5</text><text x="34.0" y="237" class="jn">6</text></svg><ol class="jlegend"><li><span class="jn-num">1</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>החלטה להירשם מראש</b><span>רוגע פרקטי · 4</span></span></li><li><span class="jn-num">2</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>זיהוי נוסע</b><span>שביעות רצון · 4</span></span></li><li><span class="jn-num">3</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>בחירת חלון זמן</b><span>אמון · 4</span></span></li><li><span class="jn-num">4</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>אישור הרשמה</b><span>שקט נפשי · 4</span></span></li><li><span class="jn-num">5</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>בידוק ביטחוני ראשוני</b><span>רוגע · 4</span></span></li><li><span class="jn-num">6</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>צ'ק אין</b><span>סיפוק מסיום התהליך · 4.5</span></span></li></ol><p class="jnote">קו ישר הוא לא מסע. אין כאן נקודה אדומה, כי אין שפל: חמישה שלבים שווים בדיוק.</p></article>
+<article class="jmap"><h4>שימוש חוזר, מטיסה 2 ועד הרגל</h4><p class="jscale"><span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg> 5 מוטיבציה</span><span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg> 1 תסכול</span></p><svg viewBox="0 0 560 265" class="jchart" role="img" aria-label="מיכל · שימוש חוזר, מטיסה 2 ועד הרגל"><line x1="34.0" y1="211.0" x2="526.0" y2="211.0" class="jg"/><text x="534" y="215.0" class="jt">1</text><line x1="34.0" y1="120.5" x2="526.0" y2="120.5" class="jg"/><text x="534" y="124.5" class="jt">3</text><line x1="34.0" y1="30.0" x2="526.0" y2="30.0" class="jg"/><text x="534" y="34.0" class="jt">5</text><path d="M526.0,52.6 L362.0,52.6 L198.0,165.8 L34.0,75.2 L34.0,211.0 L526.0,211.0 Z" class="ja"/><path d="M526.0,52.6 L362.0,52.6 L198.0,165.8 L34.0,75.2" class="jl"/><circle cx="526.0" cy="52.6" r="5" class="jd"/><text x="526.0" y="39.6" class="jv">4.5</text><text x="526.0" y="237" class="jn">1</text><circle cx="362.0" cy="52.6" r="5" class="jd"/><text x="362.0" y="39.6" class="jv">4.5</text><text x="362.0" y="237" class="jn">2</text><circle cx="198.0" cy="165.8" r="6" class="jd jd--low"/><text x="198.0" y="152.8" class="jv jv--low">2</text><text x="198.0" y="237" class="jn">3</text><circle cx="34.0" cy="75.2" r="5" class="jd"/><text x="34.0" y="62.2" class="jv">4</text><text x="34.0" y="237" class="jn">4</text></svg><ol class="jlegend"><li><span class="jn-num">1</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>לפני טיסה 2</b><span>פתיחות מיידית · 4.5</span></span></li><li><span class="jn-num">2</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>שימוש חוזר, טיסה 2</b><span>שגרתיות · 4.5</span></span></li><li><span class="jn-num">3</span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg><span class="jn-body"><b>בשדה, טיסה 2</b><span>אכזבה קלה מעיכוב · 2</span></span></li><li><span class="jn-num">4</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>גיבוש הרגל</b><span>הרגל קבוע · 4</span></span></li></ol><p class="jnote">גם אצלה הצניחה קורית בשדה, ובאותו מקום: עיכוב בצ'ק-אין. שתי הפרסונות נפגשות בפער שנשאר פתוח.</p></article>
+</div>
+
+    <div class="board bleed">
+      <button type="button" data-full="assets/jmap-michal.png" data-cap="הלוח המקורי. שתי מפות המסע של מיכל. הכאב היחיד שמופיע בהן יושב בצ'ק-אין, לא בביטחון">
+        <img src="assets/jmap-michal.png" alt="שתי מפות המסע של מיכל אברהמי, ניסיון ראשוני ושימוש חוזר" loading="lazy">
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="board-cap"><b>הלוח המקורי של מיכל</b>הכאב היחיד שמופיע בו יושב בצ'ק-אין, לא בביטחון.</span>
+      </button>
+    </div>
+
+    <p class="claim" style="margin-top:2.4rem">מפה שטוחה היא לא מפה כושלת. היא הגבול של המוצר</p>
+    <p>למיכל אין כאב מובהק סביב הביטחון, והכאב שכן יש לה יושב בצ'ק-אין, שהמוצר לא סוגר. זו הגבלה מודעת, לא הפתעה.</p>
+    <blockquote class="quote">חיכיתי הכי הרבה זמן בצ'ק אין. בביטחון דווקא זה עבר מהר.<cite>ריאיון אמיתי 2</cite></blockquote>
+  </div>
+</section>
+
+<section id="sitemap">
+  <div class="wrap">
+    <p class="eyebrow">04 · Sitemap</p>
+    <h2>Sitemap: מסך שאין לו שלב במסע לא נכנס</h2>
+    <p>הצלבתי כל שלב בארבע מפות המסע מול המסכים ב-Sitemap, בשתי ביקורות. מהן ירדו "שאלות נפוצות", "יצירת קשר" והיסטוריית הטיסות.</p>
+    <p>הביקורת השנייה הפילה גם החלטה שכבר הייתה בעיצוב: מסך ההרשמה הציג שתי בחירות, חלון לביטחון וחלון לצ'ק-אין. משך הבידוק אינו צפוי מטבעו, ולכן בחירת חלון צ'ק-אין בהרשמה היא ניחוש שמוצג ככלי. נשארה בחירה אמיתית אחת.</p>
+    <p><b>המבנה שנשאר הוא Status-First:</b> כל עוד אין הזמנה פעילה, המסך הראשי הוא הזמנה חדשה. ברגע שיש, האפליקציה עוברת אוטומטית למצב יום הטיסה וחוזרת לבד בסיום הצ'ק-אין.</p>
+
+    <div class="board bleed">
+      <button type="button" data-full="assets/sitemap.png" data-cap="ה-Sitemap אחרי שתי ביקורות. שני מצבים, מעברים אוטומטיים ביניהם, ושני מבחני קבלה בצד">
+        <img src="assets/sitemap.png" alt="Sitemap במבנה Status-First, שני מצבים ומבחני קבלה" loading="lazy">
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="board-cap"><b>Sitemap אחרי שתי ביקורות</b>שני מבחני הקבלה יושבים על הלוח עצמו, ואחד מהם מסומן ככישלון חלקי.</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section id="language" class="soft">
+  <div class="wrap">
+    <p class="eyebrow">05 · השפה העיצובית</p>
+    <h2>מה שהורדתי מסביר את השפה יותר ממה שהשארתי</h2>
+    <p class="lead">אם המוצר היה מקום, הוא היה עמדת מידע קטנה בכניסה לתור. כזו שאומרת לך איפה אתה עומד עכשיו, ולא מתיימרת להיות השומר עצמו.</p>
+
+    <div class="grid g4" style="margin-top:1.8rem">
+      <div class="card"><h3>ודאי</h3><p class="tiny">האישור וה-QR נפתחים גם בלי חיבור אינטרנט חי.</p></div>
+      <div class="card"><h3>גיבוי, לא תחליף</h3><p class="tiny">המסך נבדק לצד דרכון וכרטיס עלייה, לא במקומם.</p></div>
+      <div class="card"><h3>כן לגבי מה שלא ידוע</h3><p class="tiny">מסך הצ'ק-אין לא מתיימר לחזות עומס, כי זה מה שלא נפתר.</p></div>
+      <div class="card"><h3>לא מניח שהכול תקין</h3><p class="tiny">אין נתון עדכני? מוצג הסטטוס האחרון עם חותמת זמן.</p></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:1.6rem">
+      <div class="card">
+        <h3>פסילה ראשונה: כיוון שלם</h3>
+        <p>פיתחתי ארבעה כיוונים, ואחד מהם היה חם וידידותי. הוא נראה טוב, אבל העצימות הרגשית של עידו בבידוק יורדת ל-1.5 מתוך 5. טון ידידותי באותו רגע לא מתאים לחומרתו. הורדתי אותו.</p>
+      </div>
+      <div class="card">
+        <h3>פסילה שנייה: צפיפות</h3>
+        <p>הסבב הראשון החזיר רשימה נגללת של כל שעות היום, כשלושים שורות, ומסך סטטוס שהיה לוח מחוונים. רוב היום ממילא נפסל על ידי שעת ההמראה, אז הרשימה הפכה לתשעה חלונות בסידור שלוש על שלוש.</p>
+      </div>
+    </div>
+
+    <div class="gallery" style="--col:20rem;--ar:16/11">
+      <button type="button" data-full="assets/directions.png" data-cap="ארבעה כיוונים עיצוביים מפותחים: כחול קלאסי, בהיר ואוורירי, פרימיום מודרני, ואנושי ונגיש">
+        <span class="shot"><img src="assets/directions-thumb.png" alt="ארבעה כיוונים עיצוביים זה לצד זה, כל אחד עם פלטה, גופנים ומסכים" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>ארבעת הכיוונים</b>הכיוון הידידותי, הרביעי, פותח עד הסוף לפני שנפסל.</span>
+      </button>
+      <button type="button" data-full="assets/mood-words.png" data-cap="שבע מילות אווירה מקובלות, וכל אחת מתורגמת להתנהגות מוצר אחת קונקרטית">
+        <span class="shot"><img src="assets/mood-words-thumb.png" alt="טבלה של שבע מילות אווירה, ולצד כל אחת ההתנהגות שהיא מחייבת במסך" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>מאוצר מילים להתנהגות</b>"מודרני" הופך ל"האישור מוצג גם בלי חיבור חי".</span>
+      </button>
+      <button type="button" data-full="assets/ai-screens.png" data-cap="סבב המסכים הראשון: רצועת תאריכים ורשימת שעות ארוכה במסך בחירת הזמן, ולוח מחוונים במסך הסטטוס">
+        <span class="shot"><img src="assets/ai-screens-thumb.png" alt="סבב המסכים הראשון, עם רשימת שעות ארוכה ומסך סטטוס צפוף" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>הצפיפות שירדה</b>מסך 5 בסבב הזה מציג את כל שעות היום כרשימה נגללת.</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="wrap">
+    <p class="eyebrow">06 · המסכים והמוצר החי</p>
+    <h2>לכל מסך החלטה אחת</h2>
+    <p>מה שמעניין במסך הוא לא מה רואים בו, אלא מה הוחלט בו.</p>
+
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>המסך</th><th>ההחלטה שבו</th></tr></thead>
+        <tbody>
+          <tr><td>בית</td><td>שתי כניסות בלבד, ומתחתן סיכום סטטוס לחיץ. אלמנט שמציג סטטוס ולא מוביל לפעולה תופס את המשתמש לא מוכן.</td></tr>
+          <tr><td>בחירת חלון זמן</td><td>תשעה חלונות בסידור שלוש על שלוש, נגזרים משעת ההמראה. האחרון מסתיים שעתיים לפניה.</td></tr>
+          <tr><td>פרטי נוסע שמורים</td><td>לא היה בגרסה הראשונה. גם מי שטס פעמיים בשנה לא רוצה להקליד את אותם פרטים מחדש.</td></tr>
+          <tr><td>מעקב סטטוס</td><td>תמונת מצב מיידית בלי גלילה. אין נתון עדכני? מוצג האחרון הידוע עם חותמת זמן.</td></tr>
+          <tr><td>הצגת אישור ו-QR</td><td>עובד בלי חיבור אינטרנט, ומוצג לצד הדרכון וכרטיס העלייה ולא במקומם.</td></tr>
+          <tr><td>הגדרות והתראות</td><td>בחירת השפה יושבת גם כאן וגם בתחתית כל מסך. מי שלא קורא עברית לא אמור לחפש אותה בממשק בעברית.</td></tr>
+          <tr><td>שגיאה</td><td>המסך הנפרד נשמר לכשלים אמיתיים בלבד. ולידציה של שדה חסר קורית על אותו מסך.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="gallery" style="--col:18rem;--ar:16/10">
+      <button type="button" data-full="assets/wireframes.png" data-cap="שלושה עשר ווירפריימים אפורים, לפני שנגעתי בצבע או בטיפוגרפיה">
+        <span class="shot"><img src="assets/wireframes-thumb.png" alt="שלושה עשר ווירפריימים אפורים של האפליקציה" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>השלד</b>מסך 10 הוא עדכון וביטול הזמנה. הוא לא נבנה בסוף.</span>
+      </button>
+      <button type="button" data-full="assets/screens.png" data-cap="שנים עשר המסכים הבנויים, מיוצאים במידות האמיתיות שלהם">
+        <span class="shot"><img src="assets/screens-thumb.png" alt="שנים עשר מסכי Leeway הבנויים" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>המסכים הבנויים</b>כולל מצבי טעינה, הצלחה וכישלון, ולא רק המסלול המוצלח.</span>
+      </button>
+    </div>
+
+    <h3 style="margin-top:2.6rem">המוצר עצמו, בתוך העמוד</h3>
+    <div style="margin-block-start:1.4rem">
+      <div class="phone-stage">
+        <div class="phone" id="phone">
+          <span class="phone__notch"></span>
+          <div class="phone__screen" id="phone-screen">
+            <img class="phone__poster" src="assets/app-poster.png" alt="מסך הבית של Leeway" loading="lazy">
+            <button type="button" class="phone__start" id="phone-start">
+              <span class="play" aria-hidden="true"><svg class="ico" style="width:1.5rem;height:1.5rem"><use href="#i-play"/></svg></span>
+              <b>להפעיל את האפליקציה</b>
+              <span>נטענת רק עכשיו, כדי לא להכביד על הדף. אפשר לנווט בה כרגיל</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <p class="demo__note">
+        חלונות הזמן מחושבים משעת ההמראה של הטיסה שתזינו.<br>
+        <a href="../" target="_blank" rel="noopener">לפתוח במסך מלא בלשונית חדשה</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="ai" class="soft">
+  <div class="wrap">
+    <p class="eyebrow">07 · מעיצוב לקוד</p>
+    <h2>איפה המודל טעה, ומה זה לימד אותי</h2>
+    <p class="lead">האפליקציה נבנתה כ-HTML, CSS ו-JavaScript בלבד, מתוך קובץ פיגמה שהיה ייחוס גס ולא מפרט. זה מסביר גם מה עבד וגם מה נשבר.</p>
+
+    <div class="grid g3" style="margin-top:1.8rem">
+      <div class="card"><h3>מה עבד</h3><p>הפיכת חבילת מחקר מפוזרת למסמכים עקביים, ובניית לוחות הפרסונה, האמפתיה, המסע וה-Sitemap ישירות בקובץ.</p></div>
+      <div class="card"><h3>מה נשבר</h3><p>ביקשתי שמסך בחירת הזמן יתאים לעיצוב. תשעת החלונות הועתקו מהמסגרת בפיגמה והוקפאו בקוד, ערכים שהיו שם כדוגמה בלבד.</p></div>
+      <div class="card"><h3>איך תפסתי</h3><p>רק כשהוספתי חיפוש טיסות אמיתי. לטיסה שממריאה ב-21:10 המסך הציע חלון ביטחון ב-6:40 בבוקר.</p></div>
+    </div>
+
+    <p style="margin-top:1.6rem">בקובץ עיצוב, ערך שהוא דוגמה נראה בדיוק כמו ערך שהוא כלל, ואף אחד לא מסמן מי מהם. להבדיל ביניהם זו העבודה שלי, לא שלו.</p>
+
+    <p class="claim" style="margin-top:2rem">הפרומפט שהכי שינה את התוצאה לא היה הוראה, אלא שאלה</p>
+    <blockquote class="quote">אם חלון הצ'ק-אין תלוי לגמרי במשך הבידוק הביטחוני, שהוא בלתי צפוי מטבעו, למה בכלל להציג אותו כבחירה בהרשמה?<cite>מתוך היסטוריית הפרומפטים, שלב 4</cite></blockquote>
+    <p>השאלה הזו מחקה בורר שלם ממסך ההרשמה. הניסוחים שקדמו לה ביקשו לשפר את המסך. היא ביקשה להצדיק אותו.</p>
+
+    <details class="more">
+      <summary>שלוש הטעויות שנשברו בקוד <span>ומה הייתה הסיבה השורשית</span></summary>
+      <div>
+        <div class="scroll-x" style="margin-top:0">
+          <table>
+            <thead><tr><th>מה קרה</th><th>הסיבה השורשית</th><th>איך נפתר</th></tr></thead>
+            <tbody>
+              <tr><td>לטיסה ב-21:10 הוצע חלון ביטחון ב-6:40 בבוקר.</td><td>ערכי דוגמה מהעיצוב הוקפאו כערכים קבועים בקוד.</td><td>הרשת נבנית אחורה משעת ההמראה, בעצם אחד בקוד.</td></tr>
+              <tr><td>חיפוש טיסה שנכשל החזיר את מסלול הדמו תל אביב–סיאטל.</td><td>מצב "אין לי נתון" לא הופרד ממצב ברירת המחדל.</td><td>הכרטיס מציג את מספר הטיסה שהוקלד בפועל, על רקע ניטרלי.</td></tr>
+              <tr><td>נוסע שנוסף בטעות חסם את שליחת הטופס.</td><td>בניתי מסלול הוספה בלי המסלול ההפוך.</td><td>נוספה הסרה, עם מספור מחדש של הבלוקים שנותרו.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><b>שתיים מהשלוש הן אותה טעות:</b> המוצר הציג תוכן שנועד להדגמה כאילו הוא עובדה. פעם מתוך העיצוב, פעם מתוך נפילה לאחור בקוד.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="beforeafter">
+  <div class="wrap">
+    <p class="eyebrow">08 · לפני ואחרי</p>
+    <h2>שלושה שינויים שהגיעו מאנשים, לא ממני</h2>
+    <p class="lead">לא היו לי כלי מדידה שעבדו, אז נתתי את האפליקציה לעד שבעה אנשים והסתכלתי.</p>
+
+    <div class="grid g3" style="margin-top:1.8rem">
+      <div class="card">
+        <p class="eyebrow">לפני</p>
+        <h3>לא הבינו מה מצופה מהם</h3>
+        <p>אדם פתח, קרא, הסתכל על הכפתורים, ואז שאל בקול: מה אני צריך לעשות כאן, ומה אני בעצם מזמין.</p>
+        <p class="tiny"><b>אחרי:</b> הדרכה בשלושה שלבים, עם הדגשה ויזואלית על האלמנט הרלוונטי. המסך היה קריא, המשימה לא.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">לפני</p>
+        <h3>מסך שגיאה על שדה ריק</h3>
+        <p>לא הזנת מספר טיסה, לחצת הבא, והמערכת העיפה אותך למסך שגיאה שלם. המשתמש נכנס לקיפאון.</p>
+        <p class="tiny"><b>אחרי:</b> ולידציה על אותו מסך, שמצביעה על השדה החסר. מסך השגיאה נשאר למקרי קצה אמיתיים.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">לפני</p>
+        <h3>עברית בלבד</h3>
+        <p>חלק מהאנשים שניסו לא קוראים עברית, וחלקם לא גרים בישראל. עבורם המוצר פשוט לא היה שמיש.</p>
+        <p class="tiny"><b>אחרי:</b> ארבע שפות, ומחליף שפה בתחתית כל מסך. השינוי שהשפיע הכי הרבה, יותר מהמצב הכהה.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="impact" class="soft">
+  <div class="wrap">
+    <p class="eyebrow">09 · סיכום</p>
+    <h2>מה נעשה, ומה נשאר פתוח</h2>
+    <p>שורה בלי ראיה לא נכנסה לטבלה. שתי השורות האחרונות ריקות בעמודת ההחלטה, וזה מכוון.</p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>הבעיה</th><th>ההחלטה</th><th>סטטוס</th></tr></thead>
+        <tbody>
+          <tr><td>מגיעים שלוש שעות מראש בלי לדעת מה מחכה</td><td>חלונות הזמן נגזרים משעת ההמראה, האחרון מסתיים שעתיים לפניה</td><td><span class="pill done">עובד</span></td></tr>
+          <tr><td>צוואר הבקבוק זז בין ביטחון לצ'ק-אין</td><td>מזמינים רק את הביטחון. הצ'ק-אין מוצג כהערכה מתעדכנת</td><td><span class="pill done">עובד</span></td></tr>
+          <tr><td>הזיהוי בעמדה רץ על מסמכים פיזיים</td><td>ה-QR עובד בלי רשת ומוצג לצד הדרכון, לא במקומו</td><td><span class="pill done">עובד</span></td></tr>
+          <tr><td>אנשים לא הבינו מה לעשות בכניסה ראשונה</td><td>הדרכה בשלושה שלבים עם הדגשה על האלמנט הרלוונטי</td><td><span class="pill done">עובד</span></td></tr>
+          <tr><td>לא כל מי שטס מנתב"ג קורא עברית</td><td>ארבע שפות, ומחליף השפה בתחתית כל מסך</td><td><span class="pill done">עובד</span></td></tr>
+          <tr><td>אין ודאות לגבי העומס בצ'ק-אין</td><td></td><td><span class="pill next">פתוח</span></td></tr>
+          <tr><td>אי אפשר לדחות חלון ברגע האחרון</td><td></td><td><span class="pill next">פתוח</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid g2" style="margin-top:2rem; align-items:start">
+      <div>
+        <h3>שלושה דברים שלמדתי</h3>
+        <ul>
+          <li><b>דמו הוא לא עובדה.</b> תפסתי את זה פעמיים באותו פרויקט, בשני מקומות שונים.</li>
+          <li><b>הצורה מציעה גם כשלא התכוונתי להציע.</b> בניתי גלילה להוספת נוסעים, והמשתמש קרא שדות ריקים כהזמנה למלא.</li>
+          <li><b>סימן הוא לא ראיה, ובכל זאת אפשר להחליט לפיו.</b> שדה הדרכון נולד מדגל שסימנתי כלא-ראיה, כי עלות הטעות אינה סימטרית.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>הגרסה הבאה</h3>
+        <ul>
+          <li><b>רמת עומס חזויה בצ'ק-אין.</b> הפער שהשאיר את מבחן הקבלה של הפרסונה הראשית נכשל חלקית.</li>
+          <li><b>עדכון או דחייה של החלון ברגע האחרון.</b> קיים בווירפריימים ולא נבנה. היום אפשר רק לבטל לגמרי.</li>
+          <li><b>סריקת כרטיס העלייה במקום הקלדה.</b> מקצרת את הטופס לפעולה אחת.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="appendix">
+  <div class="wrap">
+    <p class="eyebrow">נספח</p>
+    <h2>מידע נוסף, למי שרוצה לחפור</h2>
+    <p>כל מה שמתחת נשאר סגור בכוונה. הסיפור עומד בלעדיו.</p>
+
+    <details class="more">
+      <summary>המחקר המלא <span>שמונה ראיונות, וארבעה מהם אמיתיים</span></summary>
+      <div>
+        <p>ראיינתי ארבעה אנשים, ובמקביל בניתי ארבעה תרחישי בדיקה מדומים כדי לכסות הנחות שלא היה לי את מי לשאול עליהן: נוסע עסקים תדיר, הורה לילדים קטנים, גמלאי שנמנע מאפליקציות חדשות, ועובד תפעול.</p>
+        <p>הראיונות המדומים מסומנים ככאלה בכל מסמך, הם לא שימשו לקיבוץ לפרסונות, ואף ציטוט באפיון לא נלקח מהם. הם דגלים לבדיקה, לא נתונים.</p>
+        <div class="grid g3" style="margin-top:1.4rem">
+          <div class="card">
+            <div class="card-num">01</div>
+            <h3>מגיעים מוקדם בלי קשר לעומס</h3>
+            <p class="tiny">שישה מתוך שמונה תיארו הגעה קבועה של שעתיים וחצי עד שלוש וחצי.</p>
+            <p class="tiny"><b>מה זה שינה:</b> רשת חלונות הזמן נבנית אחורה משעת ההמראה.</p>
+          </div>
+          <div class="card">
+            <div class="card-num">02</div>
+            <h3>צוואר הבקבוק זז</h3>
+            <p class="tiny">חמישה מתוך שמונה. אצל אותו אדם זה מתחלף בין טיסות.</p>
+            <p class="tiny"><b>מה זה שינה:</b> ההרשמה מזמנת רק את הביטחון. הצ'ק-אין הפך להערכה מתעדכנת.</p>
+          </div>
+          <div class="card">
+            <div class="card-num">03</div>
+            <h3>מזהים לפי מסמכים</h3>
+            <p class="tiny">ארבעה מתוך שמונה, מהם שלושה ראיונות אמיתיים: בעמדה מבקשים דרכון וכרטיס עלייה.</p>
+            <p class="tiny"><b>מה זה שינה:</b> ה-QR הוגדר כגיבוי דיגיטלי לצד המסמכים ולא במקומם.</p>
+          </div>
+        </div>
+        <p style="margin-top:1.2rem"><b>התובנה שהכי איימה על הפרויקט היא זו שהשארתי בפנים.</b> מרואיינת 2 אמרה שהתור נעשה מסודר ומהיר יותר מעצמו. אם הבעיה הייתה אורך התור, המוצר היה מיותר. היא לא, ולכן הוא לא.</p>
+      </div>
+    </details>
+
+    <details class="more">
+      <summary>הפערים שסימנתי לעצמי <span>מה כאן לא ראיה, ולמה בכל זאת נשאר</span></summary>
+      <div>
+        <ul style="max-width:none">
+          <li>שתי תובנות נוספות שעלו, על זיהוי לא חד-משמעי ועל נטישת תהליכים דיגיטליים, מגיעות מריאיון מדומה בלבד ולא נספרות כראיה.</li>
+          <li>אין כאן מדידה כמותית. התקנתי כלי אנליטיקה והם לא שיקפו את הכניסות שראיתי בעיניים. עד שבעה אנשים ניסו, בלי הקלטה ובלי משימות מוגדרות. זו תצפית, לא ניסוי.</li>
+          <li>קובץ היסטוריית הפרומפטים נכתב בדיעבד ושוחזר מהתוצרים, ולכן הניסוחים הם שחזור נאמן ולא ציטוט מילה במילה. מה שמדויק: אילו שלבים רצו, באיזה סדר, ומה יצא מהם.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="more">
+      <summary>מה נבנה בפועל <span>הרשימה המלאה של התוצרים</span></summary>
+      <div>
+        <ul style="max-width:none">
+          <li>אפליקציה חיה, מובייל, שנים עשר מסכים, בארבע שפות ובשני מצבי תצוגה.</li>
+          <li>מערכת עיצוב בפיגמה עם טוקנים לשני מצבים, שעברה ביקורת של אחת עשרה נקודות כולל ניגודיות AA.</li>
+          <li>חבילת מחקר: שמונה ראיונות מנותחים, שתי פרסונות, שתי מפות אמפתיה, ארבע מפות מסע ו-Sitemap שעבר שתי ביקורות.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h2>קיריל</h2>
+    <p class="lead">מעצב UX. הפרויקט הזה הוא פרויקט הגמר שלי בקורס UX של John Bryce.</p>
+    <div class="btn-row">
+      <a class="btn btn-1" href="../">לפתוח את המוצר</a>
+      <a class="btn btn-2" href="../landing/">דף הנחיתה של Leeway</a>
+      <a class="btn btn-2" href="https://www.linkedin.com/in/kirillblik/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn btn-2" href="https://instagram.com/b.leak__" target="_blank" rel="noopener">אינסטגרם</a>
+    </div>
+    <p class="tiny" style="margin-top:2.2rem">קיריל · Leeway · 2026</p>
+  </div>
+</footer>
+
+<dialog class="lightbox" id="lightbox" aria-label="תצוגה מוגדלת">
+  <div class="lb-in">
+    <div class="lb-bar">
+      <p id="lb-cap"></p>
+      <button type="button" class="lb-close" id="lb-close" aria-label="סגירה">✕</button>
+    </div>
+    <img id="lb-img" alt="">
+  </div>
+</dialog>
+
+<script>
+(function(){
+  var KEY='leeway.case.theme', saved=null;
+  try{ saved=localStorage.getItem(KEY); }catch(e){}
+  var mode=(saved==='dark'||saved==='light')?saved:'light';
+  document.documentElement.setAttribute('data-theme',mode);
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.getElementById('theme-btn'); if(!b)return;
+    b.addEventListener('click',function(){
+      var next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      try{ localStorage.setItem(KEY,next); }catch(e){}
+      var m=document.querySelector('meta[name=theme-color]');
+      if(m) m.setAttribute('content', next==='dark'?'#0A1220':'#FFFFFF');
+    });
+  });
+})();
+var bar=document.getElementById('bar');
+function progress(){var h=document.documentElement;var p=h.scrollTop/((h.scrollHeight-h.clientHeight)||1)*100;bar.style.width=Math.min(100,p)+'%';}
+addEventListener('scroll',progress,{passive:true});progress();
+
+document.querySelectorAll('section > .wrap').forEach(function(el){el.classList.add('reveal');});
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.05});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+var links=[].slice.call(document.querySelectorAll('.nav-links a'));
+var spy=new IntersectionObserver(function(es){es.forEach(function(e){
+  if(!e.isIntersecting)return;
+  links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id);});
+});},{rootMargin:'-45% 0px -50% 0px'});
+links.forEach(function(a){var t=document.querySelector(a.getAttribute('href'));if(t)spy.observe(t);});
+
+(function(){
+  var box=document.getElementById('lightbox');
+  if(!box||typeof box.showModal!=='function')return;
+  var img=document.getElementById('lb-img'), cap=document.getElementById('lb-cap');
+  document.querySelectorAll('.gallery button, .board button').forEach(function(b){
+    b.addEventListener('click',function(){
+      img.src=b.dataset.full; img.alt=b.querySelector('img').alt;
+      cap.textContent=b.dataset.cap||''; box.showModal();
+    });
+  });
+  document.getElementById('lb-close').addEventListener('click',function(){box.close();});
+  box.addEventListener('click',function(e){if(e.target===box)box.close();});
+  box.addEventListener('close',function(){img.removeAttribute('src');});
+})();
+
+(function(){
+  var start=document.getElementById('phone-start'), screenEl=document.getElementById('phone-screen');
+  if(!start||!screenEl)return;
+  start.addEventListener('click',function(){
+    var f=document.createElement('iframe');
+    f.src='../'; f.title='Leeway, האפליקציה החיה';
+    f.setAttribute('allow','clipboard-write');
+    screenEl.appendChild(f);
+    var poster=screenEl.querySelector('.phone__poster'); if(poster)poster.remove();
+    start.remove();
+  },{once:true});
+})();
+
+(function(){
+  document.querySelectorAll('.phone').forEach(function(phone){
+    var stage=phone.parentElement; if(!stage)return;
+    function fit(){
+      phone.style.setProperty('--s','1'); phone.style.setProperty('--gap-fix','0px');
+      var s=Math.min(1, stage.clientWidth/360);
+      phone.style.setProperty('--s',s.toFixed(3));
+      phone.style.setProperty('--gap-fix',Math.round(phone.offsetHeight*(s-1))+'px');
+    }
+    fit(); addEventListener('resize',fit);
+  });
+})();
+</script>
+</body>
+</html>
