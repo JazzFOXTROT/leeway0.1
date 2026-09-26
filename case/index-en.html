@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leeway · Case Study</title>
+<meta name="description" content="How I built an app that gives a traveler at Ben Gurion Airport a known window for the security check, instead of a guessed three-hour safety margin.">
+<link rel="alternate" hreflang="he" href="index.html">
+<link rel="alternate" hreflang="en" href="index-en.html">
+<meta name="theme-color" content="#FFFFFF">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#FFFFFF; --bg-soft:#E9F2FF; --card:#FFFFFF;
+  --fg:#001B2A; --fg-soft:#525F77; --fg-faint:#606573;
+  --line:#C9C8C8; --accent:#1E5ABA; --accent-fg:#FFFFFF; --accent-soft:#E9F2FF;
+  --low:#BB0307;
+  --font-display:"Heebo", system-ui, sans-serif;
+  --font-body:"Heebo", system-ui, sans-serif;
+  --w-display:700;
+  --t-hero:clamp(2.3rem,5.2vw,4rem);
+  --t-h2:clamp(1.6rem,3.1vw,2.3rem);
+  --t-h3:clamp(1.05rem,1.9vw,1.28rem);
+  --t-body:clamp(1rem,1.3vw,1.07rem);
+  --t-small:.875rem;
+  --r:12px; --r-lg:16px; --r-pill:999px;
+  --shadow:0 1px 2px rgba(0,27,42,.05), 0 12px 30px rgba(0,27,42,.07);
+  --line-w:1px;
+  --lh:1.7; --pad-sec:clamp(2.8rem,6.5vw,4.8rem); --gap:1rem;
+  --wrap:1240px; --measure:60ch;
+  --img-filter:none;
+}
+:root[data-theme="dark"]{
+    --bg:#07192F; --bg-soft:#0B284B; --card:#182A4A;
+    --fg:#F2EFE9; --fg-soft:#C9CEDE; --fg-faint:#AEB6C6;
+    --line:#2B3D5C; --accent:#63B3ED; --accent-fg:#001B2A; --accent-soft:#0F3673;
+    --low:#EE7B75;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px rgba(0,0,0,.45);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:5.5rem; overflow-x:clip}
+body{margin:0; background:var(--bg); color:var(--fg); font-family:var(--font-body);
+  font-size:var(--t-body); line-height:var(--lh); -webkit-font-smoothing:antialiased; overflow-x:clip}
+img{max-width:100%; height:auto; display:block; filter:var(--img-filter)}
+a{color:var(--accent)}
+h1,h2,h3,h4{font-family:var(--font-display); line-height:1.25; margin:0 0 .55em; letter-spacing:-.01em}
+h1,h2{font-weight:var(--w-display)}
+h3{font-weight:700; font-size:var(--t-h3)}
+h2{font-size:var(--t-h2)}
+p{margin:0 0 1em; max-width:var(--measure)}
+ul{padding-inline-start:1.2em; max-width:var(--measure)}
+li{margin-bottom:.4em}
+
+.wrap{width:min(100% - 2.5rem, var(--wrap)); margin-inline:auto}
+section{padding-block:var(--pad-sec); border-top:var(--line-w) solid var(--line)}
+section:first-of-type{border-top:0}
+.soft{background:var(--bg-soft)}
+
+.eyebrow{font-size:var(--t-small); font-weight:700; letter-spacing:.09em; color:var(--accent); margin:0 0 .7rem}
+.lead{font-size:calc(var(--t-body)*1.18); color:var(--fg-soft)}
+.tiny{font-size:var(--t-small); color:var(--fg-faint)}
+
+.bar-track{position:fixed; inset-block-start:0; inset-inline:0; height:3px; z-index:60}
+.bar{height:100%; width:0; background:var(--accent); transition:width .12s linear}
+
+.nav{position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter:blur(12px); border-bottom:var(--line-w) solid var(--line)}
+.nav-in{width:min(100% - 2.5rem, var(--wrap)); margin-inline:auto; display:flex; align-items:center; gap:1rem; height:3.8rem}
+.nav-name{display:inline-flex; align-items:center; gap:.6rem; margin-inline-end:auto; white-space:nowrap}
+.nav-logo{height:26px; width:auto; display:block}
+.nav-logo--dark{display:none}
+:root[data-theme="dark"] .nav-logo--light{display:none}
+:root[data-theme="dark"] .nav-logo--dark{display:block}
+.theme-btn{min-height:40px; min-width:40px; display:inline-grid; place-items:center; cursor:pointer;
+  border-radius:var(--r-pill); border:var(--line-w) solid var(--line); background:var(--card);
+  color:var(--fg-soft); font:inherit; flex:0 0 auto; margin-inline-start:.6rem;
+  transition:border-color .15s ease, color .15s ease}
+.theme-btn:hover{border-color:var(--accent); color:var(--fg)}
+.lang-btn{min-height:40px; min-width:40px; padding-inline:.85rem; display:inline-flex; align-items:center; justify-content:center; border-radius:var(--r-pill);
+  border:var(--line-w) solid var(--line); background:transparent; color:var(--fg-soft); font:inherit; font-size:var(--t-small); font-weight:600; text-decoration:none; letter-spacing:.03em}
+.lang-btn:hover{border-color:var(--accent); color:var(--fg)}
+.lang-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.theme-btn .ico{width:1.15rem; height:1.15rem}
+.theme-btn .i-sun{display:none}
+:root[data-theme="dark"] .theme-btn .i-sun{display:block}
+:root[data-theme="dark"] .theme-btn .i-moon{display:none}
+.nav-name span{font-size:var(--t-small); font-weight:600; color:var(--fg-faint); letter-spacing:.05em;
+  padding-inline-start:.6rem; border-inline-start:var(--line-w) solid var(--line);
+  align-self:stretch; display:inline-flex; align-items:center}
+@media (max-width:480px){.nav-name span{display:none}}
+.nav-links{display:flex; gap:1.15rem; overflow-x:auto; scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:var(--fg-soft); text-decoration:none; font-size:var(--t-small); white-space:nowrap; padding-block:.4rem; border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--fg)}
+.nav-links a.on{color:var(--fg); border-bottom-color:var(--accent)}
+@media (max-width:1100px){.nav-links{display:none}}
+
+.btn{display:inline-flex; align-items:center; gap:.5rem; min-height:44px; padding:.7rem 1.4rem; border-radius:var(--r-pill); text-decoration:none; font-weight:600; border:var(--line-w) solid transparent; transition:transform .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-1{background:var(--accent); color:var(--accent-fg)}
+.btn-2{background:transparent; color:var(--fg); border-color:var(--line)}
+.btn-row{display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1.8rem}
+
+/* tags, not buttons: no outline, soft background only */
+.chips{display:flex; flex-wrap:wrap; gap:.45rem; margin:0; padding:0; list-style:none}
+.chip{font-size:var(--t-small); font-weight:500; padding:.32rem .8rem; border-radius:var(--r-pill);
+  background:var(--accent-soft); color:var(--accent); border:0}
+
+.grid{display:grid; gap:var(--gap)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(19rem,100%),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(15rem,100%),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(12rem,100%),1fr))}
+.card{background:var(--card); border:var(--line-w) solid var(--line); border-radius:var(--r-lg); padding:1.4rem; box-shadow:var(--shadow)}
+.card h3{margin-bottom:.35rem}
+.card p{max-width:none}
+.card p:last-child{margin-bottom:0}
+.card-num{font-family:var(--font-display); font-size:2.1rem; font-weight:var(--w-display); color:var(--accent); line-height:1; margin-bottom:.3rem}
+
+.quote{border-inline-start:4px solid var(--accent); padding-inline-start:1.3rem; font-size:calc(var(--t-body)*1.12); margin:1.5rem 0; max-width:var(--measure); color:var(--fg-soft)}
+.quote cite{display:block; font-size:var(--t-small); color:var(--fg-faint); font-style:normal; margin-top:.5rem}
+
+.claim{font-family:var(--font-display); font-weight:700; font-size:calc(var(--t-body)*1.3); line-height:1.45;
+  max-width:var(--measure); margin:0 0 1rem; padding-inline-start:1.1rem; border-inline-start:4px solid var(--accent)}
+
+.gallery{display:grid; gap:1rem; margin-block-start:1.4rem;
+  grid-template-columns:repeat(auto-fit,minmax(min(var(--col,20rem),100%),1fr))}
+.gallery--one{grid-template-columns:minmax(0,min(56rem,100%)); justify-content:start}
+.gallery button{
+  display:flex; flex-direction:column; width:100%; padding:0; text-align:start; font:inherit; color:inherit;
+  background:var(--card); border:var(--line-w) solid var(--line); border-radius:var(--r-lg);
+  overflow:hidden; cursor:zoom-in; box-shadow:var(--shadow); position:relative;
+  transition:border-color .15s ease, transform .15s ease}
+.gallery button:hover,.gallery button:focus-visible{border-color:var(--accent); transform:translateY(-2px)}
+.gallery button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.shot{aspect-ratio:var(--ar,16/10); display:grid; place-items:center; overflow:hidden; background:var(--bg-soft)}
+.shot img{max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain}
+.zoom{position:absolute; inset-block-start:.6rem; inset-inline-end:.6rem; width:34px; height:34px;
+  display:grid; place-items:center; border-radius:var(--r-pill); background:var(--card);
+  border:var(--line-w) solid var(--line); color:var(--fg-soft);
+  opacity:0; transform:scale(.9); transition:opacity .15s ease, transform .15s ease; pointer-events:none}
+.gallery button:hover .zoom,.gallery button:focus-visible .zoom{opacity:1; transform:none}
+.cap{display:block; padding:.7rem .85rem .85rem; font-size:var(--t-small); color:var(--fg-faint)}
+.cap b{display:block; color:var(--fg); font-weight:600; margin-block-end:.15rem}
+
+/* ══ Breaking out of the box ══
+   A board built to be read across doesn't fit in a text column.
+   It leaves the wrapper and takes the full screen width. */
+.bleed{width:100vw; max-width:100vw; margin-inline:calc(50% - 50vw)}
+.board{margin-block:1.6rem 0; background:var(--card);
+  border-block:var(--line-w) solid var(--line)}
+.board button{display:block; width:100%; padding:0; margin:0; border:0; background:none;
+  font:inherit; color:inherit; cursor:zoom-in; position:relative}
+.board button:focus-visible{outline:2px solid var(--accent); outline-offset:-3px}
+/* The board is built to be read across, so it spans edge to edge with no height cap.
+   That is why it left the card in the first place. */
+.board img{width:100%; height:auto}
+.board .board-cap{width:min(100% - 2.5rem, var(--wrap)); margin-inline:auto;
+  padding-block:.75rem .95rem; font-size:var(--t-small); color:var(--fg-faint); text-align:start}
+.board .board-cap b{color:var(--fg); font-weight:600; margin-inline-end:.4rem}
+.board .zoom{opacity:1; transform:none; inset-block-start:.8rem; inset-inline-end:1.25rem}
+
+dialog.lightbox{border:0; padding:0; background:none; width:100%; height:100%; max-width:100vw; max-height:100vh; margin:0}
+dialog.lightbox::backdrop{background:rgb(11 13 20 / .88)}
+.lb-in{display:flex; flex-direction:column; height:100%; padding:1rem; gap:.75rem}
+.lb-in img{flex:1 1 auto; min-height:0; width:100%; object-fit:contain; border-radius:var(--r); background:#0f1219}
+.lb-bar{display:flex; align-items:center; justify-content:space-between; gap:1rem; color:#ECE7DD}
+.lb-bar p{margin:0; color:#B9B1A2; font-size:var(--t-small); max-width:none}
+.lb-close{min-height:44px; min-width:44px; border-radius:var(--r-pill); cursor:pointer;
+  border:1px solid rgb(236 231 221 / .35); background:none; color:#ECE7DD; font:inherit; font-size:1.1rem}
+
+.more{border:var(--line-w) solid var(--line); border-radius:var(--r-lg); background:var(--card);
+  padding:0 1.4rem; box-shadow:var(--shadow); margin-block-start:1.2rem}
+.more+.more{margin-block-start:.8rem}
+.more>summary{cursor:pointer; list-style:none; padding:1.05rem 0; font-family:var(--font-display);
+  font-weight:700; position:relative; padding-inline-start:2.4rem}
+.more>summary::-webkit-details-marker{display:none}
+.more>summary::before{content:"+"; position:absolute; inset-inline-start:0; inset-block-start:1.05rem;
+  width:1.6rem; height:1.6rem; display:grid; place-items:center;
+  border-radius:var(--r-pill); background:var(--accent-soft); color:var(--accent); font-size:1.05rem; line-height:1}
+.more[open]>summary::before{content:"–"}
+.more>summary span{font-family:var(--font-body); font-weight:400; font-size:var(--t-small); color:var(--fg-faint)}
+.more>div{padding-block:.2rem 1.3rem}
+.more p:last-child{margin-bottom:0}
+
+.scroll-x{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:1.4rem 0;
+  border:var(--line-w) solid var(--line); border-radius:var(--r-lg); background:var(--card)}
+table{border-collapse:collapse; width:100%; min-width:620px; font-size:var(--t-small)}
+th,td{text-align:start; padding:.8rem 1rem; border-bottom:var(--line-w) solid var(--line); vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-weight:700; background:var(--bg-soft); white-space:nowrap}
+.pill{font-size:.75rem; padding:.2rem .7rem; border-radius:var(--r-pill); white-space:nowrap; display:inline-block}
+.pill.done{background:var(--accent-soft); color:var(--accent)}
+:root[data-theme="dark"] .pill.done{color:#DCEBFB}
+.pill.next{background:var(--bg-soft); color:var(--fg-soft); border:var(--line-w) solid var(--line)}
+
+.jmaps{display:grid; gap:1.1rem; margin-block-start:1.2rem;
+  grid-template-columns:repeat(auto-fit,minmax(min(26rem,100%),1fr))}
+.jmap{border:var(--line-w) solid var(--line); border-radius:var(--r-lg); background:var(--card);
+  padding:1.1rem 1.2rem 1.2rem; box-shadow:var(--shadow)}
+.jmap h4{margin:0 0 .5rem; font-size:1.02rem}
+.jscale{display:flex; gap:1.1rem; margin:0 0 .7rem; max-width:none; font-size:.8rem; color:var(--fg-faint)}
+.jscale span{display:inline-flex; align-items:center; gap:.35rem}
+.jchart{display:block; width:100%; height:auto; overflow:visible; min-height:170px}
+.jg{stroke:var(--line); stroke-width:1}
+.ja{fill:var(--accent); opacity:.10}
+.jl{fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linejoin:round; stroke-linecap:round}
+.jd{fill:var(--accent)}
+.jd--low{fill:var(--low)}
+.jt,.jn{fill:var(--fg-faint); font-size:11px; font-family:var(--font-body); text-anchor:middle}
+.jv{fill:var(--fg-soft); font-size:12px; font-weight:600; font-family:var(--font-body); text-anchor:middle}
+.jv--low{fill:var(--low)}
+.jlegend{list-style:none; margin:.8rem 0 0; padding:0; display:grid; gap:.3rem; max-width:none}
+.jlegend li{display:grid; grid-template-columns:1.2rem 1.15rem 1fr; gap:.5rem; align-items:start; margin:0}
+.jn-num{font-size:.75rem; font-weight:600; color:var(--fg-faint); text-align:center; line-height:1.5}
+.jn-body b{font-size:.86rem; color:var(--fg); font-weight:600; display:block}
+.jn-body span{display:block; font-size:.79rem; color:var(--fg-soft)}
+.jnote{margin:.8rem 0 0; padding-block-start:.7rem; border-block-start:var(--line-w) solid var(--line);
+  font-size:var(--t-small); color:var(--fg-soft); max-width:none}
+.ico{width:1.15rem; height:1.15rem; flex:0 0 auto; stroke:currentColor; fill:none; stroke-width:1.6;
+  stroke-linecap:round; stroke-linejoin:round}
+.ico--hi{color:var(--accent)}
+.ico--mid{color:var(--fg-faint)}
+.ico--lo{color:var(--low)}
+
+.phone-stage{width:100%; overflow:hidden; display:flex; justify-content:center; padding:6px 1rem 3.25rem}
+.phone{--pw:340px; width:var(--pw); position:relative; flex-shrink:0;
+  border-radius:42px; padding:10px; background:#001B2A;
+  box-shadow:0 22px 60px rgb(0 27 42 / .26), 0 0 0 1px #182A4A inset;
+  transform:scale(var(--s,1)); transform-origin:top center; margin-block-end:var(--gap-fix,0px)}
+.phone__screen{position:relative; width:100%; aspect-ratio:390/844; border-radius:33px; overflow:hidden; background:#FFFFFF}
+.phone__screen>iframe,.phone__poster{position:absolute; inset:0; width:100%; height:100%; border:0}
+.phone__poster{display:block; object-fit:cover}
+.phone__notch{position:absolute; inset-block-start:14px; inset-inline-start:calc(50% - 41px);
+  width:82px; height:20px; border-radius:var(--r-pill); background:#001B2A; z-index:3}
+.phone__start{position:absolute; inset:0; z-index:2; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:.5rem; padding:2rem 1.4rem; cursor:pointer;
+  border:0; font:inherit; color:#F2EFE9; text-align:center; background:rgb(0 27 42 / .66); backdrop-filter:blur(1.5px)}
+.phone__start b{font-size:1rem; font-weight:600}
+.phone__start span{font-size:.82rem; color:#D6DCE6; max-width:17rem}
+.phone__start .play{display:grid; place-items:center; width:54px; height:54px; border-radius:var(--r-pill);
+  background:#F2EFE9; color:#001B2A; margin-block-end:.3rem}
+.demo__note{text-align:center; color:var(--fg-faint); font-size:var(--t-small); margin-block-start:.9rem; max-width:none}
+
+.hero{display:grid; gap:clamp(1.5rem,4vw,3.5rem); align-items:center;
+  grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr)}
+@media (max-width:900px){ .hero{grid-template-columns:1fr} }
+
+footer{padding-block:var(--pad-sec) 3rem; border-top:var(--line-w) solid var(--line); text-align:center}
+footer p{margin-inline:auto}
+footer .btn-row{justify-content:center}
+
+#top, footer{color:#FFFFFF; border:0}
+#top{background:linear-gradient(180deg,#0F4495 0%,#1F63BA 100%)}
+footer{background:linear-gradient(180deg,#1F63BA 0%,#0F4495 100%)}
+:root[data-theme="dark"] #top{background:linear-gradient(180deg,#061527 0%,#0B284B 100%)}
+:root[data-theme="dark"] footer{background:linear-gradient(180deg,#0B284B 0%,#061527 100%)}
+#top h1, #top h2, footer h2{color:#FFFFFF}
+#top .eyebrow{color:#E4EEFC}
+#top .lead, footer .lead{color:#E4EEFC}
+#top .tiny, footer .tiny{color:#E4EEFC}
+#top .chip{background:rgb(255 255 255 / .16); color:#FFFFFF; border:0}
+#top .btn-1, footer .btn-1{background:#FFFFFF; color:#0F4495}
+#top .btn-2, footer .btn-2{color:#FFFFFF; border-color:rgb(255 255 255 / .5)}
+footer a{color:#FFFFFF}
+#top .phone{box-shadow:0 26px 70px rgb(0 20 50 / .45)}
+
+.reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease}
+.reveal.in{opacity:1; transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1; transform:none; transition:none}
+  .btn:hover,.gallery button:hover{transform:none}
+  *,*::before,*::after{transition-duration:.001ms !important; animation-duration:.001ms !important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="f-hi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.2c.9 1.1 2.1 1.7 3.5 1.7s2.6-.6 3.5-1.7"/><path d="M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="f-mid" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 15h7"/><path d="M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="f-lo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 16.2c.9-1.1 2.1-1.7 3.5-1.7s2.6.6 3.5 1.7"/><path d="M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="i-zoom" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8 21 21"/><path d="M8.5 11h5M11 8.5v5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></symbol>
+</svg>
+
+<div class="bar-track"><div class="bar" id="bar"></div></div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <span class="nav-name">
+      <img class="nav-logo nav-logo--light" src="assets/logo-leeway-blue.webp" alt="Leeway" width="240" height="80">
+      <img class="nav-logo nav-logo--dark" src="assets/logo-leeway-white.webp" alt="Leeway" width="240" height="80">
+      <span>Case study</span>
+    </span>
+    <div class="nav-links">
+      <a href="#challenge">The challenge</a>
+      <a href="#users">User analysis</a>
+      <a href="#journey">Journey maps</a>
+      <a href="#sitemap">Sitemap</a>
+      <a href="#language">Design language</a>
+      <a href="#screens">Screens</a>
+      <a href="#ai">From design to code</a>
+      <a href="#appendix">Appendix</a>
+    </div>
+    <a class="lang-btn" href="index.html" hreflang="he" lang="he" aria-label="Read this case study in Hebrew" title="Read this case study in Hebrew">עברית</a>
+    <button type="button" class="theme-btn" id="theme-btn" aria-label="Toggle display mode" title="Display mode">
+      <svg class="ico i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+      <svg class="ico i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+    </button>
+  </div>
+</nav>
+
+<section id="top">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Case study · Mobile app</p>
+        <h1 style="font-size:var(--t-hero)">Leeway</h1>
+        <p class="lead">Booking a time window for the security check at Ben Gurion Airport, and guiding the traveler through to the end of check-in.</p>
+
+        <ul class="chips" style="margin-top:1.5rem">
+          <li class="chip">Research, design and code</li>
+          <li class="chip">12 screens</li>
+          <li class="chip">4 languages</li>
+          <li class="chip">Live product</li>
+        </ul>
+
+        <div class="btn-row">
+          <a class="btn btn-1" href="../">Open the product</a>
+          <a class="btn btn-2" href="../landing/">Landing page</a>
+        </div>
+      </div>
+
+      <div class="phone-stage">
+        <div class="phone">
+          <span class="phone__notch"></span>
+          <div class="phone__screen">
+            <img class="phone__poster" src="assets/app-poster.png" alt="Leeway home screen: a new-booking button, and a status summary beneath it">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="challenge" class="soft">
+  <div class="wrap">
+    <p class="eyebrow">01 · The challenge</p>
+    <h2>The problem isn’t the queue. The problem is that you can’t know when you’ll get out of it</h2>
+    <p class="lead">Six of the eight interviewees arrive at Ben Gurion three hours early. That buffer isn’t derived from the load, but from the fact that there’s no way to know what the load will be.</p>
+
+    <div class="grid g3" style="margin-top:1.8rem">
+      <div class="card"><h3>What happens today</h3><p>There is no tool that shows expected load at Ben Gurion. The Israel Airports Authority app provides only a flight board and parking information.</p></div>
+      <div class="card"><h3>What the research overturned</h3><p>I assumed the queue was the bottleneck. One interviewee said the queue had become faster on its own. And still, people arrive three hours early.</p></div>
+      <div class="card"><h3>The idea</h3><p>Replace a guessed buffer with a known one: book a time window for the security check in advance, and give it a number you can plan around.</p></div>
+    </div>
+
+    <blockquote class="quote" style="margin-top:1.8rem">I always get to the airport about three hours before the flight.<cite>Real interview 4</cite></blockquote>
+  </div>
+</section>
+
+<section id="users">
+  <div class="wrap">
+    <p class="eyebrow">02 · User analysis</p>
+    <h2>Two groups, and only one of them really hurts</h2>
+    <p>I grouped the interviewees not by flight frequency but by the quality of their experience so far. Those who experienced disruption plan out of risk avoidance, and those for whom the process ran smoothly focus on efficiency.</p>
+
+    <div class="grid g2" style="margin-top:1.6rem">
+      <div class="card">
+        <h3>Ido Carmeli · primary persona</h3>
+        <p class="tiny">“It took me more than an hour to get through check-in”</p>
+        <p>Experienced a queue that blew up. Arrives three hours early every time. His pain isn’t the waiting but the lack of control over what will happen that day.</p>
+      </div>
+      <div class="card">
+        <h3>Michal Avrahami · secondary persona</h3>
+        <p class="tiny">“In the past year the queue has started to be more orderly”</p>
+        <p>Manages her timing with an external tool, and has had a smooth process so far. My data shows no distinct pain for her. I flagged that and didn’t invent a second frustration for her.</p>
+      </div>
+    </div>
+
+    <div class="gallery" style="--col:24rem;--ar:16/11">
+      <button type="button" data-full="assets/persona-ido.png" data-cap="Persona card of Ido Carmeli. Goals, frustrations, key behaviors and critical pain, every field anchored in an interview">
+        <span class="shot"><img src="assets/persona-ido-thumb.png" alt="Persona card of Ido Carmeli, with goals, frustrations, behaviors and a critical pain" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>Ido Carmeli</b>Every field on the card is anchored in a quote from an interview.</span>
+      </button>
+      <button type="button" data-full="assets/persona-michal.png" data-cap="Persona card of Michal Avrahami. The critical pain field is explicitly marked as a hypothesis to validate">
+        <span class="shot"><img src="assets/persona-michal-thumb.png" alt="Persona card of Michal Avrahami, with one frustration and a critical pain marked as a hypothesis" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>Michal Avrahami</b>The critical pain is marked on the card itself as a hypothesis to validate.</span>
+      </button>
+    </div>
+
+    <p class="claim" style="margin-top:2.2rem">The persona worked for me when it refused me, not when it agreed</p>
+    <p>A ready-made onboarding skill suggested an eight-screen skeleton, including a competitor comparison table. I wanted it. Then I thought about Ido: he doesn’t open the app to choose between products, but with one question, what time to be at the airport. A comparison table answers a question he didn’t ask, so it went.</p>
+  </div>
+</section>
+
+<section id="journey" class="soft">
+  <div class="wrap">
+    <p class="eyebrow">03 · Journey maps</p>
+    <h2>Four journey maps, and one of them is a straight line</h2>
+    <p>A map for each persona in two scenarios, first experience and repeat use. The scale is emotional intensity: 5 is motivation, 1 is frustration, and the red dot is the low point.</p>
+
+    <h3 style="margin-top:2rem">Ido</h3>
+    <div class="jmaps">
+<article class="jmap"><h4>From booking to the end of check-in</h4><p class="jscale"><span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg> 5 motivation</span><span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg> 1 frustration</span></p><svg viewBox="0 0 560 265" class="jchart" role="img" aria-label="Ido · from booking to the end of check-in"><line x1="34.0" y1="211.0" x2="526.0" y2="211.0" class="jg"/><text x="534" y="215.0" class="jt">1</text><line x1="34.0" y1="120.5" x2="526.0" y2="120.5" class="jg"/><text x="534" y="124.5" class="jt">3</text><line x1="34.0" y1="30.0" x2="526.0" y2="30.0" class="jg"/><text x="534" y="34.0" class="jt">5</text><path d="M526.0,120.5 L427.6,97.9 L329.2,120.5 L230.8,97.9 L132.4,188.4 L34.0,75.2 L34.0,211.0 L526.0,211.0 Z" class="ja"/><path d="M526.0,120.5 L427.6,97.9 L329.2,120.5 L230.8,97.9 L132.4,188.4 L34.0,75.2" class="jl"/><circle cx="526.0" cy="120.5" r="5" class="jd"/><text x="526.0" y="107.5" class="jv">3</text><text x="526.0" y="237" class="jn">1</text><circle cx="427.6" cy="97.9" r="5" class="jd"/><text x="427.6" y="84.9" class="jv">3.5</text><text x="427.6" y="237" class="jn">2</text><circle cx="329.2" cy="120.5" r="5" class="jd"/><text x="329.2" y="107.5" class="jv">3</text><text x="329.2" y="237" class="jn">3</text><circle cx="230.8" cy="97.9" r="5" class="jd"/><text x="230.8" y="84.9" class="jv">3.5</text><text x="230.8" y="237" class="jn">4</text><circle cx="132.4" cy="188.4" r="6" class="jd jd--low"/><text x="132.4" y="175.4" class="jv jv--low">1.5</text><text x="132.4" y="237" class="jn">5</text><circle cx="34.0" cy="75.2" r="5" class="jd"/><text x="34.0" y="62.2" class="jv">4</text><text x="34.0" y="237" class="jn">6</text></svg><ol class="jlegend"><li><span class="jn-num">1</span><svg class="ico ico--mid" aria-hidden="true"><use href="#f-mid"/></svg><span class="jn-body"><b>Deciding to register in advance</b><span>Mild worry and a need for certainty · 3</span></span></li><li><span class="jn-num">2</span><svg class="ico ico--mid" aria-hidden="true"><use href="#f-mid"/></svg><span class="jn-body"><b>Traveler identification</b><span>Slight confidence · 3.5</span></span></li><li><span class="jn-num">3</span><svg class="ico ico--mid" aria-hidden="true"><use href="#f-mid"/></svg><span class="jn-body"><b>Choosing a time window</b><span>Tentative hope · 3</span></span></li><li><span class="jn-num">4</span><svg class="ico ico--mid" aria-hidden="true"><use href="#f-mid"/></svg><span class="jn-body"><b>Booking confirmation</b><span>Temporary relief · 3.5</span></span></li><li><span class="jn-num">5</span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg><span class="jn-body"><b>First security screening</b><span>Frustration and tension · 1.5</span></span></li><li><span class="jn-num">6</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Check-in</b><span>Relief at finishing the process · 4</span></span></li></ol><p class="jnote">The low point is the screening itself, 1.5. At that point the booking is already done, and the traveler can’t do anything more.</p></article>
+<article class="jmap"><h4>Repeat use, from flight 2 to habit</h4><p class="jscale"><span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg> 5 motivation</span><span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg> 1 frustration</span></p><svg viewBox="0 0 560 265" class="jchart" role="img" aria-label="Ido · repeat use, from flight 2 to habit"><line x1="34.0" y1="211.0" x2="526.0" y2="211.0" class="jg"/><text x="534" y="215.0" class="jt">1</text><line x1="34.0" y1="120.5" x2="526.0" y2="120.5" class="jg"/><text x="534" y="124.5" class="jt">3</text><line x1="34.0" y1="30.0" x2="526.0" y2="30.0" class="jg"/><text x="534" y="34.0" class="jt">5</text><path d="M526.0,120.5 L362.0,75.2 L198.0,165.8 L34.0,75.2 L34.0,211.0 L526.0,211.0 Z" class="ja"/><path d="M526.0,120.5 L362.0,75.2 L198.0,165.8 L34.0,75.2" class="jl"/><circle cx="526.0" cy="120.5" r="5" class="jd"/><text x="526.0" y="107.5" class="jv">3</text><text x="526.0" y="237" class="jn">1</text><circle cx="362.0" cy="75.2" r="5" class="jd"/><text x="362.0" y="62.2" class="jv">4</text><text x="362.0" y="237" class="jn">2</text><circle cx="198.0" cy="165.8" r="6" class="jd jd--low"/><text x="198.0" y="152.8" class="jv jv--low">2</text><text x="198.0" y="237" class="jn">3</text><circle cx="34.0" cy="75.2" r="5" class="jd"/><text x="34.0" y="62.2" class="jv">4</text><text x="34.0" y="237" class="jn">4</text></svg><ol class="jlegend"><li><span class="jn-num">1</span><svg class="ico ico--mid" aria-hidden="true"><use href="#f-mid"/></svg><span class="jn-body"><b>Before flight 2</b><span>Tentative skepticism · 3</span></span></li><li><span class="jn-num">2</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Repeat use, flight 2</b><span>Growing confidence · 4</span></span></li><li><span class="jn-num">3</span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg><span class="jn-body"><b>At the airport, flight 2</b><span>Repeated failure and loss of trust · 2</span></span></li><li><span class="jn-num">4</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Forming a habit</b><span>Trust gradually building · 4</span></span></li></ol><p class="jnote">The low point moves. In repeat use it’s no longer at the screening but at a failure in the field, because trust built over a whole flight breaks with a single failure.</p></article>
+</div>
+
+
+    <h3 style="margin-top:2.4rem">Michal</h3>
+    <div class="jmaps">
+<article class="jmap"><h4>From booking to the end of check-in</h4><p class="jscale"><span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg> 5 motivation</span><span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg> 1 frustration</span></p><svg viewBox="0 0 560 265" class="jchart" role="img" aria-label="Michal · from booking to the end of check-in"><line x1="34.0" y1="211.0" x2="526.0" y2="211.0" class="jg"/><text x="534" y="215.0" class="jt">1</text><line x1="34.0" y1="120.5" x2="526.0" y2="120.5" class="jg"/><text x="534" y="124.5" class="jt">3</text><line x1="34.0" y1="30.0" x2="526.0" y2="30.0" class="jg"/><text x="534" y="34.0" class="jt">5</text><path d="M526.0,75.2 L427.6,75.2 L329.2,75.2 L230.8,75.2 L132.4,75.2 L34.0,52.6 L34.0,211.0 L526.0,211.0 Z" class="ja"/><path d="M526.0,75.2 L427.6,75.2 L329.2,75.2 L230.8,75.2 L132.4,75.2 L34.0,52.6" class="jl"/><circle cx="526.0" cy="75.2" r="6" class="jd"/><text x="526.0" y="62.2" class="jv">4</text><text x="526.0" y="237" class="jn">1</text><circle cx="427.6" cy="75.2" r="5" class="jd"/><text x="427.6" y="62.2" class="jv">4</text><text x="427.6" y="237" class="jn">2</text><circle cx="329.2" cy="75.2" r="5" class="jd"/><text x="329.2" y="62.2" class="jv">4</text><text x="329.2" y="237" class="jn">3</text><circle cx="230.8" cy="75.2" r="5" class="jd"/><text x="230.8" y="62.2" class="jv">4</text><text x="230.8" y="237" class="jn">4</text><circle cx="132.4" cy="75.2" r="5" class="jd"/><text x="132.4" y="62.2" class="jv">4</text><text x="132.4" y="237" class="jn">5</text><circle cx="34.0" cy="52.6" r="5" class="jd"/><text x="34.0" y="39.6" class="jv">4.5</text><text x="34.0" y="237" class="jn">6</text></svg><ol class="jlegend"><li><span class="jn-num">1</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Deciding to register in advance</b><span>Practical calm · 4</span></span></li><li><span class="jn-num">2</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Traveler identification</b><span>Satisfaction · 4</span></span></li><li><span class="jn-num">3</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Choosing a time window</b><span>Trust · 4</span></span></li><li><span class="jn-num">4</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Booking confirmation</b><span>Peace of mind · 4</span></span></li><li><span class="jn-num">5</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>First security screening</b><span>Calm · 4</span></span></li><li><span class="jn-num">6</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Check-in</b><span>Satisfaction at finishing the process · 4.5</span></span></li></ol><p class="jnote">A straight line isn’t a journey. There’s no red dot here, because there’s no low point: five stages, exactly equal.</p></article>
+<article class="jmap"><h4>Repeat use, from flight 2 to habit</h4><p class="jscale"><span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg> 5 motivation</span><span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg> 1 frustration</span></p><svg viewBox="0 0 560 265" class="jchart" role="img" aria-label="Michal · repeat use, from flight 2 to habit"><line x1="34.0" y1="211.0" x2="526.0" y2="211.0" class="jg"/><text x="534" y="215.0" class="jt">1</text><line x1="34.0" y1="120.5" x2="526.0" y2="120.5" class="jg"/><text x="534" y="124.5" class="jt">3</text><line x1="34.0" y1="30.0" x2="526.0" y2="30.0" class="jg"/><text x="534" y="34.0" class="jt">5</text><path d="M526.0,52.6 L362.0,52.6 L198.0,165.8 L34.0,75.2 L34.0,211.0 L526.0,211.0 Z" class="ja"/><path d="M526.0,52.6 L362.0,52.6 L198.0,165.8 L34.0,75.2" class="jl"/><circle cx="526.0" cy="52.6" r="5" class="jd"/><text x="526.0" y="39.6" class="jv">4.5</text><text x="526.0" y="237" class="jn">1</text><circle cx="362.0" cy="52.6" r="5" class="jd"/><text x="362.0" y="39.6" class="jv">4.5</text><text x="362.0" y="237" class="jn">2</text><circle cx="198.0" cy="165.8" r="6" class="jd jd--low"/><text x="198.0" y="152.8" class="jv jv--low">2</text><text x="198.0" y="237" class="jn">3</text><circle cx="34.0" cy="75.2" r="5" class="jd"/><text x="34.0" y="62.2" class="jv">4</text><text x="34.0" y="237" class="jn">4</text></svg><ol class="jlegend"><li><span class="jn-num">1</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Before flight 2</b><span>Immediate openness · 4.5</span></span></li><li><span class="jn-num">2</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Repeat use, flight 2</b><span>Routine · 4.5</span></span></li><li><span class="jn-num">3</span><svg class="ico ico--lo" aria-hidden="true"><use href="#f-lo"/></svg><span class="jn-body"><b>At the airport, flight 2</b><span>Mild disappointment at a delay · 2</span></span></li><li><span class="jn-num">4</span><svg class="ico ico--hi" aria-hidden="true"><use href="#f-hi"/></svg><span class="jn-body"><b>Forming a habit</b><span>Fixed habit · 4</span></span></li></ol><p class="jnote">For her too the drop happens at the airport, and in the same place: a delay at check-in. The two personas meet at the gap that stays open.</p></article>
+</div>
+
+
+    <p class="claim" style="margin-top:2.4rem">A flat map isn’t a failed map. It’s the boundary of the product</p>
+    <p>Michal has no distinct pain around security, and the pain she does have sits at check-in, which the product doesn’t close. This is a conscious limitation, not a surprise.</p>
+    <blockquote class="quote">I waited the longest at check-in. Security actually went fast.<cite>Real interview 2</cite></blockquote>
+
+    <h3 style="margin-top:2.4rem">The original boards</h3>
+    <div class="gallery" style="--col:24rem">
+      <button type="button" style="--ar:4492/3908" data-full="assets/jmap-ido.png" data-cap="The original board. Ido’s two journey maps, with the touchpoints, pains and opportunities behind the graphs">
+        <span class="shot"><img src="assets/jmap-ido.png" alt="Ido Carmeli’s two journey maps, first experience and repeat use" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>Ido</b>The touchpoints, pains and opportunities behind the two graphs.</span>
+      </button>
+      <button type="button" style="--ar:4409/3922" data-full="assets/jmap-michal.png" data-cap="The original board. Michal’s two journey maps. The only pain that appears in them sits at check-in, not at security">
+        <span class="shot"><img src="assets/jmap-michal.png" alt="Michal Avrahami’s two journey maps, first experience and repeat use" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>Michal</b>The only pain that appears on the board sits at check-in, not at security.</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section id="sitemap">
+  <div class="wrap">
+    <p class="eyebrow">04 · Sitemap</p>
+    <h2>Sitemap: a screen with no stage in the journey doesn’t get in</h2>
+    <p>I cross-checked every stage in the four journey maps against the screens in the Sitemap, in two reviews. Out of them went “FAQ”, “Contact us” and flight history.</p>
+    <p>The second review also overturned a decision that was already in the design: the registration screen showed two choices, a security window and a check-in window. The duration of screening is unpredictable by nature, so choosing a check-in window at registration is a guess presented as a tool. One real choice remained.</p>
+    <p><b>The structure that remained is Status-First:</b> As long as there is no active booking, the main screen is New booking. Once there is one, the app switches automatically to flight-day mode, and returns on its own when check-in ends.</p>
+
+    <div class="board bleed">
+      <button type="button" data-full="assets/sitemap.png" data-cap="The Sitemap after two reviews. Two states, automatic transitions between them, and two acceptance tests on the side">
+        <img src="assets/sitemap.png" alt="Sitemap in a Status-First structure, two states and acceptance tests" loading="lazy">
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="board-cap"><b>Sitemap after two reviews</b>The two acceptance tests sit on the board itself, and one of them is marked as a partial failure.</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section id="language" class="soft">
+  <div class="wrap">
+    <p class="eyebrow">05 · Design language</p>
+    <h2>What I removed explains the language more than what I kept</h2>
+    <p class="lead">If the product were a place, it would be a small information desk at the entrance to the queue. One that tells you where you’re standing right now, and doesn’t pretend to be the guard itself.</p>
+
+    <div class="grid g4" style="margin-top:1.8rem">
+      <div class="card"><h3>Certain</h3><p class="tiny">The confirmation and QR open even without a live internet connection.</p></div>
+      <div class="card"><h3>A backup, not a replacement</h3><p class="tiny">The screen is meant to be checked alongside a passport and boarding pass, not instead of them.</p></div>
+      <div class="card"><h3>Upfront about the unknown</h3><p class="tiny">The check-in screen doesn’t claim to predict load, because that’s exactly what remains unsolved.</p></div>
+      <div class="card"><h3>Doesn’t assume everything’s fine</h3><p class="tiny">No current data? The last status is shown with a timestamp.</p></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:1.6rem">
+      <div class="card">
+        <h3>First rejection: a whole direction</h3>
+        <p>I developed four directions, and one of them was warm and friendly. It looked good, but Ido’s emotional intensity at screening drops to 1.5 out of 5. A friendly tone at that moment doesn’t fit its severity. I dropped it.</p>
+      </div>
+      <div class="card">
+        <h3>Second rejection: density</h3>
+        <p>The first round returned a scrolling list of all hours of the day, about thirty rows, and a status screen that was a dashboard. Most of the day is ruled out anyway by the takeoff time, so the list became nine windows in a three-by-three arrangement.</p>
+      </div>
+    </div>
+
+    <div class="gallery" style="--col:20rem;--ar:16/11">
+      <button type="button" data-full="assets/directions.png" data-cap="Four developed design directions: classic blue, light and airy, modern premium, and human and accessible">
+        <span class="shot"><img src="assets/directions-thumb.png" alt="Four design directions side by side, each with a palette, fonts and screens" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>The four directions</b>The friendly direction, the fourth, was developed all the way before it was rejected.</span>
+      </button>
+      <button type="button" data-full="assets/mood-words.png" data-cap="Seven common mood words, each translated into one concrete product behavior">
+        <span class="shot"><img src="assets/mood-words-thumb.png" alt="A table of seven mood words, and next to each the behavior it requires on screen" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>From mood words to behavior</b>“Modern” becomes “the confirmation is shown even without a live connection”.</span>
+      </button>
+      <button type="button" data-full="assets/ai-screens.png" data-cap="The first round of screens: a date strip and a long list of times on the time-selection screen, and a dashboard on the status screen">
+        <span class="shot"><img src="assets/ai-screens-thumb.png" alt="The first round of screens, with a long list of times and a dense status screen" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>The density that went</b>Screen 5 in this round shows all hours of the day as a scrolling list.</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="wrap">
+    <p class="eyebrow">06 · Screens and the live product</p>
+    <h2>One decision per screen</h2>
+    <p>What’s interesting about a screen isn’t what you see in it, but what was decided in it.</p>
+
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Screen</th><th>The decision in it</th></tr></thead>
+        <tbody>
+          <tr><td>Home</td><td>Only two entry points, with a tappable status summary beneath them. An element that shows status but doesn’t lead to an action catches the user unprepared.</td></tr>
+          <tr><td>Choosing a time window</td><td>Nine windows in a three-by-three arrangement, derived from the takeoff time. The last one ends two hours before it.</td></tr>
+          <tr><td>Saved traveler details</td><td>Wasn’t in the first version. Even someone who flies twice a year doesn’t want to retype the same details.</td></tr>
+          <tr><td>Status tracking</td><td>An immediate snapshot with no scrolling. No current data? The last known status is shown with a timestamp.</td></tr>
+          <tr><td>Showing the confirmation and QR</td><td>Works without an internet connection, and is shown alongside the passport and boarding pass, not instead of them.</td></tr>
+          <tr><td>Settings and notifications</td><td>Language choice sits here and also at the bottom of every screen. Someone who can’t read Hebrew shouldn’t have to look for it in a Hebrew interface.</td></tr>
+          <tr><td>Error</td><td>The separate screen is reserved for real failures only. Validation of a missing field happens on the same screen.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="gallery" style="--col:18rem;--ar:16/10">
+      <button type="button" data-full="assets/wireframes.png" data-cap="Thirteen gray wireframes, before I touched color or typography">
+        <span class="shot"><img src="assets/wireframes-thumb.png" alt="Thirteen gray wireframes of the app" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>The wireframes</b>Screen 10 is update and cancel booking. It wasn’t built in the end.</span>
+      </button>
+      <button type="button" data-full="assets/screens.png" data-cap="The twelve built screens, exported at their real sizes">
+        <span class="shot"><img src="assets/screens-thumb.png" alt="The twelve built Leeway screens" loading="lazy"></span>
+        <span class="zoom" aria-hidden="true"><svg class="ico" style="width:1.05rem;height:1.05rem"><use href="#i-zoom"/></svg></span>
+        <span class="cap"><b>The built screens</b>Including loading, success and failure states, not only the happy path.</span>
+      </button>
+    </div>
+
+    <h3 style="margin-top:2.6rem">The product itself, inside the page</h3>
+    <div style="margin-block-start:1.4rem">
+      <div class="phone-stage">
+        <div class="phone" id="phone">
+          <span class="phone__notch"></span>
+          <div class="phone__screen" id="phone-screen">
+            <img class="phone__poster" src="assets/app-poster.png" alt="Leeway home screen" loading="lazy">
+            <button type="button" class="phone__start" id="phone-start">
+              <span class="play" aria-hidden="true"><svg class="ico" style="width:1.5rem;height:1.5rem"><use href="#i-play"/></svg></span>
+              <b>Launch the app</b>
+              <span>Loads only now, so as not to weigh the page down. You can navigate it as usual</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <p class="demo__note">
+        The time windows are calculated from the takeoff time of the flight you enter.<br>
+        <a href="../" target="_blank" rel="noopener">Open full screen in a new tab</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="ai" class="soft">
+  <div class="wrap">
+    <p class="eyebrow">07 · From design to code</p>
+    <h2>Where the model went wrong, and what that taught me</h2>
+    <p class="lead">The app was built as HTML, CSS and JavaScript only, from a Figma file that was a rough reference and not a spec. That explains both what worked and what broke.</p>
+
+    <div class="grid g3" style="margin-top:1.8rem">
+      <div class="card"><h3>What worked</h3><p>Turning a scattered research package into consistent documents, and building the persona, empathy, journey and Sitemap boards directly in the file.</p></div>
+      <div class="card"><h3>What broke</h3><p>I asked that the time-selection screen match the design. The nine windows were copied from the frame in Figma and frozen in code, values that were only there as an example.</p></div>
+      <div class="card"><h3>How I caught it</h3><p>Only when I added a real flight search. For a flight taking off at 21:10, the screen offered a security window at 6:40 in the morning.</p></div>
+    </div>
+
+    <p style="margin-top:1.6rem">In a design file, a value that’s an example looks exactly like a value that’s a rule, and nobody marks which is which. Telling them apart is my job, not the model’s.</p>
+
+    <p class="claim" style="margin-top:2rem">The prompt that changed the result most wasn’t an instruction, but a question</p>
+    <blockquote class="quote">If the check-in window depends entirely on the duration of the security screening, which is unpredictable by nature, why present it at all as a choice at registration?<cite>From the prompt history, step 4</cite></blockquote>
+    <p>That question erased an entire selector from the registration screen. The phrasings before it asked to improve the screen. It asked to justify it.</p>
+
+    <details class="more">
+      <summary>The three mistakes that broke in code <span>and what the root cause was</span></summary>
+      <div>
+        <div class="scroll-x" style="margin-top:0">
+          <table>
+            <thead><tr><th>What happened</th><th>Root cause</th><th>How it was solved</th></tr></thead>
+            <tbody>
+              <tr><td>For a 21:10 flight, a security window at 6:40 in the morning was offered.</td><td>Example values from the design were frozen as constants in code.</td><td>The grid is built backward from the takeoff time, in a single object in the code.</td></tr>
+              <tr><td>A failed flight search returned the demo route, Tel Aviv–Seattle.</td><td>The “no data” state wasn’t separated from the default state.</td><td>The card shows the flight number actually typed in, on a neutral background.</td></tr>
+              <tr><td>A traveler added by mistake blocked the form submission.</td><td>I built an add flow without the reverse flow.</td><td>Removal was added, with renumbering of the remaining blocks.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><b>Two of the three are the same mistake:</b> The product presented content meant for demonstration as if it were fact. Once from the design, once from falling back in code.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="appendix">
+  <div class="wrap">
+    <p class="eyebrow">Appendix</p>
+    <h2>More information, for those who want to dig</h2>
+    <p>Everything below stays closed on purpose. The story stands without it.</p>
+
+    <details class="more">
+      <summary>Before and after <span>Three changes that came from people, not from me</span></summary>
+      <div>
+        <p>I had no measurement tools that worked, so I gave the app to up to seven people and watched.</p>
+        <div class="grid g3" style="margin-top:1.2rem">
+          <div class="card">
+            <p class="eyebrow">Before</p>
+            <h3>They didn’t understand what was expected of them</h3>
+            <p>A person opened it, read, looked at the buttons, and then asked out loud: what am I supposed to do here, and what am I actually booking.</p>
+            <p class="tiny"><b>After:</b> A three-step walkthrough, with a visual highlight on the relevant element. The screen was readable, the task wasn’t.</p>
+          </div>
+          <div class="card">
+            <p class="eyebrow">Before</p>
+            <h3>Error screen on an empty field</h3>
+            <p>You didn’t enter a flight number, pressed Next, and the system threw you to a full error screen. The user froze.</p>
+            <p class="tiny"><b>After:</b> Validation on the same screen, pointing at the missing field. The error screen remains for real edge cases.</p>
+          </div>
+          <div class="card">
+            <p class="eyebrow">Before</p>
+            <h3>Hebrew only</h3>
+            <p>Some of the people who tried it don’t read Hebrew, and some don’t live in Israel. For them the product simply wasn’t usable.</p>
+            <p class="tiny"><b>After:</b> Four languages, with a language switcher at the bottom of every screen. The change that had the most impact, more than dark mode.</p>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="more">
+      <summary>Summary <span>What was done, what remains open, and what I learned</span></summary>
+      <div>
+        <p>A row without evidence didn’t make it into the table. The last two rows are empty in the decision column, and that’s intentional.</p>
+        <div class="scroll-x" style="margin-top:.8rem">
+          <table>
+            <thead><tr><th>Problem</th><th>Decision</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>People arrive three hours early without knowing what awaits them</td><td>Time windows are derived from takeoff time, the last one ends two hours before it</td><td><span class="pill done">Works</span></td></tr>
+              <tr><td>The bottleneck shifts between security and check-in</td><td>Only security is booked. Check-in is shown as a continuously updated estimate</td><td><span class="pill done">Works</span></td></tr>
+              <tr><td>Identification at the station runs on physical documents</td><td>The QR works without a network and is shown alongside the passport, not in place of it</td><td><span class="pill done">Works</span></td></tr>
+              <tr><td>People didn’t understand what to do on first entry</td><td>A three-step walkthrough with a highlight on the relevant element</td><td><span class="pill done">Works</span></td></tr>
+              <tr><td>Not everyone flying out of Ben Gurion reads Hebrew</td><td>Four languages, and a language switcher at the bottom of every screen</td><td><span class="pill done">Works</span></td></tr>
+              <tr><td>There’s no certainty about the load at check-in</td><td></td><td><span class="pill next">Open</span></td></tr>
+              <tr><td>A window can’t be postponed at the last moment</td><td></td><td><span class="pill next">Open</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid g2" style="margin-top:1.4rem; align-items:start">
+          <div>
+            <h3>Three things I learned</h3>
+            <ul>
+              <li><b>A demo is not a fact.</b> I caught this twice in the same project, in two different places.</li>
+              <li><b>Form suggests, even when I didn’t mean to suggest.</b> I built a scrolling area for adding travelers, and the user read the empty fields as an invitation to fill them.</li>
+              <li><b>A flag isn’t evidence, and you can still decide by it.</b> The passport field was born from a flag I marked as non-evidence, because the cost of error isn’t symmetric.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>The next version</h3>
+            <ul>
+              <li><b>Predicted load level at check-in.</b> The gap that left the primary persona’s acceptance test partially failed.</li>
+              <li><b>Last-minute update or postponement of the window.</b> Exists in the wireframes and wasn’t built. Today you can only cancel entirely.</li>
+              <li><b>Scanning the boarding pass instead of typing.</b> Shortens the form to a single action.</li>
+            </ul>
+          </div>
+        </div>
+        <h3 style="margin-top:1.4rem">What was actually built</h3>
+        <ul style="max-width:none">
+          <li>A live app, mobile, twelve screens, in four languages and two display modes.</li>
+          <li>A design system in Figma with tokens for two modes, that passed an eleven-point audit including AA contrast.</li>
+          <li>A research package: eight analyzed interviews, two personas, two empathy maps, four journey maps and a Sitemap that went through two reviews.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="more">
+      <summary>The full research <span>Eight interviews, four of them real</span></summary>
+      <div>
+        <p>I interviewed four people, and in parallel built four simulated test scenarios to cover assumptions I had no one to ask about: a frequent business traveler, a parent of small children, a retiree who avoids new apps, and an operations worker.</p>
+        <p>The simulated interviews are marked as such in every document, they weren’t used to group people into personas, and no quote in the spec was taken from them. They’re flags to check, not data.</p>
+        <div class="grid g3" style="margin-top:1.4rem">
+          <div class="card">
+            <div class="card-num">01</div>
+            <h3>People arrive early regardless of load</h3>
+            <p class="tiny">Six of eight described a fixed arrival of two and a half to three and a half hours ahead.</p>
+            <p class="tiny"><b>What this changed:</b> The time-window grid is built backward from takeoff time.</p>
+          </div>
+          <div class="card">
+            <div class="card-num">02</div>
+            <h3>The bottleneck shifts</h3>
+            <p class="tiny">Five of eight. For the same person it alternates between flights.</p>
+            <p class="tiny"><b>What this changed:</b> Registration books only security. Check-in became a continuously updated estimate.</p>
+          </div>
+          <div class="card">
+            <div class="card-num">03</div>
+            <h3>Identified by documents</h3>
+            <p class="tiny">Four of eight, three of them real interviews: at the station they ask for a passport and a boarding pass.</p>
+            <p class="tiny"><b>What this changed:</b> The QR was defined as a digital backup alongside the documents, not in place of them.</p>
+          </div>
+        </div>
+        <p style="margin-top:1.2rem"><b>The insight that most threatened the project is the one I left in.</b> Interviewee 2 said the queue had become more orderly and faster on its own. If the problem were the length of the queue, the product would be pointless. It isn’t, so the product isn’t.</p>
+      </div>
+    </details>
+
+    <details class="more">
+      <summary>The gaps I flagged for myself <span>What here isn’t evidence, and why it stayed anyway</span></summary>
+      <div>
+        <ul style="max-width:none">
+          <li>Two more insights that came up, about unclear identification and about abandoning digital processes, come from a simulated interview only and aren’t counted as evidence.</li>
+          <li>There is no quantitative measurement here. I installed analytics tools and they didn’t reflect the visits I saw with my own eyes. Up to seven people tried it, with no recording and no defined tasks. This is observation, not an experiment.</li>
+          <li>The prompt-history file was written retroactively and reconstructed from the outputs, so the phrasings are a faithful reconstruction and not a word-for-word quote. What’s accurate: which steps ran, in what order, and what came out of them.</li>
+        </ul>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h2>Kirill</h2>
+    <p class="lead">UX designer. This project is my final project in the John Bryce UX course.</p>
+    <div class="btn-row">
+      <a class="btn btn-1" href="../">Open the product</a>
+      <a class="btn btn-2" href="../landing/">Leeway landing page</a>
+      <a class="btn btn-2" href="https://www.linkedin.com/in/kirillblik/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn btn-2" href="https://instagram.com/b.leak__" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <p class="tiny" style="margin-top:2.2rem">Kirill · Leeway · 2026</p>
+  </div>
+</footer>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged view">
+  <div class="lb-in">
+    <div class="lb-bar">
+      <p id="lb-cap"></p>
+      <button type="button" class="lb-close" id="lb-close" aria-label="Close">✕</button>
+    </div>
+    <img id="lb-img" alt="">
+  </div>
+</dialog>
+
+<script>
+(function(){
+  var KEY='leeway.case.theme', saved=null;
+  try{ saved=localStorage.getItem(KEY); }catch(e){}
+  var mode=(saved==='dark'||saved==='light')?saved:'light';
+  document.documentElement.setAttribute('data-theme',mode);
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.getElementById('theme-btn'); if(!b)return;
+    b.addEventListener('click',function(){
+      var next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      try{ localStorage.setItem(KEY,next); }catch(e){}
+      var m=document.querySelector('meta[name=theme-color]');
+      if(m) m.setAttribute('content', next==='dark'?'#0A1220':'#FFFFFF');
+    });
+  });
+})();
+var bar=document.getElementById('bar');
+function progress(){var h=document.documentElement;var p=h.scrollTop/((h.scrollHeight-h.clientHeight)||1)*100;bar.style.width=Math.min(100,p)+'%';}
+addEventListener('scroll',progress,{passive:true});progress();
+
+document.querySelectorAll('section > .wrap').forEach(function(el){el.classList.add('reveal');});
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.05});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+var links=[].slice.call(document.querySelectorAll('.nav-links a'));
+var spy=new IntersectionObserver(function(es){es.forEach(function(e){
+  if(!e.isIntersecting)return;
+  links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id);});
+});},{rootMargin:'-45% 0px -50% 0px'});
+links.forEach(function(a){var t=document.querySelector(a.getAttribute('href'));if(t)spy.observe(t);});
+
+(function(){
+  var box=document.getElementById('lightbox');
+  if(!box||typeof box.showModal!=='function')return;
+  var img=document.getElementById('lb-img'), cap=document.getElementById('lb-cap');
+  document.querySelectorAll('.gallery button, .board button').forEach(function(b){
+    b.addEventListener('click',function(){
+      img.src=b.dataset.full; img.alt=b.querySelector('img').alt;
+      cap.textContent=b.dataset.cap||''; box.showModal();
+    });
+  });
+  document.getElementById('lb-close').addEventListener('click',function(){box.close();});
+  box.addEventListener('click',function(e){if(e.target===box)box.close();});
+  box.addEventListener('close',function(){img.removeAttribute('src');});
+})();
+
+(function(){
+  var start=document.getElementById('phone-start'), screenEl=document.getElementById('phone-screen');
+  if(!start||!screenEl)return;
+  start.addEventListener('click',function(){
+    var f=document.createElement('iframe');
+    f.src='../'; f.title='Leeway, the live app';
+    f.setAttribute('allow','clipboard-write');
+    screenEl.appendChild(f);
+    var poster=screenEl.querySelector('.phone__poster'); if(poster)poster.remove();
+    start.remove();
+  },{once:true});
+})();
+
+(function(){
+  document.querySelectorAll('.phone').forEach(function(phone){
+    var stage=phone.parentElement; if(!stage)return;
+    function fit(){
+      phone.style.setProperty('--s','1'); phone.style.setProperty('--gap-fix','0px');
+      var s=Math.min(1, stage.clientWidth/360);
+      phone.style.setProperty('--s',s.toFixed(3));
+      phone.style.setProperty('--gap-fix',Math.round(phone.offsetHeight*(s-1))+'px');
+    }
+    fit(); addEventListener('resize',fit);
+  });
+})();
+</script>
+</body>
+</html>

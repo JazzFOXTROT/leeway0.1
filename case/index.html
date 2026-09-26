@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Leeway · קייס סטאדי · גרסה 2</title>
 <meta name="description" content="איך בניתי אפליקציה שנותנת לנוסע בנתב\"ג חלון זמן ידוע לביקורת הביטחון, במקום מרווח ביטחון מנוחש של שלוש שעות.">
+<link rel="alternate" hreflang="he" href="index.html">
+<link rel="alternate" hreflang="en" href="index-en.html">
 <meta name="theme-color" content="#FFFFFF">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,6 +80,10 @@ section:first-of-type{border-top:0}
   color:var(--fg-soft); font:inherit; flex:0 0 auto; margin-inline-start:.6rem;
   transition:border-color .15s ease, color .15s ease}
 .theme-btn:hover{border-color:var(--accent); color:var(--fg)}
+.lang-btn{min-height:40px; min-width:40px; padding-inline:.85rem; display:inline-flex; align-items:center; justify-content:center; border-radius:var(--r-pill);
+  border:var(--line-w) solid var(--line); background:transparent; color:var(--fg-soft); font:inherit; font-size:var(--t-small); font-weight:600; text-decoration:none; letter-spacing:.03em}
+.lang-btn:hover{border-color:var(--accent); color:var(--fg)}
+.lang-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
 .theme-btn .ico{width:1.15rem; height:1.15rem}
 .theme-btn .i-sun{display:none}
 :root[data-theme="dark"] .theme-btn .i-sun{display:block}
@@ -303,6 +309,7 @@ footer a{color:#FFFFFF}
       <a href="#ai">מעיצוב לקוד</a>
       <a href="#appendix">נספח</a>
     </div>
+    <a class="lang-btn" href="index-en.html" hreflang="en" lang="en" aria-label="לקרוא את הקייס באנגלית" title="לקרוא את הקייס באנגלית">EN</a>
     <button type="button" class="theme-btn" id="theme-btn" aria-label="החלפת מצב תצוגה" title="מצב תצוגה">
       <svg class="ico i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
       <svg class="ico i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
