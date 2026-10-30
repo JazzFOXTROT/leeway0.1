@@ -47,7 +47,7 @@
 
     <div class="landing__actions">
       <button type="button" class="btn btn--primary" data-go="registration" data-i18n="landing.newBooking">הזמינו חלון זמן חדש</button>
-      <button type="button" class="btn btn--secondary" data-go="status" data-i18n="landing.myBooking">הזמנה שלי</button>
+      <button type="button" class="btn btn--secondary" data-go="status" data-i18n="landing.myBooking">ההזמנה שלי</button>
     </div>
 
     <!-- כרטיס הסטטוס נפתח ריק: כל עוד לא נבחר חלון זמן אין מה לעקוב אחריו,
@@ -55,7 +55,7 @@
          מתחלפים ב-paintStatusCard() ברגע שהזמנה נסגרת בהצלחה. -->
     <button type="button" class="status-card" data-status-card data-booking="none" data-go="registration"
             data-i18n-aria="aria.statusCardEmpty" aria-label="אין הזמנה פעילה — מעבר להזמנת חלון זמן">
-      <span class="status-card__title" data-i18n="status.cardTitle">סטטוס שלי</span>
+      <span class="status-card__title" data-i18n="status.cardTitle">הסטטוס שלי</span>
       <span class="status-card__chip">
         <span class="status-card__chip-text">
           <span class="status-card__step" data-status-step data-i18n="status.noneStep">אין הזמנה פעילה</span>
@@ -130,7 +130,7 @@
     </div>
 
     <form class="form" id="registration-form" novalidate>
-      <h1 class="display" id="registration-title"><span data-i18n="reg.h1a">הכנס</span> <em data-i18n="reg.h1b">פרטיך</em></h1>
+      <h1 class="display" id="registration-title"><span data-i18n="reg.h1a">הזינו</span> <em data-i18n="reg.h1b">את הפרטים</em></h1>
 
       <div class="passenger" data-passenger="1">
         <div class="name-row">
@@ -160,11 +160,11 @@
         <p class="flight-lookup" data-flight-info role="status" aria-live="polite" hidden></p>
       </div>
 
-      <h2 class="display"><span data-i18n="reg.h2a">טס</span> <em data-i18n="reg.h2b">לא לבד?</em></h2>
+      <h2 class="display"><span data-i18n="reg.h2a">טסים</span> <em data-i18n="reg.h2b">לא לבד?</em></h2>
 
       <div id="extra-passengers"></div>
 
-      <button type="button" class="add-passenger" id="add-passenger" data-i18n="reg.addPassenger">+ הוסף נוסע</button>
+      <button type="button" class="add-passenger" id="add-passenger" data-i18n="reg.addPassenger">+ הוספת נוסע</button>
 
       <!-- הודעת הטופס עצמו: מה חסר או מה שגוי, במקום שבו אפשר לתקן את זה.
            מסך השגיאה נשמר למקרים שאי אפשר לתקן כאן. -->
@@ -294,7 +294,7 @@
       </div>
     </div>
 
-    <h1 class="display result__title" id="success-title"><span data-i18n="success.h1a">הזמנה בוצע</span> <em class="is-success" data-i18n="success.h1b">בהצלחה</em></h1>
+    <h1 class="display result__title" id="success-title"><span data-i18n="success.h1a">ההזמנה בוצעה</span> <em class="is-success" data-i18n="success.h1b">בהצלחה</em></h1>
 
     <img data-src-light="assets/images/illustration-airplane.png" data-src-dark="assets/images/illustration-airplane-dark.png" class="result__art" src="assets/images/illustration-airplane.png" data-i18n-alt="alt.airplane" alt="איור של מטוס ממריא" width="358" height="358">
 
@@ -327,7 +327,7 @@
       </div>
     </div>
 
-    <h1 class="display result__title" id="fail-title"><span data-i18n="fail.h1a">אופס...משהו</span> <em class="is-danger" data-i18n="fail.h1b">השתבש</em></h1>
+    <h1 class="display result__title" id="fail-title"><span data-i18n="fail.h1a">אופס... משהו</span> <em class="is-danger" data-i18n="fail.h1b">השתבש</em></h1>
 
     <img data-src-light="assets/images/illustration-error.png" data-src-dark="assets/images/illustration-error-dark.png" class="result__art" src="assets/images/illustration-error.png" data-i18n-alt="alt.error" alt="איור של משולש אזהרה אדום" width="377" height="283">
 
@@ -349,14 +349,14 @@
     </header>
 
     <div class="page-title">
-      <h1 id="status-title"><span data-i18n="status.h1a">סטטוס</span> <span data-i18n="status.h1b">שלי</span></h1>
+      <h1 id="status-title"><span data-i18n="status.h1a">הסטטוס</span> <span data-i18n="status.h1b">שלי</span></h1>
     </div>
 
     <div class="pass-shell">
       <div class="qr-pass">
         <div class="qr-pass__row">
           <div class="qr-pass__meta">
-            <p class="qr-pass__label" data-i18n="pass.label">כרטיס הכניסה שלך</p>
+            <p class="qr-pass__label" data-i18n="pass.label">כרטיס הכניסה שלכם</p>
             <p class="qr-pass__time" dir="ltr" data-slot-display>06:40 – 07:00</p>
             <p class="qr-pass__where" data-i18n="pass.where">טרמינל 3 · כניסה 03</p>
           </div>
@@ -398,7 +398,7 @@
                   <span class="step__state" data-i18n="state.inprogress">בתהליך</span>
                 </div>
               </div>
-              <span class="step__eta" data-time="security-eta" data-i18n-prefix="tl.eta">צפי משך - 07:45</span>
+              <span class="step__eta" data-time="security-eta" data-i18n-prefix="tl.eta">צפי סיום: 07:45</span>
             </div>
           </div>
         </li>
@@ -441,7 +441,7 @@
     </header>
 
     <div class="page-title">
-      <h1 id="status-qr-title"><span data-i18n="status.h1a">סטטוס</span> <span data-i18n="status.h1b">שלי</span></h1>
+      <h1 id="status-qr-title"><span data-i18n="status.h1a">הסטטוס</span> <span data-i18n="status.h1b">שלי</span></h1>
     </div>
 
     <div class="pass-shell" data-go="status" role="button" tabindex="0" data-i18n-aria="aria.closeFull" aria-label="סגירת התצוגה המלאה">
@@ -478,14 +478,14 @@
       </button>
     </header>
 
-    <h1 class="settings__title" id="profile-title" data-i18n="profile.title">פרופיל שלי</h1>
+    <h1 class="settings__title" id="profile-title" data-i18n="profile.title">הפרופיל שלי</h1>
     <p class="settings__name" data-i18n="profile.name">דניאל כהן</p>
 
     <img class="settings__avatar" id="profile-avatar" data-avatar-target src="assets/images/avatar-neutral.png"
          alt="" width="156" height="153" data-i18n-alt="profile.av.neutral">
 
     <button type="button" class="settings__link" data-avatar-toggle aria-expanded="false"
-            aria-controls="avatar-lane" data-i18n="profile.editPhoto">ערוך תמונת פרופיל</button>
+            aria-controls="avatar-lane" data-i18n="profile.editPhoto">עריכת תמונת פרופיל</button>
 
     <!-- The lane scrolls sideways; Figma node 4052:487 lays the nine avatars
          out in exactly this order. -->
@@ -515,7 +515,7 @@
         <input class="input input--filled" type="text" name="profile-passport"
                autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="15"
                data-i18n-ph="ph.passport" placeholder="מס׳ דרכון"></label>
-      <button type="submit" class="btn btn--primary" data-i18n="profile.save">שמור פרטים שלי</button>
+      <button type="submit" class="btn btn--primary" data-i18n="profile.save">שמירת הפרטים שלי</button>
     </form>
 
     <!-- ═══ מחיקת כל מה שנשמר במכשיר ═══════════════════════════════════════
@@ -524,8 +524,8 @@
          מפתחות וכמה מטמונים נשארו — כדי שהמחיקה תהיה ניתנת לאימות ולא
          רק מובטחת.                                                        -->
     <div class="danger-zone">
-      <button type="button" class="btn btn--danger" data-clear-storage data-i18n="profile.clear">מחק את כל מה שנשמר</button>
-      <p class="danger-zone__note" data-i18n="profile.clearNote">מוחק את הפרטים ששמרת במכשיר הזה ואת העותק הלא-מקוון של האפליקציה. אין לזה השפעה על הזמנות שכבר אושרו.</p>
+      <button type="button" class="btn btn--danger" data-clear-storage data-i18n="profile.clear">מחיקת כל מה שנשמר</button>
+      <p class="danger-zone__note" data-i18n="profile.clearNote">מוחק את הפרטים ששמרתם במכשיר הזה ואת העותק הלא-מקוון של האפליקציה. אין לזה השפעה על הזמנות שכבר אושרו.</p>
       <p class="danger-zone__result" data-clear-result role="status" aria-live="polite"></p>
     </div>
   </section>
@@ -598,7 +598,7 @@
         <img class="overlay__avatar" data-avatar-target src="assets/images/avatar-placeholder.png" data-i18n-alt="alt.avatar" alt="תמונת פרופיל" width="39" height="38">
       </div>
       <nav class="overlay__nav">
-        <button type="button" class="overlay__link" data-go="profile" data-i18n="menu.profile">פרופיל שלי</button>
+        <button type="button" class="overlay__link" data-go="profile" data-i18n="menu.profile">הפרופיל שלי</button>
         <button type="button" class="overlay__link" data-go="notifications" data-i18n="menu.notifications">התראות</button>
         <button type="button" class="overlay__link" data-go="language" data-i18n="menu.language">שפה</button>
         <button type="button" class="theme-toggle theme-toggle--menu" data-theme-toggle aria-pressed="false"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.5 1.5M17.1 17.1l1.5 1.5M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"/></svg><span data-theme-label data-i18n="theme.toDark">מצב כהה</span></button>
